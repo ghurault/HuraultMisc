@@ -2,7 +2,7 @@
 % Please edit documentation in R/PPC_group_distribution.R
 \name{PPC_group_distribution}
 \alias{PPC_group_distribution}
-\title{Posterior Predictive Check}
+\title{Posterior Predictive Check for Stan model}
 \usage{
 PPC_group_distribution(fit, parName, nDraws = 1)
 }
