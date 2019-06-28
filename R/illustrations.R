@@ -1,13 +1,15 @@
+# RPS ---------------------------------------------------------------------
+
 #' Illustration of the Ranked Probability Score
 #'
 #' Illustrates what the RPS measure when we forecast "Severity" with a Gaussian distribution.
 #' The RPS corresponds to the shaded area squared.
 #'
-#' @param mu mean of the Gaussian forecast distribution
-#' @param sigma standard deviation of the Gaussian forecast distribution
+#' @param mu Mean of the Gaussian forecast distribution
+#' @param sigma Standard deviation of the Gaussian forecast distribution
 #' @param observed Observed outcome
 #'
-#' @return Ggplot
+#' @return ggplot
 #' @export
 #'
 #' @examples
@@ -48,4 +50,47 @@ illustrate_RPS <- function(mu = 5, sigma = 1, observed = 6) {
     theme(legend.title = element_blank(), legend.position = "top")
 
   cowplot::plot_grid(cdf, pdf, nrow = 2)
+
+}
+
+
+# Forward chaining --------------------------------------------------------
+
+#' Illustration forward chaining
+#'
+#' @param horizon Prediction horizon
+#' @param n_it Number of iterations to display
+#'
+#' @return ggplot
+#' @export
+#'
+#' @examples
+#'
+#' @import ggplot2
+illustrate_forward_chaining <- function(horizon = 7, n_it = 5) {
+
+  df <- do.call(rbind,
+                lapply(1:n_it,
+                       function(it) {
+                         data.frame(Iteration = it,
+                                    Day = 1:((it + 1) * horizon),
+                                    Subset = c(rep("Train", it * horizon), rep("Test", horizon))
+                         )}))
+  lbl <- aggregate(Day ~ Iteration + Subset, df, median)
+  colnames(lbl)[colnames(lbl) == "Subset"] <- "Label"
+
+  ggplot() +
+    geom_rect(data = df,
+              aes(xmin = Day - 1, xmax = Day,ymin = Iteration - .35 , ymax = Iteration + .35, fill = Subset),
+              alpha = .8) +
+    geom_text(data = lbl,
+              aes(x = Day, y = Iteration, label = Label),
+              fontface = "bold", size = 8) +
+    scale_y_continuous(breaks = 1:max(df$Iteration), trans = "reverse", expand = c(0, 0)) +
+    scale_x_continuous(breaks = seq(0, max(df$Day), horizon), expand = c(0, 0)) +
+    scale_fill_manual(values = c("#009E73", "#F0E442")) +
+    theme_classic(base_size = 20) +
+    theme(axis.title.y = element_text(angle = 90,vjust = 0.5),
+          legend.position = "none")
+
 }
