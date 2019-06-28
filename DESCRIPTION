@@ -1,0 +1,15 @@
+Package: HuraultMisc
+Type: Package
+Title: Guillem Hurault personal functions' library
+Version: 0.1.0
+Author: Guillem Hurault
+Maintainer: Guillem Hurault <guillem.hurault@hotmail.fr>
+Description: Mainly contains functions for data analysis.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    ggplot2,
+    reshape2,
+    rstan
+RoxygenNote: 6.1.1
