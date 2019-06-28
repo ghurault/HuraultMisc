@@ -1,3 +1,5 @@
+#' Posterior Predictive Check
+#'
 #' Plot the distribution density of parameters within a same group from a single/multiple draw of the posterior distribution.
 #' In the case of a hierarchical model, we might look at the distribution of patient parameter and compare it to the prior for the population distribution.
 #'
