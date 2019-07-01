@@ -10,6 +10,8 @@
 #' @export
 #'
 #' @examples
+#' df <- data.frame(A = 1:2, B = 3:4, C = 5:6)
+#' df <- change_colnames(df, c("A", "C"), c("Aa", "Cc"))
 change_colnames <- function(df, current_names, new_names) {
 
   if (length(current_names) != length(new_names)){
@@ -20,7 +22,6 @@ change_colnames <- function(df, current_names, new_names) {
     }
     return(df)
   }
-
 }
 
 # Convert factor to numeric -----------------------------------------------
@@ -34,9 +35,11 @@ change_colnames <- function(df, current_names, new_names) {
 #' @export
 #'
 #' @examples
+#' df <- data.frame(A = rep(1:5, each = 10))
+#' df$A <- factor(df$A)
+#' df <- factor_to_numeric(df, "A")
 factor_to_numeric <- function(df, factor_name) {
 
   df[, factor_name] <- as.numeric(levels(df[, factor_name]))[df[, factor_name]]
   return(df)
-
 }

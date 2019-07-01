@@ -21,5 +21,6 @@ Illustrates what the RPS measure when we forecast "Severity" with a Gaussian dis
 The RPS corresponds to the shaded area squared.
 }
 \examples{
+illustrate_RPS()
 
 }

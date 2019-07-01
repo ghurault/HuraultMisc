@@ -13,6 +13,7 @@
 #' @export
 #'
 #' @examples
+#' illustrate_RPS()
 #'
 #' @import ggplot2
 illustrate_RPS <- function(mu = 5, sigma = 1, observed = 6) {
@@ -65,6 +66,7 @@ illustrate_RPS <- function(mu = 5, sigma = 1, observed = 6) {
 #' @export
 #'
 #' @examples
+#' illustrate_forward_chaining()
 #'
 #' @import ggplot2
 illustrate_forward_chaining <- function(horizon = 7, n_it = 5) {

@@ -18,5 +18,6 @@ ggplot
 Illustration forward chaining
 }
 \examples{
+illustrate_forward_chaining()
 
 }
