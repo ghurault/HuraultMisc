@@ -9,7 +9,7 @@
 #' @param sigma Standard deviation of the Gaussian forecast distribution
 #' @param observed Observed outcome
 #'
-#' @return ggplot
+#' @return Ggplot
 #' @export
 #'
 #' @examples
@@ -62,7 +62,7 @@ illustrate_RPS <- function(mu = 5, sigma = 1, observed = 6) {
 #' @param horizon Prediction horizon
 #' @param n_it Number of iterations to display
 #'
-#' @return ggplot
+#' @return Ggplot
 #' @export
 #'
 #' @examples
