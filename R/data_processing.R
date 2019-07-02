@@ -29,9 +29,9 @@ change_colnames <- function(df, current_names, new_names) {
 #' Change the type of the column of a dataframe from factor to numeric
 #'
 #' @param df Dataframe
-#' @param factor_name Name of the factor to change into a numeric
+#' @param factor_name Vector of names of factors to change into numerics
 #'
-#' @return Same dataframe with type of the given column changed to numeric
+#' @return Same dataframe with type of the given columns changed to numeric
 #' @export
 #'
 #' @examples
@@ -40,6 +40,8 @@ change_colnames <- function(df, current_names, new_names) {
 #' df <- factor_to_numeric(df, "A")
 factor_to_numeric <- function(df, factor_name) {
 
-  df[, factor_name] <- as.numeric(levels(df[, factor_name]))[df[, factor_name]]
+  for (i in 1:length(factor_name)) {
+    df[, factor_name[i]] <- as.numeric(levels(df[, factor_name[i]]))[df[, factor_name[i]]]
+  }
   return(df)
 }
