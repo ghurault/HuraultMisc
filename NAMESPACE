@@ -2,7 +2,10 @@
 
 export(PPC_group_distribution)
 export(change_colnames)
+export(compute_calibration)
 export(factor_to_numeric)
 export(illustrate_RPS)
 export(illustrate_forward_chaining)
+export(process_replications)
+export(summary_statistics)
 import(ggplot2)

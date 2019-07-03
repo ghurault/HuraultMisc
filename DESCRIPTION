@@ -12,5 +12,6 @@ Imports:
     ggplot2,
     reshape2,
     rstan,
-    cowplot
+    cowplot,
+    Hmisc
 RoxygenNote: 6.1.1
