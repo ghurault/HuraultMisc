@@ -12,7 +12,7 @@ illustrate_forward_chaining(horizon = 7, n_it = 5)
 \item{n_it}{Number of iterations to display}
 }
 \value{
-ggplot
+Ggplot
 }
 \description{
 Illustration forward chaining

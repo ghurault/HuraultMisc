@@ -54,7 +54,6 @@ illustrate_RPS <- function(mu = 5, sigma = 1, observed = 6) {
 
 }
 
-
 # Forward chaining --------------------------------------------------------
 
 #' Illustration forward chaining

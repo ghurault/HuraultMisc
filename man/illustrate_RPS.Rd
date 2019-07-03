@@ -14,7 +14,7 @@ illustrate_RPS(mu = 5, sigma = 1, observed = 6)
 \item{observed}{Observed outcome}
 }
 \value{
-ggplot
+Ggplot
 }
 \description{
 Illustrates what the RPS measure when we forecast "Severity" with a Gaussian distribution.
