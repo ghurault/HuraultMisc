@@ -3,6 +3,7 @@
 export(PPC_group_distribution)
 export(change_colnames)
 export(compute_calibration)
+export(compute_resolution)
 export(factor_to_numeric)
 export(illustrate_RPS)
 export(illustrate_forward_chaining)
