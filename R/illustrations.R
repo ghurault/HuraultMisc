@@ -2,8 +2,11 @@
 
 #' Illustration of the Ranked Probability Score
 #'
-#' Illustrates what the RPS measure when we forecast "Severity" with a Gaussian distribution.
-#' The RPS corresponds to the shaded area squared.
+#' Illustration of the RPS in the case of forecasts for a discrete "Severity" score, ranging from 0 to 10.
+#' The forecast follow a (truncated between 0 and 10) Gaussian distribution, which is discretised to the nearest integer for RPS calculation.
+#' The RPS is the mean square error between the cumulative outcome and cumulative forecast distribution (shaded are square).
+#' The Ranked Probability Skill Score compares the RPS to a reference RPS (RPS0), RPSS = 1 - RPS / RPS0.
+#' It can be interpreted as a normalise distance to a reference forecast: RPSS = 0 means that the forecasts are not better than the reference and RPSS = 1 corresponds to perfect forecasts.
 #'
 #' @param mu Mean of the Gaussian forecast distribution
 #' @param sigma Standard deviation of the Gaussian forecast distribution
@@ -22,7 +25,19 @@ illustrate_RPS <- function(mu = 5, sigma = 1, observed = 6) {
   lwidth <- 3 # linewidth
   x <- seq(0, 10, .01)
 
-  df1 <- data.frame(Severity = x, Density = dnorm(x, mean = mu, sd = sigma))
+  # RPS calculation
+  Z <- pnorm(10, mu, sigma) - pnorm(0, mu, sigma) # Normalisation constant (cf. truncation)
+  cumForecast <- (pnorm(pmin(0:10 + .5, 10), mu, sigma) -  pnorm(pmax(0:10 - .5, 0), mu, sigma)) / Z # Discretise Gaussian
+  cumForecast <- cumsum(cumForecast)
+  cumOutcome <- rep(0, 11)
+  cumOutcome[observed + 1] <- 1
+  cumOutcome <- cumsum(cumOutcome)
+  RPS <- sum((cumForecast - cumOutcome)^2) / (11 - 1)
+  RPS0 <- 2 / 11 # expected RPS for uniformly distributed outcome and uniform forecast: (k+1)/(6*k) where k is the number of categories
+  RPSS <- 1 - RPS / RPS0
+
+  # PDF
+  df1 <- data.frame(Severity = x, Density = dnorm(x, mean = mu, sd = sigma) / Z)
   pdf <- ggplot(data = df1, aes(x = Severity)) +
     geom_line(aes(y = Density), lwd = lwidth) +
     geom_vline(xintercept = observed, colour = cbbPalette[2], lwd = lwidth) +
@@ -31,12 +46,12 @@ illustrate_RPS <- function(mu = 5, sigma = 1, observed = 6) {
     scale_colour_manual(values = cbbPalette) +
     theme_classic(base_size = 20)
 
+  # CDF
   df2 <- data.frame(x,
-                    Forecast = pnorm(x, mean = mu, sd = sigma),
+                    Forecast = pnorm(x, mean = mu, sd = sigma) / Z,
                     Outcome = as.numeric(x > observed))
   df2$Lower <- pmin(df2$Forecast, df2$Outcome)
   df2$Upper <- pmax(df2$Forecast, df2$Outcome)
-
   cdf <- ggplot()+
     geom_line(data = reshape2::melt(df2[, c("x", "Forecast", "Outcome")],
                                     id="x", variable.name = "Distribution", value.name = "CD"),
@@ -50,7 +65,9 @@ illustrate_RPS <- function(mu = 5, sigma = 1, observed = 6) {
     theme_classic(base_size = 20) +
     theme(legend.title = element_blank(), legend.position = "top")
 
-  cowplot::plot_grid(cdf, pdf, nrow = 2)
+  cowplot::plot_grid(pdf + labs(subtitle = paste("RPS = ", signif(RPS, 2), " ; RPSS = ", signif(RPSS, 3), sep = "")),
+                     cdf,
+                     nrow = 2)
 
 }
 
