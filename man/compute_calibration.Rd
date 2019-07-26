@@ -4,26 +4,36 @@
 \alias{compute_calibration}
 \title{Estimate calibration given forecasts and corresponding outcomes}
 \usage{
-compute_calibration(forecast, outcome, res = NULL)
+compute_calibration(forecast, outcome, method = "smoothing", CI = NULL,
+  span = 0.7, binwidth = NULL)
 }
 \arguments{
-\item{forecast}{Vector of probability forecast}
+\item{forecast}{Vector of probability forecasts}
 
 \item{outcome}{Vector of observations (0 or 1)}
 
-\item{res}{Resolution (bin's width). If NULL, automatic bin width selection with Sturges' method}
+\item{method}{Moethod used to estimate calibration, either "smoothing" or "binning"}
+
+\item{CI}{Confidence level (e.g. 0.95). CI not computed if NULL (CI can be expensive to compute for LOWESS).}
+
+\item{span}{LOWESS span when calibration is estimated by smoothing}
+
+\item{binwidth}{Binwidth when calibration is estimated by binning.  If NULL, automatic bin width selection with Sturges' method.}
 }
 \value{
-Dataframe with colums Forecast (bins), Frequency (frequency of outcomes in the bin), Lower (lower bound of the 95% CI) and Upper (upper bound of the 95% CI)
+Dataframe with colums Forecast (bins), Frequency (frequency of outcomes in the bin), Lower (lower bound of the CI) and Upper (upper bound of the CI)
 }
 \description{
 Estimate calibration given forecasts and corresponding outcomes
 }
 \examples{
-N <- 10000
-f <- runif(N)
-o <- sapply(1:N, function(i) {rbinom(1, 1, f[i])})
-cal <- compute_calibration(f, o)
-with(cal, plot(Forecast, Frequency))
-abline(c(0, 1), col = "red")
+N <- 1e4
+f <- rbeta(N, 1, 1)
+o <- sapply(f, function(x) {rbinom(1, 1, x)})
+lapply(c("binning", "smoothing"),
+       function(m) {
+         cal <- compute_calibration(f, o, method = m)
+         with(cal, plot(Forecast, Frequency))
+         abline(c(0, 1), col = "red")
+       })
 }
