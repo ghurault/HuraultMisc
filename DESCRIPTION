@@ -1,7 +1,7 @@
 Package: HuraultMisc
 Type: Package
 Title: Guillem Hurault personal functions' library
-Version: 0.1.0
+Version: 1.0.0
 Author: Guillem Hurault
 Maintainer: Guillem Hurault <guillem.hurault@hotmail.fr>
 Description: Mainly contains functions for data analysis.
