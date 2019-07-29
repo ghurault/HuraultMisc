@@ -5,7 +5,7 @@
 \title{Estimate calibration given forecasts and corresponding outcomes}
 \usage{
 compute_calibration(forecast, outcome, method = "smoothing", CI = NULL,
-  span = 0.7, binwidth = NULL)
+  binwidth = NULL, ...)
 }
 \arguments{
 \item{forecast}{Vector of probability forecasts}
@@ -16,24 +16,13 @@ compute_calibration(forecast, outcome, method = "smoothing", CI = NULL,
 
 \item{CI}{Confidence level (e.g. 0.95). CI not computed if NULL (CI can be expensive to compute for LOWESS).}
 
-\item{span}{LOWESS span when calibration is estimated by smoothing}
-
 \item{binwidth}{Binwidth when calibration is estimated by binning.  If NULL, automatic bin width selection with Sturges' method.}
+
+\item{...}{Arguments of stats::loess function (e.g.span)}
 }
 \value{
 Dataframe with colums Forecast (bins), Frequency (frequency of outcomes in the bin), Lower (lower bound of the CI) and Upper (upper bound of the CI)
 }
 \description{
 Estimate calibration given forecasts and corresponding outcomes
-}
-\examples{
-N <- 1e4
-f <- rbeta(N, 1, 1)
-o <- sapply(f, function(x) {rbinom(1, 1, x)})
-lapply(c("binning", "smoothing"),
-       function(m) {
-         cal <- compute_calibration(f, o, method = m)
-         with(cal, plot(Forecast, Frequency))
-         abline(c(0, 1), col = "red")
-       })
 }

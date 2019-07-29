@@ -6,8 +6,8 @@
 #' @param outcome Vector of observations (0 or 1)
 #' @param method Moethod used to estimate calibration, either "smoothing" or "binning"
 #' @param CI Confidence level (e.g. 0.95). CI not computed if NULL (CI can be expensive to compute for LOWESS).
-#' @param span LOWESS span when calibration is estimated by smoothing
 #' @param binwidth Binwidth when calibration is estimated by binning.  If NULL, automatic bin width selection with Sturges' method.
+#' @param ... Arguments of stats::loess function (e.g.span)
 #'
 #' @return Dataframe with colums Forecast (bins), Frequency (frequency of outcomes in the bin), Lower (lower bound of the CI) and Upper (upper bound of the CI)
 #' @export
@@ -19,10 +19,10 @@
 #' lapply(c("binning", "smoothing"),
 #'        function(m) {
 #'          cal <- compute_calibration(f, o, method = m)
-#'          with(cal, plot(Forecast, Frequency))
+#'          with(cal, plot(Forecast, Frequency, type = "l))
 #'          abline(c(0, 1), col = "red")
 #'        })
-compute_calibration <- function(forecast, outcome, method = "smoothing", CI = NULL , span = 0.7, binwidth = NULL) {
+compute_calibration <- function(forecast, outcome, method = "smoothing", CI = NULL , binwidth = NULL, ...) {
 
   if (!is.null(CI)){
     if (CI >= 1 | CI <= 0)
@@ -78,17 +78,6 @@ compute_calibration <- function(forecast, outcome, method = "smoothing", CI = NU
   }
   return(out)
 }
-
-N <- 1e4
-f <- rbeta(N, 1, 1)
-o <- sapply(f, function(x) {rbinom(1, 1, x)})
-lapply(c("binning", "smoothing"),
-       function(m) {
-         cal <- compute_calibration(f, o, method = m)
-         with(cal, plot(Forecast, Frequency))
-         abline(c(0, 1), col = "red")
-       })
-
 
 # Compute resolution ------------------------------------------------------
 
