@@ -31,7 +31,7 @@ compute_calibration <- function(forecast, outcome, method = "smoothing", CI = NU
 
   if (method == "smoothing") {
 
-    fit <- loess(outcome ~ forecast, span = span)
+    fit <- loess(outcome ~ forecast, ...)
 
     out <- data.frame(Forecast = seq(0, 1, .01))
     if (!is.null(CI)) {
