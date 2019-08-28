@@ -3,7 +3,8 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-HuraultMisc provides R functions for data analysis.
+HuraultMisc is my personal R package regrouping functions used across different projects.
+The library mostly provides functions for data analysis.
 
 ``` r
 devtools::install_github("ghurault/HuraultMisc")
