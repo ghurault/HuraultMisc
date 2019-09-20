@@ -120,3 +120,32 @@ PPC_group_distribution <- function(fit, parName, nDraws = 1) {
     labs(x = parName, y = "Density") +
     theme_classic(base_size = 20)
 }
+
+# Compare posterior to prior estimates ------------------------------------
+
+#' Plot posterior estimates alongside prior estimates
+#'
+#' @param post Dataframe of posterior parameter estimates
+#' @param prior Dataframe of prior parameter estimates
+#' @param param Vector of parameter names to plot
+#'
+#' @return ggplot of parameter estimates
+#' @export
+#'
+#' @import ggplot2
+plot_prior_posterior <- function(post, prior, param) {
+
+  post$Distribution <- "Posterior"
+  prior$Distribution <- "Prior"
+  tmp <- rbind(post[post[["Variable"]] %in% param, ],
+               prior[prior[["Variable"]] %in% param, ])
+  tmp$Distribution <- factor(tmp$Distribution, levels = c("Prior", "Posterior")) # to show posterior on top
+
+  ggplot(data = tmp, aes_string(x = "Variable", y = "Mean", ymin = "`5%`", ymax = "`95%`", colour = "Distribution")) +
+    geom_pointrange(position = position_dodge2(width = .3), size = 1.2) +
+    scale_colour_manual(values = c("#E69F00", "#000000")) +
+    coord_flip() +
+    labs(colour = "", x = "", y = "Estimate") +
+    theme_bw(base_size = 20) +
+    theme(legend.position = "top")
+}
