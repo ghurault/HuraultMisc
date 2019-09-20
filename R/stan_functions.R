@@ -98,8 +98,6 @@ process_replications <- function(fit, idx, parName, type = "continuous", bounds,
 #' @return ggplot of the distribution
 #' @export
 #'
-#' @examples
-#'
 #' @import ggplot2
 PPC_group_distribution <- function(fit, parName, nDraws = 1) {
 
