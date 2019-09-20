@@ -112,7 +112,7 @@ PPC_group_distribution <- function(fit, parName, nDraws = 1) {
   }
   tmp$Draw <- factor(tmp$Draw)
 
-  ggplot(data = tmp, aes(x = Parameter, group = Draw)) +
+  ggplot(data = tmp, aes_string(x = "Parameter", group = "Draw")) +
     geom_density(colour = "#9ecae1") + # pastel blue
     scale_y_continuous(expand = c(0, 0)) +
     labs(x = parName, y = "Density") +

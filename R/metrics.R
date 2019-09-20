@@ -52,7 +52,7 @@ compute_calibration <- function(forecast, outcome, method = "smoothing", CI = NU
   } else if (method == "binning") {
 
     if (is.null(binwidth)) {
-      binwidth <- 1 / nclass.Sturges(as.vector(as.matrix(forecast))) # Automatic bin width selection
+      binwidth <- 1 / grDevices::nclass.Sturges(as.vector(as.matrix(forecast))) # Automatic bin width selection
     } else if (binwidth <= 0 | binwidth >= 1) {
       stop("binwidth should be NULL or between 0 and 1")
     }

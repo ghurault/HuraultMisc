@@ -13,5 +13,7 @@ Imports:
     reshape2,
     rstan,
     cowplot,
-    Hmisc
+    Hmisc,
+    stats,
+    grDevices
 RoxygenNote: 6.1.1
