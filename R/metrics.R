@@ -19,7 +19,7 @@
 #' lapply(c("binning", "smoothing"),
 #'        function(m) {
 #'          cal <- compute_calibration(f, o, method = m)
-#'          with(cal, plot(Forecast, Frequency, type = "l))
+#'          with(cal, plot(Forecast, Frequency, type = "l"))
 #'          abline(c(0, 1), col = "red")
 #'        })
 compute_calibration <- function(forecast, outcome, method = "smoothing", CI = NULL , binwidth = NULL, ...) {

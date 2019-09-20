@@ -26,3 +26,14 @@ Dataframe with colums Forecast (bins), Frequency (frequency of outcomes in the b
 \description{
 Estimate calibration given forecasts and corresponding outcomes
 }
+\examples{
+N <- 1e4
+f <- rbeta(N, 1, 1)
+o <- sapply(f, function(x) {rbinom(1, 1, x)})
+lapply(c("binning", "smoothing"),
+       function(m) {
+         cal <- compute_calibration(f, o, method = m)
+         with(cal, plot(Forecast, Frequency, type = "l"))
+         abline(c(0, 1), col = "red")
+       })
+}
