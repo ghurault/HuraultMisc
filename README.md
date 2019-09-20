@@ -23,6 +23,7 @@ library(HuraultMisc)
 - `summary_statistics(fit, param, quant = c(.05, .25, .5, .75, .95))`
 - `process_replications(fit, idx, parName, type = "continuous", bounds, nDensity = 2^7, nDraws = 100)`
 - `PPC_group_distribution(fit, parName, nDraws = 1)`
+- `plot_prior_posterior(post, prior, param)`
 
 ### Evaluation metrics
 
