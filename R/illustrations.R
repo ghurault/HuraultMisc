@@ -85,7 +85,7 @@ illustrate_RPS <- function(mu = 5, sigma = 1, observed = 6) {
 #' @examples
 #' illustrate_forward_chaining()
 #'
-#' @import ggplot2
+#' @import ggplot2 stats
 illustrate_forward_chaining <- function(horizon = 7, n_it = 5) {
 
   df <- do.call(rbind,

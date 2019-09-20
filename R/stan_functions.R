@@ -51,6 +51,7 @@ summary_statistics <- function(fit, param, quant = c(.05, .25, .5, .75, .95)) {
 #'
 #' @return Dataframe
 #' @export
+#' @import stats
 process_replications <- function(fit, idx, parName, type = "continuous", bounds, nDensity = 2^7, nDraws = 100) {
 
   pred <- rstan::extract(fit, pars = parName)[[1]]

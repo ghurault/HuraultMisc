@@ -11,6 +11,7 @@
 #'
 #' @return Dataframe with colums Forecast (bins), Frequency (frequency of outcomes in the bin), Lower (lower bound of the CI) and Upper (upper bound of the CI)
 #' @export
+#' @import stats
 #'
 #' @examples
 #' N <- 1e4
