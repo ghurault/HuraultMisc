@@ -1,6 +1,7 @@
 # HuraultMisc
 
 <!-- badges: start -->
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 <!-- badges: end -->
 
 HuraultMisc is my personal R package regrouping functions used across different projects.
