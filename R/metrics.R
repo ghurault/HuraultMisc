@@ -25,6 +25,12 @@
 #'        })
 compute_calibration <- function(forecast, outcome, method = "smoothing", CI = NULL , binwidth = NULL, ...) {
 
+  if (max(forecast) > 1 | min(forecast) < 0) {
+    stop("forecast values should be between 0 and 1")
+  }
+  if (sum(outcome == 0 | outcome == 1, na.rm = TRUE) != length(outcome)) {
+    stop("outcome values should be only 0 or 1")
+  }
   if (!is.null(CI)){
     if (CI >= 1 | CI <= 0)
       stop("If not NULL, CI should be between 0 and 1")
@@ -96,6 +102,13 @@ compute_calibration <- function(forecast, outcome, method = "smoothing", CI = NU
 #' @examples
 #' compute_resolution(seq(0, 1, .1), 0.5)
 compute_resolution <- function(f, p0) {
+
+  if (max(f) > 1 | min(f) < 0) {
+    stop("f values should be between 0 and 1")
+  }
+  if (max(p0) > 1 | min(p0) < 0) {
+    stop("p0 values should be between 0 and 1")
+  }
 
   reso <- mean((f - p0)^2)
   uncertainty <- mean(p0 * (1 - p0))
