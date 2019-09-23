@@ -26,6 +26,7 @@ test_that("Calibration curve are accurate", {
   # Checking errors
   expect_error(compute_calibration(c(1.1, 0.5), c(1, 0), method = "smoothing"))
   expect_error(compute_calibration(c(0.9, 0.5), c(1.1, 0), method = "smoothing"))
+  expect_error(with(df, compute_calibration(Forecast, Outcome, method = "smoothing", CI = 95)))
   expect_error(with(df, compute_calibration(Forecast, Outcome, method = "binning", binwidth = 2)))
   expect_error(with(df, compute_calibration(Forecast, Outcome, method = "kernel")))
 })
