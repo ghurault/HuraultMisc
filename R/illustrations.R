@@ -21,6 +21,13 @@
 #' @import ggplot2 stats
 illustrate_RPS <- function(mu = 5, sigma = 1, observed = 6) {
 
+  if (observed < 0 | observed > 10) {
+    stop("observed should be between 0 and 10")
+  }
+  if ((mu / sigma) < -2 | (mu - 10) / sigma > 2) {
+    stop("If the distribution mass is too much outside [0, 10], there will be numerical errors")
+  }
+
   cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
   lwidth <- 3 # linewidth
   x <- seq(0, 10, .01)
