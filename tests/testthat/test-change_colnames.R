@@ -6,7 +6,7 @@ test_that("Changing column names work", {
   expect_equal(colnames(df1)[3], "Cc")
 })
 
-test_that("Checking dataframe is unchanged", {
+test_that("Dataframe is unchanged", {
   df0 <- data.frame(A = 1:2, B = 3:4, C = 5:6)
   df1 <- change_colnames(df0, c("A", "C"), c("Aa", "Cc"))
   expect_equal(ncol(df1), ncol(df0))
