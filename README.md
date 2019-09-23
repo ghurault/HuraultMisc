@@ -2,6 +2,7 @@
 
 <!-- badges: start -->
 [![Travis build status](https://travis-ci.org/ghurault/HuraultMisc.svg?branch=master)](https://travis-ci.org/ghurault/HuraultMisc)
+[![Codecov test coverage](https://codecov.io/gh/ghurault/HuraultMisc/branch/master/graph/badge.svg)](https://codecov.io/gh/ghurault/HuraultMisc?branch=master)
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 <!-- badges: end -->
