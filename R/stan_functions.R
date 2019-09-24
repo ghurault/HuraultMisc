@@ -45,26 +45,37 @@ summary_statistics <- function(fit, param, quant = c(.05, .25, .5, .75, .95)) {
 #' @param idx Dataframe for translating the indices of the replication parameters into more informative variable
 #' @param parName Name of the replication parameter
 #' @param type Indicates how the distribution is summarised. Values can take "continuous", "discrete" or "samples".
-#' @param bounds Bounds of the distribution (vector of length 2)
+#' @param bounds NULL or vector of length 2 representing the bounds of the distribution if it needs to be truncated.
 #' @param nDensity Number of equally spaced points at which the density is to be estimated (better to use a power of 2). Applies when type = "continuous".
 #' @param nDraws Number of draws from the distribution. Applies when type = "samples"
 #'
 #' @return Dataframe
 #' @export
 #' @import stats
-process_replications <- function(fit, idx, parName, type = "continuous", bounds, nDensity = 2^7, nDraws = 100) {
+process_replications <- function(fit, idx, parName, type = "continuous", bounds = NULL, nDensity = 2^7, nDraws = 100) {
 
   pred <- rstan::extract(fit, pars = parName)[[1]]
+  if (is.null(bounds)) {
+    # Even if the distribution is continuous, it needs to be truncated for type "continuous" or "discrete"
+    bounds <- quantile(pred, probs = c(.001, 0.999))
+  }
   pred <- as.data.frame(pred)
 
   if (type == "samples"){
-    smp <- sample(1:nrow(pred), nDraws)
+    if (nDraws < 1 | nDraws > nrow(pred)) {
+      stop("nDraws should be between 1 and ", nrow(pred), " (number of posterior samples)")
+    } else {
+      smp <- sample(1:nrow(pred), nDraws)
+    }
   }
 
   tmp <- do.call("rbind",
                  lapply(1:ncol(pred), function(x) {
                    tmp <- pred[, x]
-                   tmp <- tmp[!(tmp < min(bounds) | tmp > max(bounds))] # truncate the distribution
+                   if (!is.null(bounds)) {
+                     # truncate the distribution if bounds are provided
+                     tmp <- tmp[!(tmp < min(bounds) | tmp > max(bounds))]
+                   }
                    if (type == "continuous") {
                      d <- density(tmp, kernel = "gaussian", from = min(bounds), to = max(bounds), n = nDensity) # select a power of 2 for n, not too much or it takes memory
                      data.frame(S = d$x, Density = d$y, Index = x)
@@ -103,6 +114,9 @@ process_replications <- function(fit, idx, parName, type = "continuous", bounds,
 PPC_group_distribution <- function(fit, parName, nDraws = 1) {
 
   tmp <- rstan::extract(fit, parName)[[1]]
+  if (nDraws < 1 | nDraws > nrow(tmp)) {
+    stop("nDraws should be between 1 and ", nrow(pred), " (number of posterior samples)")
+  }
   tmp <- tmp[sample(1:nrow(tmp), nDraws), ]
   if (nDraws == 1) {
     tmp <- data.frame(Patient = 1:length(tmp), Draw = 1, Parameter = tmp)
