@@ -22,12 +22,13 @@ library(HuraultMisc)
 - `change_colnames(df, current_names, new_names)`
 - `factor_to_numeric(df, factor_name)`
 
-### Stan related function
+### Stan/Bayesian workflow
 
 - `summary_statistics(fit, param, quant = c(.05, .25, .5, .75, .95))`
 - `process_replications(fit, idx, parName, type = "continuous", bounds, nDensity = 2^7, nDraws = 100)`
 - `PPC_group_distribution(fit, parName, nDraws = 1)`
 - `plot_prior_posterior(post, prior, param)`
+- `plot_coverage(post_samples, truth, CI = seq(0, 1, 0.05))`
 
 ### Evaluation metrics
 
