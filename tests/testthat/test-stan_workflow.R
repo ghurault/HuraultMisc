@@ -4,6 +4,8 @@
 
 # set.seed(1)
 
+library(rstan)
+
 # Data
 N_subject <- 20
 N_repeat <- c(2, 7, 3, 4, 8, 9, 9, 6, 3, 8, 5, 7, 6, 3, 2, 5, 5, 11, 4, 7) # rpois(N_subject, 5)
@@ -17,8 +19,8 @@ param <- c(param_pop, param_sub, param_obs)
 
 # Files
 # stan_code <- system.file("testdata", "hierarchical_model.stan",package="HuraultMisc", mustWork = TRUE)
-file_prior <- system.file("testdata", "prior_hierarchical.rds",package="HuraultMisc", mustWork = TRUE)
-file_fake <- system.file("testdata", "fit_hierarchical.rds",package="HuraultMisc", mustWork = TRUE)
+file_prior <- system.file("testdata", "prior_hierarchical.rds",package="HuraultMisc", mustWork = TRUE) # "inst/testdata/prior_hierarchical.rds"
+file_fake <- system.file("testdata", "fit_hierarchical.rds",package="HuraultMisc", mustWork = TRUE) # "inst/testdata/fit_hierarchical.rds"
 
 # Dataframe to translate observation parameters' indices into patient and time values
 observations_dictionary <- function(data_stan) {
@@ -36,7 +38,7 @@ data_prior <- list(N = N,
                    N_repeat = N_repeat,
                    y = rep(1, N), # doesn't matter
                    run = 0)
-# fit_prior <- stan(file = "hierarchical_model.stan", data = data_prior)
+# fit_prior <- stan(file = stan_code, data = data_prior)
 # saveRDS(fit_prior, file = "prior_hierarchical.rds")
 fit_prior <- readRDS(file_prior)
 
@@ -46,7 +48,7 @@ fit_prior <- readRDS(file_prior)
 
 # Simulate fake data from prior
 draw <- 2019
-y_sim <- rstan::extract(fit_prior, pars = "y_rep")[[1]][draw, ]
+y_sim <- extract(fit_prior, pars = "y_rep")[[1]][draw, ]
 
 # Fit fake data -----------------------------------------------------------
 
@@ -103,4 +105,12 @@ test_that("plot_prior_posterior returns a ggplot object", {
   par_fake <- summary_statistics(fit_fake, param)
 
   expect_is(plot_prior_posterior(par_fake, par_prior, param_pop), "ggplot")
+})
+
+test_that("plot_coverage works", {
+  truth <- rstan::extract(fit_prior, pars = "mu")[[1]][draw, ]
+  post_samples <- rstan::extract(fit_fake, pars = "mu")[[1]]
+
+  expect_is(plot_coverage(post_samples, truth), "ggplot")
+  expect_error(plot_coverage(post_samples, truth[-1]))
 })
