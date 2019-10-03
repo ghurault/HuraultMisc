@@ -107,10 +107,11 @@ test_that("plot_prior_posterior returns a ggplot object", {
   expect_is(plot_prior_posterior(par_fake, par_prior, param_pop), "ggplot")
 })
 
-test_that("plot_coverage works", {
+test_that("coverage is accurate", {
   truth <- rstan::extract(fit_prior, pars = "mu")[[1]][draw, ]
   post_samples <- rstan::extract(fit_fake, pars = "mu")[[1]]
 
-  expect_is(plot_coverage(post_samples, truth), "ggplot")
-  expect_error(plot_coverage(post_samples, truth[-1]))
+  cov_rmse <- with(compute_coverage(post_samples, truth),
+                   sqrt(mean((Nominal - Coverage)^2)))
+  expect_lt(cov_rmse, 0.1)
 })

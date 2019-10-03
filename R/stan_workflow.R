@@ -165,24 +165,17 @@ plot_prior_posterior <- function(post, prior, param) {
 
 # Plot coverage (not directly Stan-related) -----------------------------------------------------------
 
-#' Plot coverage of CI for different confidence level.
+#' Compute coverage of CI for different confidence level
+#'
 #' Useful for fake data check.
 #'
 #' @param post_samples Matrix of posterior samples. Rows represent a sample and columns represent variables.
 #' @param truth Vector of true parameter values (should be the same length as the number of columns in post_samples).
 #' @param CI Vector of confidence levels.
 #'
-#' @return Ggplot of coverage as a function of the nominal coverage (confidence level), with 95% uncertainty interval
-#' @export
-#' @import ggplot2
-#'
-#' @examples
-#' N <- 100
-#' N_post <- 1e3
-#' truth <- rep(0, N)
-#' post_samples <- sapply(rnorm(N, 0, 1), function(x) {rnorm(N_post, x, 1)})
-#' plot_coverage(post_samples, truth)
-plot_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05)) {
+#' @return Dataframe containing coverage (and uncertainty interval for the coverage) for different confidence level (nominal)
+compute_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05)) {
+
   if (ncol(post_samples) != length(truth)) {
     stop("The number of columns in post_samples should be equal to the length of truth")
   }
@@ -206,16 +199,38 @@ plot_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05)) {
   # Compute coverage and confidence levels (95% fot coverage)
   cov <- do.call(data.frame,
                  aggregate(Coverage ~ Nominal, df, function(x) {
-                   with(binom.test(sum(x), length(x), alternative = "two.sided", conf.level = 0.95),
-                        c(estimate, conf.int))
+                   Hmisc::binconf(sum(x), length(x), alpha = 0.05, method = "exact")
                  }))
   colnames(cov)[-1] <- c("Coverage", "Lower", "Upper")
 
-  # Plot
-  ggplot(data = cov, aes_string(x = "Nominal", y = "Coverage", ymin = "Lower", ymax = "Upper")) +
+  return(cov)
+}
+
+#' Plot coverage of CI for different confidence level
+#'
+#' Useful for fake data check.
+#'
+#' @param post_samples Matrix of posterior samples. Rows represent a sample and columns represent variables.
+#' @param truth Vector of true parameter values (should be the same length as the number of columns in post_samples).
+#' @param CI Vector of confidence levels.
+#'
+#' @return Ggplot of coverage as a function of the nominal coverage (confidence level), with 95% uncertainty interval
+#' @export
+#' @import ggplot2
+#'
+#' @examples
+#' N <- 100
+#' N_post <- 1e3
+#' truth <- rep(0, N)
+#' post_samples <- sapply(rnorm(N, 0, 1), function(x) {rnorm(N_post, x, 1)})
+#' plot_coverage(post_samples, truth)
+plot_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05)) {
+
+  ggplot(data =  compute_coverage(post_samples, truth, CI),
+         aes_string(x = "Nominal", y = "Coverage", ymin = "Lower", ymax = "Upper")) +
     geom_line() +
     geom_ribbon(alpha = 0.5) +
-    geom_abline(intercept = 0, slope = 1, col = "red") +
+    geom_abline(intercept = 0, slope = 1, col = "red", linetype = "dashed") +
     coord_cartesian(xlim = c(0, 1), ylim = c(0, 1), expand = FALSE) +
     theme_bw(base_size = 15)
 }
