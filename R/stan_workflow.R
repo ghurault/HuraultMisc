@@ -165,15 +165,33 @@ plot_prior_posterior <- function(post, prior, param) {
 
 # Plot coverage (not directly Stan-related) -----------------------------------------------------------
 
-#' Compute coverage of CI for different confidence level
+#' Coverage probability
 #'
+#' Compute and plot coverage of CI for different confidence level.
 #' Useful for fake data check.
 #'
 #' @param post_samples Matrix of posterior samples. Rows represent a sample and columns represent variables.
 #' @param truth Vector of true parameter values (should be the same length as the number of columns in post_samples).
 #' @param CI Vector of confidence levels.
 #'
-#' @return Dataframe containing coverage (and uncertainty interval for the coverage) for different confidence level (nominal)
+#' @name coverage
+#'
+#' @return
+#' compute_coverage returns a dataframe containing coverage (and 95% uncertainty interval for the coverage) for different confidence level (nominal coverage).
+#' plot_coverage returns a ggplot of the coverage as the function of the nominal coverage with 95% uncertainty interval.
+#'
+#' @examples
+#' N <- 100
+#' N_post <- 1e3
+#' truth <- rep(0, N)
+#' post_samples <- sapply(rnorm(N, 0, 1), function(x) {rnorm(N_post, x, 1)})
+#'
+#' compute_coverage(post_samples, truth)
+#' plot_coverage(post_samples, truth)
+NULL
+
+#' @rdname coverage
+#' @export
 compute_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05)) {
 
   if (ncol(post_samples) != length(truth)) {
@@ -206,24 +224,9 @@ compute_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05)) {
   return(cov)
 }
 
-#' Plot coverage of CI for different confidence level
-#'
-#' Useful for fake data check.
-#'
-#' @param post_samples Matrix of posterior samples. Rows represent a sample and columns represent variables.
-#' @param truth Vector of true parameter values (should be the same length as the number of columns in post_samples).
-#' @param CI Vector of confidence levels.
-#'
-#' @return Ggplot of coverage as a function of the nominal coverage (confidence level), with 95% uncertainty interval
+#' @rdname coverage
 #' @export
 #' @import ggplot2
-#'
-#' @examples
-#' N <- 100
-#' N_post <- 1e3
-#' truth <- rep(0, N)
-#' post_samples <- sapply(rnorm(N, 0, 1), function(x) {rnorm(N_post, x, 1)})
-#' plot_coverage(post_samples, truth)
 plot_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05)) {
 
   ggplot(data =  compute_coverage(post_samples, truth, CI),
