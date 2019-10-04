@@ -18,9 +18,7 @@ param_obs <- c("y_rep")
 param <- c(param_pop, param_sub, param_obs)
 
 # Files
-# stan_code <- system.file("testdata", "hierarchical_model.stan",package="HuraultMisc", mustWork = TRUE)
-file_prior <- system.file("testdata", "prior_hierarchical.rds",package="HuraultMisc", mustWork = TRUE) # "inst/testdata/prior_hierarchical.rds"
-file_fake <- system.file("testdata", "fit_hierarchical.rds",package="HuraultMisc", mustWork = TRUE) # "inst/testdata/fit_hierarchical.rds"
+compiled_model <- readRDS(system.file("testdata", "hierarchical_compiled.rds",package="HuraultMisc", mustWork = TRUE))
 
 # Dataframe to translate observation parameters' indices into patient and time values
 observations_dictionary <- function(data_stan) {
@@ -38,28 +36,24 @@ data_prior <- list(N = N,
                    N_repeat = N_repeat,
                    y = rep(1, N), # doesn't matter
                    run = 0)
-# fit_prior <- stan(file = stan_code, data = data_prior)
-# saveRDS(fit_prior, file = "prior_hierarchical.rds")
-fit_prior <- readRDS(file_prior)
+fit_prior <- sampling(compiled_model, data = data_prior)
 
 # Check fit
 # check_hmc_diagnostics(fit_prior)
 # pairs(fit_prior, pars = param_pop)
 
+# Fit fake data -----------------------------------------------------------
+
 # Simulate fake data from prior
 draw <- 2019
 y_sim <- extract(fit_prior, pars = "y_rep")[[1]][draw, ]
-
-# Fit fake data -----------------------------------------------------------
 
 data_fake <- list(N = N,
                   N_subject = N_subject,
                   N_repeat = N_repeat,
                   y = y_sim,
                   run = 1)
-# fit_fake <- stan(file = "hierarchical_model.stan", data = data_fake)
-# saveRDS(fit_fake, file = "fit_hierarchical.rds")
-fit_fake <- readRDS(file_fake)
+fit_fake <- sampling(compiled_model, data = data_fake)
 
 # Check fit
 # check_hmc_diagnostics(fit_fake)
