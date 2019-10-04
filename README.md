@@ -28,6 +28,7 @@ library(HuraultMisc)
 - `process_replications(fit, idx, parName, type = "continuous", bounds, nDensity = 2^7, nDraws = 100)`
 - `PPC_group_distribution(fit, parName, nDraws = 1)`
 - `plot_prior_posterior(post, prior, param)`
+- `compute_coverage(post_samples, truth, CI = seq(0, 1, 0.05))`
 - `plot_coverage(post_samples, truth, CI = seq(0, 1, 0.05))`
 
 ### Evaluation metrics
