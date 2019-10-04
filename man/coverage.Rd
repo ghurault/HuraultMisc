@@ -18,8 +18,8 @@ plot_coverage(post_samples, truth, CI = seq(0, 1, 0.05))
 \item{CI}{Vector of confidence levels.}
 }
 \value{
-compute_coverage returns a dataframe containing coverage (and 95% uncertainty interval for the coverage) for different confidence level (nominal coverage).
-plot_coverage returns a ggplot of the coverage as the function of the nominal coverage with 95% uncertainty interval.
+compute_coverage returns a dataframe containing coverage (and 95\% uncertainty interval for the coverage) for different confidence level (nominal coverage).
+plot_coverage returns a ggplot of the coverage as the function of the nominal coverage with 95\% uncertainty interval.
 }
 \description{
 Compute and plot coverage of CI for different confidence level.
