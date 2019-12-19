@@ -275,8 +275,6 @@ plot_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05)) {
     theme_bw(base_size = 15)
 }
 
-
-
 # Parameters from a single draw -------------------------------------------
 
 #' Extract parameters from a single draw
@@ -287,8 +285,6 @@ plot_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05)) {
 #'
 #' @return Dataframe
 #' @export
-#'
-#' @examples
 extract_parameters_from_draw <- function(fit, param, draw = 1) {
 
   par <- rstan::extract(fit, pars = param)
