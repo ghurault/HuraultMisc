@@ -63,7 +63,7 @@ process_replications <- function(fit, idx = NULL, parName, type = c("continuous"
   }
   pred <- as.data.frame(pred)
 
-  if (type == "samples"){
+  if (type == "samples") {
     if (nDraws < 1 | nDraws > nrow(pred)) {
       stop("nDraws should be between 1 and ", nrow(pred), " (number of posterior samples)")
     } else {
