@@ -4,13 +4,20 @@
 \alias{process_replications}
 \title{Extract posterior predictive distribution}
 \usage{
-process_replications(fit, idx, parName, type = "continuous",
-  bounds = NULL, nDensity = 2^7, nDraws = 100)
+process_replications(
+  fit,
+  idx = NULL,
+  parName,
+  type = "continuous",
+  bounds = NULL,
+  nDensity = 2^7,
+  nDraws = 100
+)
 }
 \arguments{
 \item{fit}{Stanfit object}
 
-\item{idx}{Dataframe for translating the indices of the replication parameters into more informative variable}
+\item{idx}{Dataframe for translating the indices of the replication parameters into more informative variable (can be NULL)}
 
 \item{parName}{Name of the replication parameter}
 

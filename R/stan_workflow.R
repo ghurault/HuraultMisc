@@ -42,7 +42,7 @@ summary_statistics <- function(fit, param, quant = c(.05, .25, .5, .75, .95)) {
 #' The Posterior predictive distribution is extracted as a "continuous" function (cf. density), as a "discrete" function (cf. probability) or as "samples" (draws from the distribution)
 #'
 #' @param fit Stanfit object
-#' @param idx Dataframe for translating the indices of the replication parameters into more informative variable
+#' @param idx Dataframe for translating the indices of the replication parameters into more informative variable (can be NULL)
 #' @param parName Name of the replication parameter
 #' @param type Indicates how the distribution is summarised. Values can take "continuous", "discrete" or "samples".
 #' @param bounds NULL or vector of length 2 representing the bounds of the distribution if it needs to be truncated.
@@ -52,7 +52,7 @@ summary_statistics <- function(fit, param, quant = c(.05, .25, .5, .75, .95)) {
 #' @return Dataframe
 #' @export
 #' @import stats
-process_replications <- function(fit, idx, parName, type = "continuous", bounds = NULL, nDensity = 2^7, nDraws = 100) {
+process_replications <- function(fit, idx = NULL, parName, type = "continuous", bounds = NULL, nDensity = 2^7, nDraws = 100) {
 
   pred <- rstan::extract(fit, pars = parName)[[1]]
   if (is.null(bounds)) {
@@ -90,8 +90,10 @@ process_replications <- function(fit, idx, parName, type = "continuous", bounds 
                    }
                  }))
   tmp <- change_colnames(tmp, "S", parName)
-  tmp <- merge(tmp, idx, by = "Index", all = TRUE)
-  tmp$Index <- NULL
+  if (!is.null(idx) & "Index" %in% colnames(idx)) {
+    tmp <- merge(tmp, idx, by = "Index", all = TRUE)
+    tmp$Index <- NULL
+  }
 
   return(tmp)
 }
