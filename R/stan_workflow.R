@@ -35,6 +35,41 @@ summary_statistics <- function(fit, param, quant = c(.05, .25, .5, .75, .95)) {
   return(par)
 }
 
+# Extract parameters' CI --------------------------------------------------
+
+#' Extract parameters distribution as a series of credible interval around the median.
+#'
+#' A potential improvement could be to compute the highest density posterior intervals (around the mode, narrowest but not symmetrical and harder to find).
+#'
+#' @param fit Stanfit object
+#' @param param Vector of parameters to extract
+#' @param CI_width Vector containing the width of the credible intervals
+#'
+#' @return (Long) Dataframe with columns: Variable, Index, Lower, Upper, Width
+#' @export
+parameters_intervals <- function(fit, param, CI_width = seq(0.1, 0.9, 0.1)) {
+
+  if (max(CI_width) > 1 | min(CI_width) < 0) {
+    stop("CI_width values must be between 0 and 1")
+  }
+
+  bounds <- data.frame(lower = 0.5 - CI_width / 2,
+                       upper = 0.5 + CI_width /2,
+                       width = CI_width)
+
+  ss <- summary_statistics(fit, param, quant = c(rev(bounds[["lower"]]), bounds[["upper"]]))
+
+  do.call(rbind,
+          lapply(1:nrow(bounds),
+                 function(i) {
+                   lbl <- paste0(format(c(bounds$lower[i], bounds$upper[i]) * 100, trim = TRUE), "%")
+                   tmp <- ss[, c("Variable", "Index", lbl)]
+                   tmp <- change_colnames(tmp, lbl, c("Lower", "Upper"))
+                   tmp[["Width"]] <- bounds$width[i]
+                   return(tmp)
+                 }))
+}
+
 # Process replications ----------------------------------------------------
 
 #' Extract posterior predictive distribution

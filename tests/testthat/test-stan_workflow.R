@@ -126,4 +126,14 @@ test_that("extract_parameters_from_draw works", {
   expect_warning(extract_parameters_from_draw(fit_prior, param, 1e6))
 })
 
+test_that("parameters_intervals works", {
 
+  CI_width <- lapply(c(.05, .1), function(st) {seq(.05, .95, st)})
+  for (i in 1:length(CI_width)) {
+    tmp <- parameters_intervals(fit_fake, param, CI_width[[i]])
+    expect_equal(nrow(tmp), N_parameters * length(CI_width[[i]]))
+    expect_equal(sort(param), sort(as.character(unique(tmp[["Variable"]]))))
+  }
+  expect_error(parameters_intervals(fit_fake, param, c(seq(5, 95, 10))))
+
+})
