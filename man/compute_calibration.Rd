@@ -4,8 +4,14 @@
 \alias{compute_calibration}
 \title{Estimate calibration given forecasts and corresponding outcomes}
 \usage{
-compute_calibration(forecast, outcome, method = "smoothing", CI = NULL,
-  binwidth = NULL, ...)
+compute_calibration(
+  forecast,
+  outcome,
+  method = "smoothing",
+  CI = NULL,
+  binwidth = NULL,
+  ...
+)
 }
 \arguments{
 \item{forecast}{Vector of probability forecasts}
