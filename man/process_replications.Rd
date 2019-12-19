@@ -8,7 +8,7 @@ process_replications(
   fit,
   idx = NULL,
   parName,
-  type = "continuous",
+  type = c("continuous", "discrete", "samples"),
   bounds = NULL,
   nDensity = 2^7,
   nDraws = 100

@@ -23,7 +23,9 @@
 #'          with(cal, plot(Forecast, Frequency, type = "l"))
 #'          abline(c(0, 1), col = "red")
 #'        })
-compute_calibration <- function(forecast, outcome, method = "smoothing", CI = NULL , binwidth = NULL, ...) {
+compute_calibration <- function(forecast, outcome, method = c("smoothing", "binning"), CI = NULL , binwidth = NULL, ...) {
+
+  method <- match.arg(method)
 
   if (max(forecast) > 1 | min(forecast) < 0) {
     stop("forecast values should be between 0 and 1")
@@ -80,9 +82,8 @@ compute_calibration <- function(forecast, outcome, method = "smoothing", CI = NU
       out <- data.frame(Forecast = bins, Frequency = as.numeric(count_a / count_f))
     }
 
-  } else {
-    stop("method should be either smoothing or binning")
   }
+
   return(out)
 }
 

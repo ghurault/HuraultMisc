@@ -7,7 +7,7 @@
 compute_calibration(
   forecast,
   outcome,
-  method = "smoothing",
+  method = c("smoothing", "binning"),
   CI = NULL,
   binwidth = NULL,
   ...

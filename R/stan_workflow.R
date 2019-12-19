@@ -52,7 +52,9 @@ summary_statistics <- function(fit, param, quant = c(.05, .25, .5, .75, .95)) {
 #' @return Dataframe
 #' @export
 #' @import stats
-process_replications <- function(fit, idx = NULL, parName, type = "continuous", bounds = NULL, nDensity = 2^7, nDraws = 100) {
+process_replications <- function(fit, idx = NULL, parName, type = c("continuous", "discrete", "samples"), bounds = NULL, nDensity = 2^7, nDraws = 100) {
+
+  type <- match.arg(type)
 
   pred <- rstan::extract(fit, pars = parName)[[1]]
   if (is.null(bounds)) {
@@ -85,8 +87,6 @@ process_replications <- function(fit, idx = NULL, parName, type = "continuous", 
                      data.frame(S = min(bounds):max(bounds), Probability = as.numeric(d / sum(d)), Index = x)
                    } else if (type == "samples") {
                      data.frame(S = tmp[smp], Draw = 1:nDraws, Index = x)
-                   } else {
-                     stop("type should be either continuous, discrete or samples")
                    }
                  }))
   tmp <- change_colnames(tmp, "S", parName)
