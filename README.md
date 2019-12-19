@@ -30,6 +30,7 @@ library(HuraultMisc)
 - `plot_prior_posterior(post, prior, param)`
 - `compute_coverage(post_samples, truth, CI = seq(0, 1, 0.05))`
 - `plot_coverage(post_samples, truth, CI = seq(0, 1, 0.05))`
+- `extract_parameters_from_draw(fit, param, draw = 1)`
 
 ### Evaluation metrics
 

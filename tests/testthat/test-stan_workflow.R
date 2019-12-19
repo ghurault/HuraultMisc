@@ -67,9 +67,11 @@ par_fake <- summary_statistics(fit_fake, param)
 truth <- rstan::extract(fit_prior, pars = "mu")[[1]][draw, ]
 post_samples <- rstan::extract(fit_fake, pars = "mu")[[1]]
 
+N_parameters <- N *length(param_obs) + N_subject * length(param_sub) + length(param_pop)
+
 test_that("summary_statistics returns a correct dataframe", {
   expect_equal(dim(par_fake), dim(par_prior))
-  expect_equal(nrow(par_fake), N *length(param_obs) + N_subject * length(param_sub) + length(param_pop))
+  expect_equal(nrow(par_fake), N_parameters)
   expect_equal(nrow(par_fake[par_fake$Variable == "mu", ]), N_subject)
   expect_equal(nrow(par_fake[par_fake$Variable == "y_rep", ]), N)
 })
@@ -113,4 +115,15 @@ test_that("compute_coverage catch errors", {
 test_that("plot_coverage returns a ggplot object", {
   expect_is(plot_coverage(post_samples, truth), "ggplot")
 })
+
+test_that("extract_parameters_from_draw works", {
+  tmp <- extract_parameters_from_draw(fit_prior, param, 1)
+  expect_equal(nrow(tmp), N_parameters)
+  expect_equal(sort(param), sort(as.character(unique(tmp[["Parameter"]]))))
+
+  expect_warning(extract_parameters_from_draw(fit_prior, param, c(1, 2)))
+  expect_warning(extract_parameters_from_draw(fit_prior, param, 0))
+  expect_warning(extract_parameters_from_draw(fit_prior, param, 1e6))
+})
+
 

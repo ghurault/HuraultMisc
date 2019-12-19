@@ -239,3 +239,46 @@ plot_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05)) {
     coord_cartesian(xlim = c(0, 1), ylim = c(0, 1), expand = FALSE) +
     theme_bw(base_size = 15)
 }
+
+
+
+# Parameters from a single draw -------------------------------------------
+
+#' Extract parameters from a single draw
+#'
+#' @param fit Stanfit object
+#' @param param Vector of parameter names
+#' @param draw Index of the draw to extract the parameters from
+#'
+#' @return Dataframe
+#' @export
+#'
+#' @examples
+extract_parameters_from_draw <- function(fit, param, draw = 1) {
+
+  par <- rstan::extract(fit, pars = param)
+
+  draw <- as.integer(draw)
+  if (length(draw) > 1) {
+    warning("draw should be a single number, taking the first element")
+    draw <- draw[1]
+  }
+  if (dim(par[[1]])[1] < draw | draw < 1) {
+    warning("draw should be between 1 and the number of draws in the stanfit object, taking the first draw")
+    draw <- 1
+  }
+
+  do.call(rbind,
+          lapply(1:length(par),
+                 function(i) {
+                   tmp <- par[[i]]
+                   d <- dim(tmp)
+                   if (length(d) == 1) {
+                     data.frame(Parameter = names(par)[i], Value = tmp[draw], Index = NA)
+                   } else if (length(d) == 2) {
+                     data.frame(Parameter = names(par)[i], Value = tmp[draw, ], Index = 1:ncol(tmp))
+                   } else {
+                     stop("Parameters of more than one dimensions (e.g. matrix or array of array) are not supported yet")
+                   }
+                 }))
+}
