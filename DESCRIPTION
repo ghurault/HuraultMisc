@@ -17,7 +17,7 @@ Imports:
     Hmisc,
     stats,
     grDevices
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.0
 Suggests: 
     testthat (>= 2.1.0),
     covr
