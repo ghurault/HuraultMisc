@@ -55,6 +55,7 @@ parameters_intervals <- function(fit, param, CI_width = seq(0.1, 0.9, 0.1), type
   }
 
   type <- match.arg(type)
+
   if (type == "eti") {
     bounds <- data.frame(lower = 0.5 - CI_width / 2,
                          upper = 0.5 + CI_width /2,
@@ -62,7 +63,7 @@ parameters_intervals <- function(fit, param, CI_width = seq(0.1, 0.9, 0.1), type
 
     ss <- summary_statistics(fit, param, quant = c(rev(bounds[["lower"]]), bounds[["upper"]]))
 
-    do.call(rbind,
+    out <- do.call(rbind,
             lapply(1:nrow(bounds),
                    function(i) {
                      lbl <- paste0(format(c(bounds$lower[i], bounds$upper[i]) * 100, trim = TRUE), "%")
@@ -76,7 +77,7 @@ parameters_intervals <- function(fit, param, CI_width = seq(0.1, 0.9, 0.1), type
   if (type == "hdi") {
     par <- rstan::extract(fit, pars = param)
 
-    do.call(rbind,
+    out <- do.call(rbind,
             lapply(1:length(par),
                    function(i) {
                      # Loop over parameters
@@ -96,6 +97,7 @@ parameters_intervals <- function(fit, param, CI_width = seq(0.1, 0.9, 0.1), type
                    }))
   }
 
+  return(out)
 }
 
 # Process replications ----------------------------------------------------
