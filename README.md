@@ -31,7 +31,7 @@ library(HuraultMisc)
 - `compute_coverage(post_samples, truth, CI = seq(0, 1, 0.05))`
 - `plot_coverage(post_samples, truth, CI = seq(0, 1, 0.05))`
 - `extract_parameters_from_draw(fit, param, draw = 1)`
-- `parameters_intervals(fit, param, CI_width = seq(0.1, 0.9, 0.1))`
+- `parameters_intervals(fit, param, CI_width = seq(0.1, 0.9, 0.1), type = c("hdi", "eti"))`
 
 ### Evaluation metrics
 

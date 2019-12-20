@@ -4,7 +4,12 @@
 \alias{parameters_intervals}
 \title{Extract parameters distribution as a series of credible interval around the median.}
 \usage{
-parameters_intervals(fit, param, CI_width = seq(0.1, 0.9, 0.1))
+parameters_intervals(
+  fit,
+  param,
+  CI_width = seq(0.1, 0.9, 0.1),
+  type = c("hdi", "eti")
+)
 }
 \arguments{
 \item{fit}{Stanfit object}
@@ -12,6 +17,8 @@ parameters_intervals(fit, param, CI_width = seq(0.1, 0.9, 0.1))
 \item{param}{Vector of parameters to extract}
 
 \item{CI_width}{Vector containing the width of the credible intervals}
+
+\item{type}{Should be one of hdi (highest density interval, i.e. narrowest) or eti (equal-tailed interval, i.e. centered around median)}
 }
 \value{
 (Long) Dataframe with columns: Variable, Index, Lower, Upper, Width
