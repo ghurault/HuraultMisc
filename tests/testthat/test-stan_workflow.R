@@ -18,7 +18,7 @@ param_obs <- c("y_rep")
 param <- c(param_pop, param_sub, param_obs)
 
 # Files
-compiled_model <- readRDS(system.file("testdata", "hierarchical_compiled.rds",package="HuraultMisc", mustWork = TRUE))
+compiled_model <- readRDS(system.file("testdata", "hierarchical_compiled.rds", package = "HuraultMisc", mustWork = TRUE))
 
 # Dataframe to translate observation parameters' indices into patient and time values
 observations_dictionary <- function(data_stan) {
