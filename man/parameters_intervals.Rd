@@ -2,7 +2,7 @@
 % Please edit documentation in R/stan_workflow.R
 \name{parameters_intervals}
 \alias{parameters_intervals}
-\title{Extract parameters distribution as a series of credible interval around the median.}
+\title{Extract parameters distribution as a series of credible interval (equal-tailed or highest density)}
 \usage{
 parameters_intervals(
   fit,
@@ -24,5 +24,10 @@ parameters_intervals(
 (Long) Dataframe with columns: Variable, Index, Lower, Upper, Width
 }
 \description{
-A potential improvement could be to compute the highest density posterior intervals (around the mode, narrowest but not symmetrical and harder to find).
+Extract parameters distribution as a series of credible interval (equal-tailed or highest density)
 }
+\section{Note}{
+
+This function should not work for more than one-dimensional parameters
+}
+
