@@ -2,7 +2,7 @@
 % Please edit documentation in R/stan_workflow.R
 \name{parameters_intervals}
 \alias{parameters_intervals}
-\title{Extract parameters distribution as a series of credible interval (equal-tailed or highest density)}
+\title{Extract parameters' credible interval}
 \usage{
 parameters_intervals(
   fit,

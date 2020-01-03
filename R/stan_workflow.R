@@ -6,6 +6,9 @@
 #' @param param Parameters to extract
 #' @param quant Quantiles to extract
 #'
+#' @section Note:
+#' Not sure how this function works for more than one-dimensional (e.g. matrices) parameters
+#'
 #' @return Dataframe of posterior summary statistics
 #' @export
 summary_statistics <- function(fit, param, quant = c(.05, .25, .5, .75, .95)) {
@@ -37,6 +40,8 @@ summary_statistics <- function(fit, param, quant = c(.05, .25, .5, .75, .95)) {
 
 # Extract parameters' CI --------------------------------------------------
 
+#' Extract parameters' credible interval
+#'
 #' Extract parameters distribution as a series of credible interval (equal-tailed or highest density)
 #'
 #' @param fit Stanfit object
@@ -89,7 +94,6 @@ parameters_intervals <- function(fit, param, CI_width = seq(0.1, 0.9, 0.1), type
                                              ci <- HDInterval::hdi(par[[i]], credMass = q)
                                              ci <- as.data.frame(t(ci))
                                              colnames(ci) <- c("Lower", "Upper")
-
                                              if (nrow(ci) > 1) {
                                                ci[["Index"]] <- 1:nrow(ci)
                                              } else {

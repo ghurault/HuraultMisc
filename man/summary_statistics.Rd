@@ -19,3 +19,8 @@ Dataframe of posterior summary statistics
 \description{
 Extract summary statistics
 }
+\section{Note}{
+
+Not sure how this function works for more than one-dimensional (e.g. matrices) parameters
+}
+
