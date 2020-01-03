@@ -37,14 +37,15 @@ summary_statistics <- function(fit, param, quant = c(.05, .25, .5, .75, .95)) {
 
 # Extract parameters' CI --------------------------------------------------
 
-#' Extract parameters distribution as a series of credible interval around the median.
-#'
-#' A potential improvement could be to compute the highest density posterior intervals (around the mode, narrowest but not symmetrical and harder to find).
+#' Extract parameters distribution as a series of credible interval (equal-tailed or highest density)
 #'
 #' @param fit Stanfit object
 #' @param param Vector of parameters to extract
 #' @param CI_width Vector containing the width of the credible intervals
 #' @param type Should be one of hdi (highest density interval, i.e. narrowest) or eti (equal-tailed interval, i.e. centered around median)
+#'
+#' @section Note:
+#' This function should not work for more than one-dimensional parameters
 #'
 #' @return (Long) Dataframe with columns: Variable, Index, Lower, Upper, Width
 #' @export
@@ -88,7 +89,12 @@ parameters_intervals <- function(fit, param, CI_width = seq(0.1, 0.9, 0.1), type
                                              ci <- HDInterval::hdi(par[[i]], credMass = q)
                                              ci <- as.data.frame(t(ci))
                                              colnames(ci) <- c("Lower", "Upper")
-                                             ci[["Index"]] <- 1:ncol(par[[i]])
+
+                                             if (nrow(ci) > 1) {
+                                               ci[["Index"]] <- 1:nrow(ci)
+                                             } else {
+                                               ci[["Index"]] <- NA
+                                             }
                                              ci[["Width"]] <- q
                                              return(ci)
                                            }))
