@@ -160,16 +160,16 @@ process_replications <- function(fit, idx = NULL, parName, type = c("continuous"
                    }
                    if (type == "continuous") {
                      d <- density(tmp, kernel = "gaussian", from = min(bounds), to = max(bounds), n = nDensity) # select a power of 2 for n, not too much or it takes memory
-                     data.frame(S = d$x, Density = d$y, Index = x)
+                     data.frame(Value = d$x, Density = d$y, Index = x)
                    } else if (type == "discrete") {
                      tmp <- round(tmp)
                      d <- table(factor(tmp, levels = min(bounds):max(bounds)))
-                     data.frame(S = min(bounds):max(bounds), Probability = as.numeric(d / sum(d)), Index = x)
+                     data.frame(Value = min(bounds):max(bounds), Probability = as.numeric(d / sum(d)), Index = x)
                    } else if (type == "samples") {
-                     data.frame(S = tmp[smp], Draw = 1:nDraws, Index = x)
+                     data.frame(Value = tmp[smp], Draw = 1:nDraws, Index = x)
                    }
                  }))
-  tmp <- change_colnames(tmp, "S", parName)
+  tmp <- change_colnames(tmp, "Value", parName)
   if (!is.null(idx) & "Index" %in% colnames(idx)) {
     tmp <- merge(tmp, idx, by = "Index", all = TRUE)
     tmp$Index <- NULL
