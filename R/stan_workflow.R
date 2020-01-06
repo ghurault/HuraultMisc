@@ -134,7 +134,7 @@ process_replications <- function(fit, idx = NULL, parName, type = c("continuous"
 
   pred <- rstan::extract(fit, pars = parName)[[1]]
 
-  if (bounds_provided) {
+  if (!bounds_provided) {
     # Even if the distribution is continuous, it needs to be truncated for type "continuous" or "discrete"
     bounds <- quantile(pred, probs = c(.001, 0.999))
   }
