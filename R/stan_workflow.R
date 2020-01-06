@@ -142,10 +142,10 @@ process_replications <- function(fit, idx = NULL, parName, type = c("continuous"
 
   if (type == "samples") {
     if (nDraws < 1 | nDraws > nrow(pred)) {
-      stop("nDraws should be between 1 and ", nrow(pred), " (number of posterior samples)")
-    } else {
-      smp <- sample(1:nrow(pred), nDraws)
+      warning("nDraws should be between 1 and ", nrow(pred), " (number of posterior samples). nDraws set to 1")
+      nDraws <- 1
     }
+    smp <- sample(1:nrow(pred), nDraws)
   }
 
   tmp <- do.call("rbind",
