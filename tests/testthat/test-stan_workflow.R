@@ -87,7 +87,7 @@ test_that("process_replications works", {
   expect_true("Probability" %in% colnames(pred_disc))
   expect_true("Draw" %in% colnames(pred_samp))
 
-  expect_error(process_replications(fit_fake, idx, "y_rep", type = "samples", nDraws = 1e5))
+  expect_warning(process_replications(fit_fake, idx, "y_rep", type = "samples", nDraws = 1e5))
   expect_error(process_replications(fit_fake, idx, "y_rep", type = "spaghetti"))
 })
 
