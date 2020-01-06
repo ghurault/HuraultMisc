@@ -124,6 +124,9 @@ parameters_intervals <- function(fit, param, CI_width = seq(0.1, 0.9, 0.1), type
 #' @param nDensity Number of equally spaced points at which the density is to be estimated (better to use a power of 2). Applies when type = "continuous".
 #' @param nDraws Number of draws from the distribution. Applies when type = "samples"
 #'
+#' @section Note:
+#' This could just be a convenience function to summarise a distribution given as samples (not necessarily from a Stanfit object, could be vector or matrix) to a pdf, pmf, draws (or even CI by combining parameters_intervals)
+#'
 #' @return Dataframe
 #' @export
 #' @import stats

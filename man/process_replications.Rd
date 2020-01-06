@@ -35,3 +35,8 @@ Dataframe
 \description{
 The Posterior predictive distribution is extracted as a "continuous" function (cf. density), as a "discrete" function (cf. probability) or as "samples" (draws from the distribution)
 }
+\section{Note}{
+
+This could just be a convenience function to summarise a distribution given as samples (not necessarily from a Stanfit object, could be vector or matrix) to a pdf, pmf, draws (or even CI by combining parameters_intervals)
+}
+
