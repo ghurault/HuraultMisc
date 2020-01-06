@@ -132,7 +132,7 @@ test_that("parameters_intervals works", {
                    seq(.05, .95, .05))
   for (i in 1:length(CI_level)) {
     for (t in c("hdi", "eti")) {
-      tmp <- parameters_intervals(fit_fake, param, CI_width[[i]], type = t)
+      tmp <- parameters_intervals(fit_fake, param, CI_level[[i]], type = t)
       expect_equal(nrow(tmp), N_parameters * length(CI_level[[i]]))
       expect_equal(sort(param), sort(as.character(unique(tmp[["Variable"]]))))
     }
