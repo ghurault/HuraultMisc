@@ -130,9 +130,11 @@ parameters_intervals <- function(fit, param, CI_width = seq(0.1, 0.9, 0.1), type
 process_replications <- function(fit, idx = NULL, parName, type = c("continuous", "discrete", "samples"), bounds = NULL, nDensity = 2^7, nDraws = 100) {
 
   type <- match.arg(type)
+  bounds_provided <- !is.null(bounds)
 
   pred <- rstan::extract(fit, pars = parName)[[1]]
-  if (is.null(bounds)) {
+
+  if (bounds_provided) {
     # Even if the distribution is continuous, it needs to be truncated for type "continuous" or "discrete"
     bounds <- quantile(pred, probs = c(.001, 0.999))
   }
@@ -149,8 +151,8 @@ process_replications <- function(fit, idx = NULL, parName, type = c("continuous"
   tmp <- do.call("rbind",
                  lapply(1:ncol(pred), function(x) {
                    tmp <- pred[, x]
-                   if (!is.null(bounds)) {
-                     # truncate the distribution if bounds are provided
+                   if (bounds_provided) {
+                     # Truncate the distribution if bounds are provided
                      tmp <- tmp[!(tmp < min(bounds) | tmp > max(bounds))]
                    }
                    if (type == "continuous") {
