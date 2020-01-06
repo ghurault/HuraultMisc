@@ -46,65 +46,65 @@ summary_statistics <- function(fit, param, quant = c(.05, .25, .5, .75, .95)) {
 #'
 #' @param fit Stanfit object
 #' @param param Vector of parameters to extract
-#' @param CI_width Vector containing the width of the credible intervals
+#' @param CI_level Vector containing the level of the credible intervals
 #' @param type Should be one of hdi (highest density interval, i.e. narrowest) or eti (equal-tailed interval, i.e. centered around median)
 #'
 #' @section Note:
 #' This function should not work for more than one-dimensional parameters
 #'
-#' @return (Long) Dataframe with columns: Variable, Index, Lower, Upper, Width
+#' @return (Long) Dataframe with columns: Variable, Index, Lower, Upper, Level
 #' @export
-parameters_intervals <- function(fit, param, CI_width = seq(0.1, 0.9, 0.1), type = c("hdi", "eti")) {
+parameters_intervals <- function(fit, param, CI_level = seq(0.1, 0.9, 0.1), type = c("hdi", "eti")) {
 
-  if (max(CI_width) > 1 | min(CI_width) < 0) {
-    stop("CI_width values must be between 0 and 1")
+  if (max(CI_level) > 1 | min(CI_level) < 0) {
+    stop("CI_level values must be between 0 and 1")
   }
 
   type <- match.arg(type)
 
   if (type == "eti") {
-    bounds <- data.frame(lower = 0.5 - CI_width / 2,
-                         upper = 0.5 + CI_width /2,
-                         width = CI_width)
+    bounds <- data.frame(lower = 0.5 - CI_level / 2,
+                         upper = 0.5 + CI_level /2,
+                         level = CI_level)
 
     ss <- summary_statistics(fit, param, quant = c(rev(bounds[["lower"]]), bounds[["upper"]]))
 
     out <- do.call(rbind,
-            lapply(1:nrow(bounds),
-                   function(i) {
-                     lbl <- paste0(format(c(bounds$lower[i], bounds$upper[i]) * 100, trim = TRUE), "%")
-                     tmp <- ss[, c("Variable", "Index", lbl)]
-                     tmp <- change_colnames(tmp, lbl, c("Lower", "Upper"))
-                     tmp[["Width"]] <- bounds$width[i]
-                     return(tmp)
-                   }))
+                   lapply(1:nrow(bounds),
+                          function(i) {
+                            lbl <- paste0(format(c(bounds$lower[i], bounds$upper[i]) * 100, trim = TRUE), "%")
+                            tmp <- ss[, c("Variable", "Index", lbl)]
+                            tmp <- change_colnames(tmp, lbl, c("Lower", "Upper"))
+                            tmp[["Level"]] <- bounds$level[i]
+                            return(tmp)
+                          }))
   }
 
   if (type == "hdi") {
     par <- rstan::extract(fit, pars = param)
 
     out <- do.call(rbind,
-            lapply(1:length(par),
-                   function(i) {
-                     # Loop over parameters
-                     tmp <- do.call(rbind,
-                                    lapply(CI_width,
-                                           function(q) {
-                                             # Loop over CI width
-                                             ci <- HDInterval::hdi(par[[i]], credMass = q)
-                                             ci <- as.data.frame(t(ci))
-                                             colnames(ci) <- c("Lower", "Upper")
-                                             if (nrow(ci) > 1) {
-                                               ci[["Index"]] <- 1:nrow(ci)
-                                             } else {
-                                               ci[["Index"]] <- NA
-                                             }
-                                             ci[["Width"]] <- q
-                                             return(ci)
-                                           }))
-                     tmp[["Variable"]] <- names(par)[i]
-                     return(tmp)
-                   }))
+                   lapply(1:length(par),
+                          function(i) {
+                            # Loop over parameters
+                            tmp <- do.call(rbind,
+                                           lapply(CI_level,
+                                                  function(q) {
+                                                    # Loop over CI width
+                                                    ci <- HDInterval::hdi(par[[i]], credMass = q)
+                                                    ci <- as.data.frame(t(ci))
+                                                    colnames(ci) <- c("Lower", "Upper")
+                                                    if (nrow(ci) > 1) {
+                                                      ci[["Index"]] <- 1:nrow(ci)
+                                                    } else {
+                                                      ci[["Index"]] <- NA
+                                                    }
+                                                    ci[["Level"]] <- q
+                                                    return(ci)
+                                                  }))
+                            tmp[["Variable"]] <- names(par)[i]
+                            return(tmp)
+                          }))
   }
 
   return(out)

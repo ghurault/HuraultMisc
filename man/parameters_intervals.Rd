@@ -7,7 +7,7 @@
 parameters_intervals(
   fit,
   param,
-  CI_width = seq(0.1, 0.9, 0.1),
+  CI_level = seq(0.1, 0.9, 0.1),
   type = c("hdi", "eti")
 )
 }
@@ -16,12 +16,12 @@ parameters_intervals(
 
 \item{param}{Vector of parameters to extract}
 
-\item{CI_width}{Vector containing the width of the credible intervals}
+\item{CI_level}{Vector containing the level of the credible intervals}
 
 \item{type}{Should be one of hdi (highest density interval, i.e. narrowest) or eti (equal-tailed interval, i.e. centered around median)}
 }
 \value{
-(Long) Dataframe with columns: Variable, Index, Lower, Upper, Width
+(Long) Dataframe with columns: Variable, Index, Lower, Upper, Level
 }
 \description{
 Extract parameters distribution as a series of credible interval (equal-tailed or highest density)

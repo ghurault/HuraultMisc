@@ -128,12 +128,12 @@ test_that("extract_parameters_from_draw works", {
 
 test_that("parameters_intervals works", {
 
-  CI_width <- list(seq(.1, .9, .1),
+  CI_level <- list(seq(.1, .9, .1),
                    seq(.05, .95, .05))
-  for (i in 1:length(CI_width)) {
+  for (i in 1:length(CI_level)) {
     for (t in c("hdi", "eti")) {
       tmp <- parameters_intervals(fit_fake, param, CI_width[[i]], type = t)
-      expect_equal(nrow(tmp), N_parameters * length(CI_width[[i]]))
+      expect_equal(nrow(tmp), N_parameters * length(CI_level[[i]]))
       expect_equal(sort(param), sort(as.character(unique(tmp[["Variable"]]))))
     }
   }
