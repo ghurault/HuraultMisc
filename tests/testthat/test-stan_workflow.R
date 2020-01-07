@@ -16,6 +16,7 @@ param_pop <- c("mu_pop", "sigma_pop")
 param_sub <- c("mu")
 param_obs <- c("y_rep")
 param <- c(param_pop, param_sub, param_obs)
+N_parameters <- N *length(param_obs) + N_subject * length(param_sub) + length(param_pop)
 
 # Files
 compiled_model <- readRDS(system.file("testdata", "hierarchical_compiled.rds", package = "HuraultMisc", mustWork = TRUE))
@@ -59,15 +60,10 @@ fit_fake <- sampling(compiled_model, data = data_fake, refresh = 0)
 # check_hmc_diagnostics(fit_fake)
 # pairs(fit_fake, pars = param_pop)
 
-# Tests -------------------------------------------------------------------
+# Test summary_statistics -------------------------------------------------------------------
 
 par_prior <- summary_statistics(fit_prior, param)
 par_fake <- summary_statistics(fit_fake, param)
-
-truth <- rstan::extract(fit_prior, pars = "mu")[[1]][draw, ]
-post_samples <- rstan::extract(fit_fake, pars = "mu")[[1]]
-
-N_parameters <- N *length(param_obs) + N_subject * length(param_sub) + length(param_pop)
 
 test_that("summary_statistics returns a correct dataframe", {
   expect_equal(dim(par_fake), dim(par_prior))
@@ -76,66 +72,89 @@ test_that("summary_statistics returns a correct dataframe", {
   expect_equal(nrow(par_fake[par_fake$Variable == "y_rep", ]), N)
 })
 
+# Test extract_distribution and process_replications ----------------------
+
 test_that("extract_distribution works with different objects", {
 
-  # Stan input, continuous
-  dist_stan <- extract_distribution(fit_fake, parName = "y_rep", type = "continuous", support = c(-10, 10))
-  expect_true("Density" %in% colnames(dist_stan)) # check colnames
+  obj <- list(fit_fake,
+              matrix(rnorm(1e3), ncol = 10),
+              rnorm(1e3))
 
-  # Matrix input, discrete
-  dist_matrix <- extract_distribution(matrix(rnorm(1e3), ncol = 10), parName = "x", type = "discrete", support = -4:4)
-  expect_equal(length(unique(dist_matrix[["Index"]])), 10) # check index length
-
-  # Vector input, samples
-  dist_vector <- extract_distribution(rnorm(1e3), parName = "x", type = "samples")
-  expect_true(is.na(unique(dist_vector[["Index"]]))) # check index is NA
-  expect_true("Draw" %in% colnames(dist_vector)) # check colnames
-
-  # List input
-  expect_error(extract_distribution(rstan::extract(fit_fake, pars = "y_rep"), parName = "x", type = "eti"))
+  for (i in 1:length(obj)) {
+    dist <- extract_distribution(obj[[i]], parName = "y_rep", type = "continuous", support = c(-10, 10))
+    expect_true("Density" %in% colnames(dist)) # check colnames
+    # check index
+    if (i == 1) {
+      expect_equal(length(unique(dist[["Index"]])), N)
+    } else if (i == 2) {
+      expect_equal(length(unique(dist[["Index"]])), 10)
+    } else if (i == 3) {
+      expect_true(is.na(unique(dist[["Index"]])))
+    }
+  }
+  expect_error(extract_distribution(rstan::extract(fit_fake, pars = "y_rep"), parName = "x", type = "eti")) # list input
 })
 
-idx <- observations_dictionary(data_fake)
+test_that("extract_distribution works for different types", {
 
-test_that("process_replications returns a correct dataframe", {
-  pred_disc1 <- process_replications(fit_fake, idx, "y_rep", type = "discrete", bounds = c(-10, 10))
+  # Continuous
+  dist_cont <- extract_distribution(fit_fake, parName = "y_rep", type = "continuous", support = c(-10, 10))
+  expect_true("Density" %in% colnames(dist_cont)) # check colnames
+  expect_equal(range(dist_cont[["Value"]]), c(-10, 10)) # check support range
 
-  expect_true("Probability" %in% colnames(pred_disc1)) # check colnames
-  expect_equal(range(pred_disc1[["y_rep"]]), c(-10, 10)) # check support range
+  # Discrete
+  dist_disc <- extract_distribution(fit_fake, parName = "y_rep", type = "discrete", support = c(-10, 10))
+  expect_true("Probability" %in% colnames(dist_disc)) # check colnames
+  expect_equal(range(dist_disc[["Value"]]), c(-10, 10)) # check support range
 
-  # eti and hdi
+  # Samples
+  dist_samp <- extract_distribution(fit_fake, parName = "y_rep", type = "samples", nDraws = 100)
+  expect_true("Draw" %in% colnames(dist_samp)) # check colnames
+  expect_equal(nrow(dist_samp), 100 * N) # check nrow
+
+  # ETI and HDI
   CI_level <- list(seq(.1, .9, .1),
                    seq(.05, .95, .05))
   for (i in 1:length(CI_level)) {
     for (t in c("hdi", "eti")) {
-      tmp <- process_replications(fit_fake, parName = "y_rep", CI_level = CI_level[[i]], type = t)
-      expect_equal(nrow(tmp), N * length(CI_level[[i]])) # check nrow dataset
-      expect_true("Level" %in% colnames(tmp)) # check colnames
+      dist_ci <- extract_distribution(fit_fake, parName = "y_rep", CI_level = CI_level[[i]], type = t)
+      expect_equal(nrow(dist_ci), N * length(CI_level[[i]])) # check nrow
+      expect_true("Level" %in% colnames(dist_ci)) # check colnames
     }
   }
+
+  # Wrong type
+  expect_error(extract_distribution(fit_fake, parName = "y_rep", type = "spaghetti"))
+
 })
 
-test_that("extract_distribution or process_replications catch warnings and errors", {
-  expect_error(extract_distribution(fit_fake, parName = "y_rep", type = "hdi", CI_level = seq(5, 95, 10))) # check error in CI_level
+test_that("extract_distribution other failures and warnings", {
+  expect_error(extract_distribution(fit_fake, parName = "y_rep", type = "hdi", CI_level = seq(5, 95, 10))) # error in CI_level
   expect_warning(extract_distribution(fit_fake, parName = c("y_rep", "mu"))) # multiple parName
-  expect_error(extract_distribution(rnorm(1e3), parName = "x", transform = "log")) # check error that transform not a function
-  expect_error(process_replications(rnorm(1e3), idx = NULL, parName = "y_rep")) # check error that fit is not a stanfit object
-  expect_warning(process_replications(fit_fake, idx, "y_rep", type = "samples", nDraws = 1e5)) # check nDraws warning
-  expect_error(process_replications(fit_fake, idx, "y_rep", type = "spaghetti")) # check wrong type error
-  expect_warning(process_replications(fit_fake, idx, "y_rep", type = "continuous", bounds = NULL)) # check support warning
-  expect_warning(process_replications(fit_fake, idx, "y_rep", type = "discrete", bounds = NULL)) # check support warning
+  expect_error(extract_distribution(fit_fake, parName = "y_rep", transform = "log")) # transform not a function
+  expect_warning(extract_distribution(fit_fake, parName = "y_rep", type = "samples", nDraws = 1e5)) # nDraws warning
+  expect_warning(extract_distribution(fit_fake, parName = "y_rep", type = "continuous", support = NULL)) # support warning
+  expect_warning(extract_distribution(fit_fake, parName = "y_rep", type = "discrete", support = NULL)) # support warning
 })
 
-test_that("PPC_group_distribution returns a ggplot object", {
-  expect_is(PPC_group_distribution(fit_fake, "mu", 1), "ggplot")
-  expect_is(PPC_group_distribution(fit_fake, "mu", 100), "ggplot")
-  expect_error(PPC_group_distribution(fit_fake, "mu", 0))
-  expect_error(PPC_group_distribution(fit_fake, "mu", 1e5))
+idx <- observations_dictionary(data_fake)
+
+test_that("process_replications works", {
+  pred_cont <- process_replications(fit_fake, idx = idx, parName = "y_rep", bounds = c(-10, 10), type = "continuous")
+  expect_equal(range(pred_cont[["y_rep"]]), c(-10, 10)) # support works
+
+  # need to test whether the truncation works
 })
 
-test_that("plot_prior_posterior returns a ggplot object", {
-  expect_is(plot_prior_posterior(par_fake, par_prior, param_pop), "ggplot")
+test_that("process_replications failures and warnings", {
+  expect_warning(process_replications(fit_fake, idx = NULL, parName = "y_rep", bounds = NULL)) # support warning from extract_distribution
+  expect_error(process_replications(rnorm(1e3), idx = NULL, parName = "y_rep")) # fit is not a stanfit object
 })
+
+# Test coverage -----------------------------------------------------------
+
+truth <- rstan::extract(fit_prior, pars = "mu")[[1]][draw, ]
+post_samples <- rstan::extract(fit_fake, pars = "mu")[[1]]
 
 test_that("coverage is accurate", {
   cov_rmse <- with(compute_coverage(post_samples, truth),
@@ -150,6 +169,23 @@ test_that("compute_coverage catch errors", {
 test_that("plot_coverage returns a ggplot object", {
   expect_is(plot_coverage(post_samples, truth), "ggplot")
 })
+
+# Test PPC_group_distribution ----------------------------------------------------
+
+test_that("PPC_group_distribution returns a ggplot object", {
+  expect_is(PPC_group_distribution(fit_fake, "mu", 1), "ggplot")
+  expect_is(PPC_group_distribution(fit_fake, "mu", 100), "ggplot")
+  expect_error(PPC_group_distribution(fit_fake, "mu", 0))
+  expect_error(PPC_group_distribution(fit_fake, "mu", 1e5))
+})
+
+# Test plot_prior_posterior -----------------------------------------------
+
+test_that("plot_prior_posterior returns a ggplot object", {
+  expect_is(plot_prior_posterior(par_fake, par_prior, param_pop), "ggplot")
+})
+
+# Test extract_parameters_from_draw ---------------------------------------
 
 test_that("extract_parameters_from_draw works", {
   tmp <- extract_parameters_from_draw(fit_prior, param, 1)
