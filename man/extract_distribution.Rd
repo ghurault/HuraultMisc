@@ -10,7 +10,8 @@ extract_distribution(
   idx = NULL,
   parName,
   type = c("continuous", "discrete", "samples", "eti", "hdi"),
-  bounds = NULL,
+  support = NULL,
+  transform = identity,
   nDensity = 2^7,
   nDraws = 100,
   CI_level = seq(0.1, 0.9, 0.1)
@@ -36,13 +37,17 @@ process_replications(
 
 \item{type}{Indicates how the distribution is summarised.}
 
-\item{bounds}{NULL or vector of length 2 representing the bounds of the distribution if it needs to be truncated.}
+\item{support}{Support of the distribution. For type = "continuous", this must be the range of the distribution. For type = "discrete", this must be a vector of all possible values that the distribution can take. Can be NULL.}
+
+\item{transform}{Function to apply to the samples}
 
 \item{nDensity}{Number of equally spaced points at which the density is to be estimated (better to use a power of 2). Applies when type = "continuous".}
 
 \item{nDraws}{Number of draws from the distribution. Applies when type = "samples"}
 
 \item{CI_level}{Vector containing the level of the confidence/credible intervals}
+
+\item{bounds}{(only for process_replications) NULL or vector of length 2 representing the bounds of the distribution if it needs to be truncated.}
 }
 \value{
 Dataframe

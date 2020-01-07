@@ -113,11 +113,8 @@ parameters_intervals <- function(fit, param, CI_level = seq(0.1, 0.9, 0.1), type
 # Process replications ----------------------------------------------------
 
 # Replace by a convenience function to summarise a distribution given as samples to a pdf, pmf, draws, ci
-# - rename pred
 # - extend function to hande other inputs than Stanfit object (cf. class(fit) == "stanfit"); notably make sure it works for one dimensional vector (cf. Index)
-# - rename function (extract_distribution?) but keep process_replications as an alias (cf. https://stackoverflow.com/questions/9071514/r-package-development-function-aliases)
 # - extend function so that parNames can be a list of parameters (and instead of calling the value the name of the parameters, have a column variable)
-# - input a function for transforming the samples rather than using "bounds" (could use the transformation for truncation)
 # - update README
 
 # at the end, make changes to project to ultimately delete parameters_intervals
@@ -138,24 +135,36 @@ parameters_intervals <- function(fit, param, CI_level = seq(0.1, 0.9, 0.1), type
 #' @param idx Dataframe for translating the indices of the parameters into more informative variable (can be NULL)
 #' @param parName Name of the parameter to extract
 #' @param type Indicates how the distribution is summarised.
-#' @param bounds NULL or vector of length 2 representing the bounds of the distribution if it needs to be truncated.
+#' @param transform Function to apply to the samples
+#' @param support Support of the distribution. For type = "continuous", this must be the range of the distribution. For type = "discrete", this must be a vector of all possible values that the distribution can take. Can be NULL.
 #' @param nDensity Number of equally spaced points at which the density is to be estimated (better to use a power of 2). Applies when type = "continuous".
 #' @param nDraws Number of draws from the distribution. Applies when type = "samples"
 #' @param CI_level Vector containing the level of the confidence/credible intervals
+#' @param bounds (only for process_replications) NULL or vector of length 2 representing the bounds of the distribution if it needs to be truncated.
 #'
 #' @return Dataframe
 #' @export
 #' @import stats
-extract_distribution <- function(fit, idx = NULL, parName, type = c("continuous", "discrete", "samples", "eti", "hdi"), bounds = NULL, nDensity = 2^7, nDraws = 100, CI_level = seq(0.1, 0.9, 0.1)) {
+extract_distribution <- function(fit,
+                                 idx = NULL,
+                                 parName,
+                                 type = c("continuous", "discrete", "samples", "eti", "hdi"),
+                                 support = NULL,
+                                 transform = identity,
+                                 nDensity = 2^7,
+                                 nDraws = 100,
+                                 CI_level = seq(0.1, 0.9, 0.1)) {
 
   type <- match.arg(type)
-  bounds_provided <- !is.null(bounds)
 
   ps <- rstan::extract(fit, pars = parName)[[1]]
 
-  if (!bounds_provided) {
-    # Even if the distribution is continuous, it needs to be truncated for type "continuous" or "discrete"
-    bounds <- quantile(ps, probs = c(.001, 0.999))
+  if (is.null(support)) {
+    if (type == "continuous") {
+      support <- quantile(ps, probs = c(.001, 0.999))
+    } else if (type == "discrete") {
+      support <- min(ps):max(ps)
+    }
   }
 
   ps <- as.data.frame(ps)
@@ -172,21 +181,17 @@ extract_distribution <- function(fit, idx = NULL, parName, type = c("continuous"
                  lapply(1:ncol(ps),
                         function(i) {
                           # Loop over parameters (indexed by i)
-
                           x <- ps[, i]
-                          if (bounds_provided) {
-                            # Truncate the distribution if bounds are provided
-                            x <- x[!(x < min(bounds) | x > max(bounds))]
-                          }
+                          x <- transform(x)
                           if (type == "continuous") {
-                            d <- density(x, kernel = "gaussian", from = min(bounds), to = max(bounds), n = nDensity) # select a power of 2 for n, not too much or it takes memory
+                            d <- density(x, kernel = "gaussian", from = min(support), to = max(support), n = nDensity) # select a power of 2 for n, not too much or it takes memory
                             data.frame(Value = d$x,
                                        Density = d$y,
                                        Index = i)
                           } else if (type == "discrete") {
                             x <- round(x)
-                            d <- table(factor(x, levels = min(bounds):max(bounds)))
-                            data.frame(Value = min(bounds):max(bounds),
+                            d <- table(factor(x, levels = support))
+                            data.frame(Value = support,
                                        Probability = as.numeric(d / sum(d)),
                                        Index = i)
                           } else if (type == "samples") {
@@ -219,7 +224,33 @@ extract_distribution <- function(fit, idx = NULL, parName, type = c("continuous"
 
 #' @rdname extract_distribution
 #' @export
-process_replications <- extract_distribution
+process_replications <- function(fit,
+                                 idx = NULL,
+                                 parName,
+                                 type = c("continuous", "discrete", "samples", "eti", "hdi"),
+                                 bounds = NULL,
+                                 nDensity = 2^7,
+                                 nDraws = 100,
+                                 CI_level = seq(0.1, 0.9, 0.1)) {
+
+  if (is.null(bounds)) {
+    support <- NULL
+    transform <- identity
+  } else {
+    support <- min(bounds):max(bounds)
+    transform <- function(x) {x[!(x < min(bounds) | x > max(bounds))]}
+  }
+
+  extract_distribution(fit = fit,
+                       idx = idx,
+                       parName = parName,
+                       type = type,
+                       support = support,
+                       transform = transform,
+                       nDensity = nDensity,
+                       nDraws = nDraws,
+                       CI_level = CI_level)
+}
 
 
 # PPC distribution for single draw ----------------------------------------
