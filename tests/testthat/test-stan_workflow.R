@@ -76,20 +76,27 @@ test_that("summary_statistics returns a correct dataframe", {
   expect_equal(nrow(par_fake[par_fake$Variable == "y_rep", ]), N)
 })
 
-test_that("process_replications works", {
-  idx <- observations_dictionary(data_fake)
+idx <- observations_dictionary(data_fake)
 
-  pred_cont <- process_replications(fit_fake, idx, "y_rep", type = "continuous", bounds = NULL)
-  pred_disc <- process_replications(fit_fake, idx, "y_rep", type = "discrete", bounds = c(-10, 10))
-  pred_samp <- process_replications(fit_fake, idx, "y_rep", type = "samples")
+pred_cont <- process_replications(fit_fake, idx, "y_rep", type = "continuous", bounds = NULL)
+pred_disc <- process_replications(fit_fake, idx, "y_rep", type = "discrete", bounds = c(-10, 10))
+pred_samp <- process_replications(fit_fake, idx, "y_rep", type = "samples")
+pred_eti <- process_replications(fit_fake, idx, "y_rep", type = "eti")
+pred_hdi <- process_replications(fit_fake, idx, "y_rep", type = "hdi")
 
+test_that("process_replications returns a correct dataframe", {
   expect_true("Density" %in% colnames(pred_cont))
   expect_true("Probability" %in% colnames(pred_disc))
   expect_true("Draw" %in% colnames(pred_samp))
+  expect_true("Level" %in% colnames(pred_eti))
+  expect_true("Level" %in% colnames(pred_hdi))
+})
 
+test_that("process_replications catch warnings and errors", {
   expect_warning(process_replications(fit_fake, idx, "y_rep", type = "samples", nDraws = 1e5))
   expect_error(process_replications(fit_fake, idx, "y_rep", type = "spaghetti"))
 })
+
 
 test_that("PPC_group_distribution returns a ggplot object", {
   expect_is(PPC_group_distribution(fit_fake, "mu", 1), "ggplot")
