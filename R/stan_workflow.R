@@ -162,13 +162,23 @@ extract_distribution <- function(object,
     stop("object of class ", class(object), " not supported")
   }
 
+  parName <- as.character(parName)
+  if (length(parName) > 1) {
+    parName <- parName[1]
+    warning("parName should be of length 1, taking the first element: ", parName)
+  }
+
+  if (class(transform) != "function") {
+    stop(transform, " should be a function")
+  }
+
   if (is.null(support)) {
-    warning("support is NULL, resorting to defaults")
     if (type == "continuous") {
       support <- quantile(ps, probs = c(.001, 0.999))
     } else if (type == "discrete") {
       support <- min(ps):max(ps)
     }
+    warning("support is NULL, taking the following values: ", support)
   }
 
   if (type == "samples") {
