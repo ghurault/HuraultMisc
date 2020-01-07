@@ -157,6 +157,7 @@ extract_distribution <- function(fit,
   ps <- rstan::extract(fit, pars = parName)[[1]]
 
   if (is.null(support)) {
+    warning("support is NULL, resorting to defaults")
     if (type == "continuous") {
       support <- quantile(ps, probs = c(.001, 0.999))
     } else if (type == "discrete") {
