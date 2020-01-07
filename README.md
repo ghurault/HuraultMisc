@@ -10,35 +10,16 @@
 HuraultMisc is my personal R package regrouping functions used across different projects.
 The library mostly provides functions for data analysis.
 
+The package can be installed and loaded by typing the following commands in R:
+
 ``` r
 devtools::install_github("ghurault/HuraultMisc")
 library(HuraultMisc)
 ```
 
-## List of functions
+The list of available functions and their documentation can be accessed with:
 
-### Data wrangling
+``` r
+help(package = HuraultMisc)
+```
 
-- `change_colnames(df, current_names, new_names)`
-- `factor_to_numeric(df, factor_name)`
-
-### Stan/Bayesian workflow
-
-- `summary_statistics(fit, param, quant = c(.05, .25, .5, .75, .95))`
-- `process_replications(fit, idx = NULL, parName, type = c("continuous", "discrete", "samples"), bounds = NULL, nDensity = 2^7, nDraws = 100)`
-- `PPC_group_distribution(fit, parName, nDraws = 1)`
-- `plot_prior_posterior(post, prior, param)`
-- `compute_coverage(post_samples, truth, CI = seq(0, 1, 0.05))`
-- `plot_coverage(post_samples, truth, CI = seq(0, 1, 0.05))`
-- `extract_parameters_from_draw(fit, param, draw = 1)`
-- `parameters_intervals(fit, param, CI_width = seq(0.1, 0.9, 0.1), type = c("hdi", "eti"))`
-
-### Evaluation metrics
-
-- `compute_calibration(forecast, outcome, method = c("smoothing", "binning"), CI = NULL , binwidth = NULL, ...)`
-- `compute_resolution(f, p0)`
-
-### Figures
-
-- `illustrate_RPS(mu = 5, sigma = 1, observed = 6)`
-- `illustrate_forward_chaining(horizon = 7, n_it = 5)`
