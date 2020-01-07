@@ -167,8 +167,6 @@ extract_distribution <- function(fit,
     }
   }
 
-  ps <- as.data.frame(ps)
-
   if (type == "samples") {
     if (nDraws < 1 | nDraws > nrow(ps)) {
       warning("nDraws should be between 1 and ", nrow(ps), " (number of posterior samples). nDraws set to 1")
