@@ -112,14 +112,32 @@ parameters_intervals <- function(fit, param, CI_level = seq(0.1, 0.9, 0.1), type
 
 # Process replications ----------------------------------------------------
 
-#' Extract posterior predictive distribution
+# Replace by a convenience function to summarise a distribution given as samples to a pdf, pmf, draws, ci
+# - rename pred
+# - extend function to hande other inputs than Stanfit object (cf. class(fit) == "stanfit"); notably make sure it works for one dimensional vector (cf. Index)
+# - rename function (extract_distribution?) but keep process_replications as an alias (cf. https://stackoverflow.com/questions/9071514/r-package-development-function-aliases)
+# - extend function so that parNames can be a list of parameters (and instead of calling the value the name of the parameters, have a column variable)
+# - input a function for transforming the samples rather than using "bounds" (could use the transformation for truncation)
+# - update README
+
+# at the end, make changes to project to ultimately delete parameters_intervals
+
+#' Extract a distribution represented by samples
 #'
-#' The Posterior predictive distribution is extracted as a "continuous" function (cf. density), as a "discrete" function (cf. probability) or as "samples" (draws from the distribution)
+#'@description
+#' The distribution can be extracted as:
+#' \itemize{
+#' \item a probability density function ("continuous").
+#' \item a probability mass unction ("discrete").
+#' \item draws from the distribution ("samples"), in that case, little processing is done.
+#' \item a series of equal-tailed confidence/credible intervals ("eti").
+#' \item a series of highest density confidence/credible intervals ("hdi").
+#' }
 #'
 #' @param fit Stanfit object
-#' @param idx Dataframe for translating the indices of the replication parameters into more informative variable (can be NULL)
-#' @param parName Name of the replication parameter
-#' @param type Indicates how the distribution is summarised. Values can take "continuous", "discrete" or "samples".
+#' @param idx Dataframe for translating the indices of the parameters into more informative variable (can be NULL)
+#' @param parName Name of the parameter to extract
+#' @param type Indicates how the distribution is summarised.
 #' @param bounds NULL or vector of length 2 representing the bounds of the distribution if it needs to be truncated.
 #' @param nDensity Number of equally spaced points at which the density is to be estimated (better to use a power of 2). Applies when type = "continuous".
 #' @param nDraws Number of draws from the distribution. Applies when type = "samples"
@@ -128,63 +146,66 @@ parameters_intervals <- function(fit, param, CI_level = seq(0.1, 0.9, 0.1), type
 #' @return Dataframe
 #' @export
 #' @import stats
-process_replications <- function(fit, idx = NULL, parName, type = c("continuous", "discrete", "samples", "eti", "hdi"), bounds = NULL, nDensity = 2^7, nDraws = 100, CI_level = seq(0.1, 0.9, 0.1)) {
+extract_distribution <- function(fit, idx = NULL, parName, type = c("continuous", "discrete", "samples", "eti", "hdi"), bounds = NULL, nDensity = 2^7, nDraws = 100, CI_level = seq(0.1, 0.9, 0.1)) {
 
   type <- match.arg(type)
   bounds_provided <- !is.null(bounds)
 
-  pred <- rstan::extract(fit, pars = parName)[[1]]
+  ps <- rstan::extract(fit, pars = parName)[[1]]
 
   if (!bounds_provided) {
     # Even if the distribution is continuous, it needs to be truncated for type "continuous" or "discrete"
-    bounds <- quantile(pred, probs = c(.001, 0.999))
+    bounds <- quantile(ps, probs = c(.001, 0.999))
   }
 
-  pred <- as.data.frame(pred)
+  ps <- as.data.frame(ps)
 
   if (type == "samples") {
-    if (nDraws < 1 | nDraws > nrow(pred)) {
-      warning("nDraws should be between 1 and ", nrow(pred), " (number of posterior samples). nDraws set to 1")
+    if (nDraws < 1 | nDraws > nrow(ps)) {
+      warning("nDraws should be between 1 and ", nrow(ps), " (number of posterior samples). nDraws set to 1")
       nDraws <- 1
     }
-    smp <- sample(1:nrow(pred), nDraws)
+    smp <- sample(1:nrow(ps), nDraws)
   }
 
   out <- do.call("rbind",
-                 lapply(1:ncol(pred), function(i) {
-                   x <- pred[, i]
-                   if (bounds_provided) {
-                     # Truncate the distribution if bounds are provided
-                     x <- x[!(x < min(bounds) | x > max(bounds))]
-                   }
-                   if (type == "continuous") {
-                     d <- density(x, kernel = "gaussian", from = min(bounds), to = max(bounds), n = nDensity) # select a power of 2 for n, not too much or it takes memory
-                     data.frame(Value = d$x,
-                                Density = d$y,
-                                Index = i)
-                   } else if (type == "discrete") {
-                     x <- round(x)
-                     d <- table(factor(x, levels = min(bounds):max(bounds)))
-                     data.frame(Value = min(bounds):max(bounds),
-                                Probability = as.numeric(d / sum(d)),
-                                Index = i)
-                   } else if (type == "samples") {
-                     data.frame(Value = x[smp],
-                                Draw = 1:nDraws,
-                                Index = i)
-                   } else if (type == "eti") {
-                     data.frame(Lower = quantile(x, probs = 0.5 - CI_level / 2),
-                                Upper = quantile(x, probs = 0.5 + CI_level / 2),
-                                Level = CI_level,
-                                Index = i)
-                   } else if (type == "hdi") {
-                     tmp <- sapply(CI_level, function(q) {HDInterval::hdi(x, credMass = q)})
-                     data.frame(Lower = tmp["lower", ],
-                                Upper = tmp["upper", ],
-                                Level = CI_level,
-                                Index = i)
-                   }
-                 }))
+                 lapply(1:ncol(ps),
+                        function(i) {
+                          # Loop over parameters (indexed by i)
+
+                          x <- ps[, i]
+                          if (bounds_provided) {
+                            # Truncate the distribution if bounds are provided
+                            x <- x[!(x < min(bounds) | x > max(bounds))]
+                          }
+                          if (type == "continuous") {
+                            d <- density(x, kernel = "gaussian", from = min(bounds), to = max(bounds), n = nDensity) # select a power of 2 for n, not too much or it takes memory
+                            data.frame(Value = d$x,
+                                       Density = d$y,
+                                       Index = i)
+                          } else if (type == "discrete") {
+                            x <- round(x)
+                            d <- table(factor(x, levels = min(bounds):max(bounds)))
+                            data.frame(Value = min(bounds):max(bounds),
+                                       Probability = as.numeric(d / sum(d)),
+                                       Index = i)
+                          } else if (type == "samples") {
+                            data.frame(Value = x[smp],
+                                       Draw = 1:nDraws,
+                                       Index = i)
+                          } else if (type == "eti") {
+                            data.frame(Lower = quantile(x, probs = 0.5 - CI_level / 2),
+                                       Upper = quantile(x, probs = 0.5 + CI_level / 2),
+                                       Level = CI_level,
+                                       Index = i)
+                          } else if (type == "hdi") {
+                            tmp <- sapply(CI_level, function(q) {HDInterval::hdi(x, credMass = q)})
+                            data.frame(Lower = tmp["lower", ],
+                                       Upper = tmp["upper", ],
+                                       Level = CI_level,
+                                       Index = i)
+                          }
+                        }))
 
   out <- change_colnames(out, "Value", parName)
   if (!is.null(idx) & "Index" %in% colnames(idx)) {
@@ -193,6 +214,13 @@ process_replications <- function(fit, idx = NULL, parName, type = c("continuous"
   }
   return(out)
 }
+
+# Alias of extract_distribution corresponding to previous version of the function
+
+#' @rdname extract_distribution
+#' @export
+process_replications <- extract_distribution
+
 
 # PPC distribution for single draw ----------------------------------------
 
