@@ -9,7 +9,7 @@ process_replications(fit, idx = NULL, parName, bounds = NULL, ...)
 \arguments{
 \item{fit}{Stanfit object}
 
-\item{idx}{idx Dataframe for translating the indices of the parameters into more informative variable (can be NULL)}
+\item{idx}{Dataframe for translating the indices of the parameters into more informative variable (can be NULL)}
 
 \item{parName}{Name of the parameter to extract}
 
