@@ -19,3 +19,8 @@ Dataframe
 \description{
 Extract parameters from a single draw
 }
+\section{Note}{
+
+Useful for to generate fake data.
+}
+

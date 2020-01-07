@@ -369,6 +369,9 @@ plot_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05)) {
 #' @param param Vector of parameter names
 #' @param draw Index of the draw to extract the parameters from
 #'
+#' @section Note:
+#' Useful for to generate fake data.
+#'
 #' @return Dataframe
 #' @export
 extract_parameters_from_draw <- function(fit, param, draw = 1) {
