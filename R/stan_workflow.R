@@ -38,15 +38,7 @@ summary_statistics <- function(fit, param, quant = c(.05, .25, .5, .75, .95)) {
   return(par)
 }
 
-
-# Process replications ----------------------------------------------------
-
-# Replace by a convenience function to summarise a distribution given as samples to a pdf, pmf, draws, ci
-# - extend function to hande other inputs than Stanfit object (cf. class(fit) == "stanfit"); notably make sure it works for one dimensional vector (cf. Index)
-# - extend function so that parNames can be a list of parameters (and instead of calling the value the name of the parameters, have a column variable)
-# - update README
-
-# at the end, make changes to project to ultimately delete parameters_intervals
+# Extract distribution and process replications ----------------------------------------------------
 
 #' Extract a distribution represented by samples
 #'
