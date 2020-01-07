@@ -97,6 +97,12 @@ extract_distribution <- function(object,
     warning("parName should be of length 1, taking the first element: ", parName)
   }
 
+  if (type %in% c("eti", "hdi")) {
+    if (max(CI_level) > 1 | min(CI_level) < 0) {
+      stop("CI_level values must be between 0 and 1")
+    }
+  }
+
   if (class(transform) != "function") {
     stop(transform, " should be a function")
   }
