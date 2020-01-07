@@ -8,10 +8,11 @@ process_replications(
   fit,
   idx = NULL,
   parName,
-  type = c("continuous", "discrete", "samples"),
+  type = c("continuous", "discrete", "samples", "eti", "hdi"),
   bounds = NULL,
   nDensity = 2^7,
-  nDraws = 100
+  nDraws = 100,
+  CI_level = seq(0.1, 0.9, 0.1)
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ process_replications(
 \item{nDensity}{Number of equally spaced points at which the density is to be estimated (better to use a power of 2). Applies when type = "continuous".}
 
 \item{nDraws}{Number of draws from the distribution. Applies when type = "samples"}
+
+\item{CI_level}{Vector containing the level of the confidence/credible intervals}
 }
 \value{
 Dataframe
@@ -35,8 +38,3 @@ Dataframe
 \description{
 The Posterior predictive distribution is extracted as a "continuous" function (cf. density), as a "discrete" function (cf. probability) or as "samples" (draws from the distribution)
 }
-\section{Note}{
-
-This could just be a convenience function to summarise a distribution given as samples (not necessarily from a Stanfit object, could be vector or matrix) to a pdf, pmf, draws (or even CI by combining parameters_intervals)
-}
-
