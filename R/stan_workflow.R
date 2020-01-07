@@ -214,6 +214,8 @@ extract_distribution <- function(fit,
 
 #' Extract posterior predictive distribution
 #'
+#' This function keeps the signature of the previous implementation but is now a particular case of extract_distribution.
+#'
 #' @param fit Stanfit object
 #' @param idx idx Dataframe for translating the indices of the parameters into more informative variable (can be NULL)
 #' @param parName Name of the parameter to extract

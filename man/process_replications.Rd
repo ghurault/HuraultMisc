@@ -21,5 +21,5 @@ process_replications(fit, idx = NULL, parName, bounds = NULL, ...)
 Dataframe
 }
 \description{
-Extract posterior predictive distribution
+This function keeps the signature of the previous implementation but is now a particular case of extract_distribution.
 }
