@@ -157,7 +157,7 @@ extract_distribution <- function(object,
   if (class(object) == "stanfit") {
     ps <- rstan::extract(object, pars = parName)[[1]]
   } else if (class(object) %in% c("matrix", "array", "numeric")) {
-    ps <- object
+    ps <- as.array(object)
   } else {
     stop("object of class ", class(object), " not supported")
   }
@@ -173,12 +173,14 @@ extract_distribution <- function(object,
   }
 
   if (is.null(support)) {
-    if (type == "continuous") {
-      support <- quantile(ps, probs = c(.001, 0.999))
-    } else if (type == "discrete") {
-      support <- min(ps):max(ps)
+    if (type == "continuous" | type == "discrete") {
+      if (type == "continuous") {
+        support <- quantile(ps, probs = c(.001, 0.999))
+      } else if (type == "discrete") {
+        support <- min(floor(ps)):max(ceiling(ps))
+      }
+      warning("support is NULL, taking the following values: ", paste(support, collapse = ", "))
     }
-    warning("support is NULL, taking the following values: ", support)
   }
 
   if (type == "samples") {
