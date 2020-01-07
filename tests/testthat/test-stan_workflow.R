@@ -76,27 +76,47 @@ test_that("summary_statistics returns a correct dataframe", {
   expect_equal(nrow(par_fake[par_fake$Variable == "y_rep", ]), N)
 })
 
+test_that("extract_distribution works with different objects", {
+
+  # Stan input, continuous
+  dist_stan <- extract_distribution(fit_fake, parName = "y_rep", type = "continuous", support = c(-10, 10))
+  expect_true("Density" %in% colnames(dist_stan)) # check colnames
+
+  # Matrix input, discrete
+  dist_matrix <- extract_distribution(matrix(rnorm(1e3), ncol = 10), parName = "x", type = "discrete", support = -4:4)
+  expect_equal(length(unique(dist_matrix[["Index"]])), 10) # check index length
+
+  # Vector input, samples
+  dist_vector <- extract_distribution(rnorm(1e3), parName = "x", type = "samples")
+  expect_true(is.na(unique(dist_vector[["Index"]]))) # check index is NA
+  expect_true("Draw" %in% colnames(dist_vector)) # check colnames
+
+  # List input
+  expect_error(extract_distribution(rstan::extract(fit_fake, pars = "y_rep"), parName = "x", type = "eti"))
+})
+
 idx <- observations_dictionary(data_fake)
 
-pred_cont <- process_replications(fit_fake, idx, "y_rep", type = "continuous", bounds = NULL)
-pred_disc <- process_replications(fit_fake, idx, "y_rep", type = "discrete", bounds = c(-10, 10))
-pred_samp <- process_replications(fit_fake, idx, "y_rep", type = "samples")
+pred_disc1 <- process_replications(fit_fake, idx, "y_rep", type = "discrete", bounds = c(-10, 10))
 pred_eti <- process_replications(fit_fake, idx, "y_rep", type = "eti")
 pred_hdi <- process_replications(fit_fake, idx, "y_rep", type = "hdi")
 
 test_that("process_replications returns a correct dataframe", {
-  expect_true("Density" %in% colnames(pred_cont))
-  expect_true("Probability" %in% colnames(pred_disc))
-  expect_true("Draw" %in% colnames(pred_samp))
-  expect_true("Level" %in% colnames(pred_eti))
-  expect_true("Level" %in% colnames(pred_hdi))
+  expect_true("Probability" %in% colnames(pred_disc1)) # check colnames
+  expect_equal(range(pred_disc1[["y_rep"]]), c(-10, 10)) # check support range
+  expect_true("Level" %in% colnames(pred_eti)) # check colnames
+  expect_true("Level" %in% colnames(pred_hdi)) # check colnames
 })
 
-test_that("process_replications catch warnings and errors", {
-  expect_warning(process_replications(fit_fake, idx, "y_rep", type = "samples", nDraws = 1e5))
-  expect_error(process_replications(fit_fake, idx, "y_rep", type = "spaghetti"))
+test_that("extract_distribution or process_replications catch warnings and errors", {
+  expect_warning(extract_distribution(fit_fake, parName = c("y_rep", "mu"))) # multiple parName
+  expect_error(extract_distribution(rnorm(1e3), parName = "x", transform = "log")) # check error that transform not a function
+  expect_error(process_replications(rnorm(1e3), idx = NULL, parName = "y_rep")) # check error that fit is not a stanfit object
+  expect_warning(process_replications(fit_fake, idx, "y_rep", type = "samples", nDraws = 1e5)) # check nDraws warning
+  expect_error(process_replications(fit_fake, idx, "y_rep", type = "spaghetti")) # check wrong type error
+  expect_warning(process_replications(fit_fake, idx, "y_rep", type = "continuous", bounds = NULL)) # check support warning
+  expect_warning(process_replications(fit_fake, idx, "y_rep", type = "discrete", bounds = NULL)) # check support warning
 })
-
 
 test_that("PPC_group_distribution returns a ggplot object", {
   expect_is(PPC_group_distribution(fit_fake, "mu", 1), "ggplot")
