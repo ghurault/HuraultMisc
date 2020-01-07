@@ -64,7 +64,7 @@ parameters_intervals <- function(fit, param, CI_level = seq(0.1, 0.9, 0.1), type
 
   if (type == "eti") {
     bounds <- data.frame(lower = 0.5 - CI_level / 2,
-                         upper = 0.5 + CI_level /2,
+                         upper = 0.5 + CI_level / 2,
                          level = CI_level)
 
     ss <- summary_statistics(fit, param, quant = c(rev(bounds[["lower"]]), bounds[["upper"]]))
