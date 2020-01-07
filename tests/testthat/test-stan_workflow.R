@@ -97,12 +97,9 @@ test_that("extract_distribution works with different objects", {
 
 idx <- observations_dictionary(data_fake)
 
-pred_disc1 <- process_replications(fit_fake, idx, "y_rep", type = "discrete", bounds = c(-10, 10))
-# pred_eti <- process_replications(fit_fake, idx, "y_rep", type = "eti")
-# pred_hdi <- process_replications(fit_fake, idx, "y_rep", type = "hdi", CI_level = seq(.1, .9, .1))
-
 test_that("process_replications returns a correct dataframe", {
   pred_disc1 <- process_replications(fit_fake, idx, "y_rep", type = "discrete", bounds = c(-10, 10))
+
   expect_true("Probability" %in% colnames(pred_disc1)) # check colnames
   expect_equal(range(pred_disc1[["y_rep"]]), c(-10, 10)) # check support range
 
