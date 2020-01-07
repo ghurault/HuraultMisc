@@ -131,7 +131,7 @@ parameters_intervals <- function(fit, param, CI_level = seq(0.1, 0.9, 0.1), type
 #' \item a series of highest density confidence/credible intervals ("hdi").
 #' }
 #'
-#' @param fit Stanfit object
+#' @param object Object specifying the distribution as samples: can be a Stanfit object, a matrix (columns represents parameters, rows samples) or a vector.
 #' @param parName Name of the parameter to extract
 #' @param type Indicates how the distribution is summarised.
 #' @param support Support of the distribution. For type = "continuous", this must be the range of the distribution. For type = "discrete", this must be a vector of all possible values that the distribution can take. Can be NULL.
@@ -143,7 +143,7 @@ parameters_intervals <- function(fit, param, CI_level = seq(0.1, 0.9, 0.1), type
 #' @return Dataframe
 #' @export
 #' @import stats
-extract_distribution <- function(fit,
+extract_distribution <- function(object,
                                  parName,
                                  type = c("continuous", "discrete", "samples", "eti", "hdi"),
                                  support = NULL,
@@ -154,7 +154,13 @@ extract_distribution <- function(fit,
 
   type <- match.arg(type)
 
-  ps <- rstan::extract(fit, pars = parName)[[1]]
+  if (class(object) == "stanfit") {
+    ps <- rstan::extract(object, pars = parName)[[1]]
+  } else if (class(object) %in% c("matrix", "array", "numeric")) {
+    ps <- object
+  } else {
+    stop("object of class ", class(object), " not supported")
+  }
 
   if (is.null(support)) {
     warning("support is NULL, resorting to defaults")
@@ -173,40 +179,53 @@ extract_distribution <- function(fit,
     smp <- sample(1:nrow(ps), nDraws)
   }
 
-  out <- do.call("rbind",
-                 lapply(1:ncol(ps),
-                        function(i) {
-                          # Loop over parameters (indexed by i)
-                          x <- ps[, i]
-                          x <- transform(x)
-                          if (type == "continuous") {
-                            d <- density(x, kernel = "gaussian", from = min(support), to = max(support), n = nDensity) # select a power of 2 for n, not too much or it takes memory
-                            data.frame(Value = d$x,
-                                       Density = d$y,
-                                       Index = i)
-                          } else if (type == "discrete") {
-                            x <- round(x)
-                            d <- table(factor(x, levels = support))
-                            data.frame(Value = support,
-                                       Probability = as.numeric(d / sum(d)),
-                                       Index = i)
-                          } else if (type == "samples") {
-                            data.frame(Value = x[smp],
-                                       Draw = 1:nDraws,
-                                       Index = i)
-                          } else if (type == "eti") {
-                            data.frame(Lower = quantile(x, probs = 0.5 - CI_level / 2),
-                                       Upper = quantile(x, probs = 0.5 + CI_level / 2),
-                                       Level = CI_level,
-                                       Index = i)
-                          } else if (type == "hdi") {
-                            tmp <- sapply(CI_level, function(q) {HDInterval::hdi(x, credMass = q)})
-                            data.frame(Lower = tmp["lower", ],
-                                       Upper = tmp["upper", ],
-                                       Level = CI_level,
-                                       Index = i)
-                          }
-                        }))
+  summary_from_vector <- function(x) {
+    # Summarise distribution stored in a vector
+    #
+    # Args:
+    # x: Vector of samples from the distribution
+    #
+    # Returns:
+    # Dataframe
+
+    x <- transform(x)
+    if (type == "continuous") {
+      d <- density(x, kernel = "gaussian", from = min(support), to = max(support), n = nDensity) # select a power of 2 for n, not too much or it takes memory
+      data.frame(Value = d$x,
+                 Density = d$y)
+    } else if (type == "discrete") {
+      x <- round(x)
+      d <- table(factor(x, levels = support))
+      data.frame(Value = support,
+                 Probability = as.numeric(d / sum(d)))
+    } else if (type == "samples") {
+      data.frame(Value = x[smp],
+                 Draw = 1:nDraws)
+    } else if (type == "eti") {
+      data.frame(Lower = quantile(x, probs = 0.5 - CI_level / 2),
+                 Upper = quantile(x, probs = 0.5 + CI_level / 2),
+                 Level = CI_level)
+    } else if (type == "hdi") {
+      tmp <- sapply(CI_level, function(q) {HDInterval::hdi(x, credMass = q)})
+      data.frame(Lower = tmp["lower", ],
+                 Upper = tmp["upper", ],
+                 Level = CI_level)
+    }
+  }
+
+  if (!is.na(ncol(ps))) {
+    out <- do.call("rbind",
+                   lapply(1:ncol(ps),
+                          function(i) {
+                            # Loop over parameters in the matrix
+                            tmp <- summary_from_vector(ps[, i])
+                            tmp[["Index"]] <- i
+                            return(tmp)
+                          }))
+  } else {
+    out <- summary_from_vector(ps)
+    out[["Index"]] <- NA
+  }
   out[["Variable"]] <- parName
 
   return(out)
@@ -226,6 +245,10 @@ extract_distribution <- function(fit,
 #' @export
 process_replications <- function(fit, idx = NULL, parName, bounds = NULL, ...) {
 
+  if (class(fit) != "stanfit") {
+    stop("fit must be a stanfit object and not of class ", class(fit))
+  }
+
   if (is.null(bounds)) {
     support <- NULL
     transform <- identity
@@ -234,7 +257,7 @@ process_replications <- function(fit, idx = NULL, parName, bounds = NULL, ...) {
     transform <- function(x) {x[!(x < min(bounds) | x > max(bounds))]} # truncate
   }
 
-  out <- extract_distribution(fit = fit,
+  out <- extract_distribution(object = fit,
                               parName = parName,
                               support = support,
                               transform = transform,

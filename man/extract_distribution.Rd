@@ -5,7 +5,7 @@
 \title{Extract a distribution represented by samples}
 \usage{
 extract_distribution(
-  fit,
+  object,
   parName,
   type = c("continuous", "discrete", "samples", "eti", "hdi"),
   support = NULL,
@@ -16,7 +16,7 @@ extract_distribution(
 )
 }
 \arguments{
-\item{fit}{Stanfit object}
+\item{object}{Object specifying the distribution as samples: can be a Stanfit object, a matrix (columns represents parameters, rows samples) or a vector.}
 
 \item{parName}{Name of the parameter to extract}
 
