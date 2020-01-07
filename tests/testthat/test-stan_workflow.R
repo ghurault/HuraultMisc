@@ -98,17 +98,28 @@ test_that("extract_distribution works with different objects", {
 idx <- observations_dictionary(data_fake)
 
 pred_disc1 <- process_replications(fit_fake, idx, "y_rep", type = "discrete", bounds = c(-10, 10))
-pred_eti <- process_replications(fit_fake, idx, "y_rep", type = "eti")
-pred_hdi <- process_replications(fit_fake, idx, "y_rep", type = "hdi")
+# pred_eti <- process_replications(fit_fake, idx, "y_rep", type = "eti")
+# pred_hdi <- process_replications(fit_fake, idx, "y_rep", type = "hdi", CI_level = seq(.1, .9, .1))
 
 test_that("process_replications returns a correct dataframe", {
+  pred_disc1 <- process_replications(fit_fake, idx, "y_rep", type = "discrete", bounds = c(-10, 10))
   expect_true("Probability" %in% colnames(pred_disc1)) # check colnames
   expect_equal(range(pred_disc1[["y_rep"]]), c(-10, 10)) # check support range
-  expect_true("Level" %in% colnames(pred_eti)) # check colnames
-  expect_true("Level" %in% colnames(pred_hdi)) # check colnames
+
+  # eti and hdi
+  CI_level <- list(seq(.1, .9, .1),
+                   seq(.05, .95, .05))
+  for (i in 1:length(CI_level)) {
+    for (t in c("hdi", "eti")) {
+      tmp <- process_replications(fit_fake, parName = "y_rep", CI_level = CI_level[[i]], type = t)
+      expect_equal(nrow(tmp), N * length(CI_level[[i]])) # check nrow dataset
+      expect_true("Level" %in% colnames(tmp)) # check colnames
+    }
+  }
 })
 
 test_that("extract_distribution or process_replications catch warnings and errors", {
+  expect_error(extract_distribution(fit_fake, parName = "y_rep", type = "hdi", CI_level = seq(5, 95, 10))) # check error in CI_level
   expect_warning(extract_distribution(fit_fake, parName = c("y_rep", "mu"))) # multiple parName
   expect_error(extract_distribution(rnorm(1e3), parName = "x", transform = "log")) # check error that transform not a function
   expect_error(process_replications(rnorm(1e3), idx = NULL, parName = "y_rep")) # check error that fit is not a stanfit object
