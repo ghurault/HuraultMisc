@@ -123,12 +123,12 @@ parameters_intervals <- function(fit, param, CI_level = seq(0.1, 0.9, 0.1), type
 #' @param bounds NULL or vector of length 2 representing the bounds of the distribution if it needs to be truncated.
 #' @param nDensity Number of equally spaced points at which the density is to be estimated (better to use a power of 2). Applies when type = "continuous".
 #' @param nDraws Number of draws from the distribution. Applies when type = "samples"
-#'
+#' @param CI_level Vector containing the level of the confidence/credible intervals
 #'
 #' @return Dataframe
 #' @export
 #' @import stats
-process_replications <- function(fit, idx = NULL, parName, type = c("continuous", "discrete", "samples"), bounds = NULL, nDensity = 2^7, nDraws = 100) {
+process_replications <- function(fit, idx = NULL, parName, type = c("continuous", "discrete", "samples", "eti", "hdi"), bounds = NULL, nDensity = 2^7, nDraws = 100, CI_level = seq(0.1, 0.9, 0.1)) {
 
   type <- match.arg(type)
   bounds_provided <- !is.null(bounds)
@@ -139,6 +139,7 @@ process_replications <- function(fit, idx = NULL, parName, type = c("continuous"
     # Even if the distribution is continuous, it needs to be truncated for type "continuous" or "discrete"
     bounds <- quantile(pred, probs = c(.001, 0.999))
   }
+
   pred <- as.data.frame(pred)
 
   if (type == "samples") {
@@ -149,31 +150,48 @@ process_replications <- function(fit, idx = NULL, parName, type = c("continuous"
     smp <- sample(1:nrow(pred), nDraws)
   }
 
-  tmp <- do.call("rbind",
-                 lapply(1:ncol(pred), function(x) {
-                   tmp <- pred[, x]
+  out <- do.call("rbind",
+                 lapply(1:ncol(pred), function(i) {
+                   x <- pred[, i]
                    if (bounds_provided) {
                      # Truncate the distribution if bounds are provided
-                     tmp <- tmp[!(tmp < min(bounds) | tmp > max(bounds))]
+                     x <- x[!(x < min(bounds) | x > max(bounds))]
                    }
                    if (type == "continuous") {
-                     d <- density(tmp, kernel = "gaussian", from = min(bounds), to = max(bounds), n = nDensity) # select a power of 2 for n, not too much or it takes memory
-                     data.frame(Value = d$x, Density = d$y, Index = x)
+                     d <- density(x, kernel = "gaussian", from = min(bounds), to = max(bounds), n = nDensity) # select a power of 2 for n, not too much or it takes memory
+                     data.frame(Value = d$x,
+                                Density = d$y,
+                                Index = i)
                    } else if (type == "discrete") {
-                     tmp <- round(tmp)
-                     d <- table(factor(tmp, levels = min(bounds):max(bounds)))
-                     data.frame(Value = min(bounds):max(bounds), Probability = as.numeric(d / sum(d)), Index = x)
+                     x <- round(x)
+                     d <- table(factor(x, levels = min(bounds):max(bounds)))
+                     data.frame(Value = min(bounds):max(bounds),
+                                Probability = as.numeric(d / sum(d)),
+                                Index = i)
                    } else if (type == "samples") {
-                     data.frame(Value = tmp[smp], Draw = 1:nDraws, Index = x)
+                     data.frame(Value = x[smp],
+                                Draw = 1:nDraws,
+                                Index = i)
+                   } else if (type == "eti") {
+                     data.frame(Lower = quantile(x, probs = 0.5 - CI_level / 2),
+                                Upper = quantile(x, probs = 0.5 + CI_level / 2),
+                                Level = CI_level,
+                                Index = i)
+                   } else if (type == "hdi") {
+                     tmp <- sapply(CI_level, function(q) {HDInterval::hdi(x, credMass = q)})
+                     data.frame(Lower = tmp["lower", ],
+                                Upper = tmp["upper", ],
+                                Level = CI_level,
+                                Index = i)
                    }
                  }))
-  tmp <- change_colnames(tmp, "Value", parName)
-  if (!is.null(idx) & "Index" %in% colnames(idx)) {
-    tmp <- merge(tmp, idx, by = "Index", all = TRUE)
-    tmp$Index <- NULL
-  }
 
-  return(tmp)
+  out <- change_colnames(out, "Value", parName)
+  if (!is.null(idx) & "Index" %in% colnames(idx)) {
+    out <- merge(out, idx, by = "Index", all = TRUE)
+    out$Index <- NULL
+  }
+  return(out)
 }
 
 # PPC distribution for single draw ----------------------------------------
