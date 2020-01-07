@@ -132,21 +132,18 @@ parameters_intervals <- function(fit, param, CI_level = seq(0.1, 0.9, 0.1), type
 #' }
 #'
 #' @param fit Stanfit object
-#' @param idx Dataframe for translating the indices of the parameters into more informative variable (can be NULL)
 #' @param parName Name of the parameter to extract
 #' @param type Indicates how the distribution is summarised.
-#' @param transform Function to apply to the samples
 #' @param support Support of the distribution. For type = "continuous", this must be the range of the distribution. For type = "discrete", this must be a vector of all possible values that the distribution can take. Can be NULL.
+#' @param transform Function to apply to the samples
 #' @param nDensity Number of equally spaced points at which the density is to be estimated (better to use a power of 2). Applies when type = "continuous".
 #' @param nDraws Number of draws from the distribution. Applies when type = "samples"
 #' @param CI_level Vector containing the level of the confidence/credible intervals
-#' @param bounds (only for process_replications) NULL or vector of length 2 representing the bounds of the distribution if it needs to be truncated.
 #'
 #' @return Dataframe
 #' @export
 #' @import stats
 extract_distribution <- function(fit,
-                                 idx = NULL,
                                  parName,
                                  type = c("continuous", "discrete", "samples", "eti", "hdi"),
                                  support = NULL,
@@ -209,6 +206,36 @@ extract_distribution <- function(fit,
                                        Index = i)
                           }
                         }))
+  out[["Variable"]] <- parName
+
+  return(out)
+}
+
+#' Extract posterior predictive distribution
+#'
+#' @param fit Stanfit object
+#' @param idx idx Dataframe for translating the indices of the parameters into more informative variable (can be NULL)
+#' @param parName Name of the parameter to extract
+#' @param bounds NULL or vector of length 2 representing the bounds of the distribution if it needs to be truncated.
+#' @param ... Parameters to be passed to extract_distribution
+#'
+#' @return Dataframe
+#' @export
+process_replications <- function(fit, idx = NULL, parName, bounds = NULL, ...) {
+
+  if (is.null(bounds)) {
+    support <- NULL
+    transform <- identity
+  } else {
+    support <- min(bounds):max(bounds)
+    transform <- function(x) {x[!(x < min(bounds) | x > max(bounds))]} # truncate
+  }
+
+  out <- extract_distribution(fit = fit,
+                              parName = parName,
+                              support = support,
+                              transform = transform,
+                              ...)
 
   out <- change_colnames(out, "Value", parName)
   if (!is.null(idx) & "Index" %in% colnames(idx)) {
@@ -216,38 +243,6 @@ extract_distribution <- function(fit,
     out$Index <- NULL
   }
   return(out)
-}
-
-# Alias of extract_distribution corresponding to previous version of the function
-
-#' @rdname extract_distribution
-#' @export
-process_replications <- function(fit,
-                                 idx = NULL,
-                                 parName,
-                                 type = c("continuous", "discrete", "samples", "eti", "hdi"),
-                                 bounds = NULL,
-                                 nDensity = 2^7,
-                                 nDraws = 100,
-                                 CI_level = seq(0.1, 0.9, 0.1)) {
-
-  if (is.null(bounds)) {
-    support <- NULL
-    transform <- identity
-  } else {
-    support <- min(bounds):max(bounds)
-    transform <- function(x) {x[!(x < min(bounds) | x > max(bounds))]}
-  }
-
-  extract_distribution(fit = fit,
-                       idx = idx,
-                       parName = parName,
-                       type = type,
-                       support = support,
-                       transform = transform,
-                       nDensity = nDensity,
-                       nDraws = nDraws,
-                       CI_level = CI_level)
 }
 
 

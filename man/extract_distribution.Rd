@@ -2,12 +2,10 @@
 % Please edit documentation in R/stan_workflow.R
 \name{extract_distribution}
 \alias{extract_distribution}
-\alias{process_replications}
 \title{Extract a distribution represented by samples}
 \usage{
 extract_distribution(
   fit,
-  idx = NULL,
   parName,
   type = c("continuous", "discrete", "samples", "eti", "hdi"),
   support = NULL,
@@ -16,22 +14,9 @@ extract_distribution(
   nDraws = 100,
   CI_level = seq(0.1, 0.9, 0.1)
 )
-
-process_replications(
-  fit,
-  idx = NULL,
-  parName,
-  type = c("continuous", "discrete", "samples", "eti", "hdi"),
-  bounds = NULL,
-  nDensity = 2^7,
-  nDraws = 100,
-  CI_level = seq(0.1, 0.9, 0.1)
-)
 }
 \arguments{
 \item{fit}{Stanfit object}
-
-\item{idx}{Dataframe for translating the indices of the parameters into more informative variable (can be NULL)}
 
 \item{parName}{Name of the parameter to extract}
 
@@ -46,8 +31,6 @@ process_replications(
 \item{nDraws}{Number of draws from the distribution. Applies when type = "samples"}
 
 \item{CI_level}{Vector containing the level of the confidence/credible intervals}
-
-\item{bounds}{(only for process_replications) NULL or vector of length 2 representing the bounds of the distribution if it needs to be truncated.}
 }
 \value{
 Dataframe
