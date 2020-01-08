@@ -17,7 +17,7 @@ devtools::install_github("ghurault/HuraultMisc")
 library(HuraultMisc)
 ```
 
-The list of available functions and their documentation can be accessed with:
+The list of available functions and their documentation can be accessed from:
 
 ``` r
 help(package = HuraultMisc)
