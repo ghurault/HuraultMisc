@@ -40,8 +40,21 @@ change_colnames <- function(df, current_names, new_names) {
 #' df <- factor_to_numeric(df, "A")
 factor_to_numeric <- function(df, factor_name) {
 
-  for (i in 1:length(factor_name)) {
-    df[, factor_name[i]] <- as.numeric(levels(df[, factor_name[i]]))[df[, factor_name[i]]]
+  factor_name <- intersect(colnames(df), factor_name)
+  if (length(factor_name) == 0) {
+    stop("The intersection of columns names of ",
+         as.character(df),
+         " and ",
+         as.character(substitute(df)),
+         " should not be empty")
   }
+
+  for (i in 1:length(factor_name)) {
+    tmp <- df[, factor_name[i]]
+    if (is.factor(tmp)) {
+      df[, factor_name[i]] <- as.numeric(levels(tmp))[tmp]
+    }
+  }
+
   return(df)
 }

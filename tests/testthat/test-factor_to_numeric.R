@@ -1,16 +1,24 @@
-test_that("Transformation to numeric works", {
-  x <- rep(seq(0, 1, .1), each = 10)
-  df0 <- data.frame(A = x)
-  df0$A <- factor(df0$A)
-  df1 <- factor_to_numeric(df0, "A")
-  expect_equal(df1$A, x)
-  expect_type(df1$A, "double")
-  expect_warning(factor_to_numeric(data.frame(A = c(1, 2, "C")), "A"))
+test_that("factor_to_numeric works", {
+
+  x <- matrix(rbinom(3 * 100, 5, 0.5), ncol = 3)
+  df0 <- data.frame(A = x[, 1], B = x[, 2], C = x[, 3])
+
+  df1 <- df0
+  df1[["A"]] <- factor(df1[["A"]])
+  df1[["C"]] <- factor(df1[["C"]])
+
+  df2 <- factor_to_numeric(df1, c("A", "C"))
+
+  expect_equal(dim(df1), dim(df2))
+  expect_equal(df1[["B"]], df2[["B"]])
+
+  for (i in c("A", "C")) {
+    expect_equal(df2[[i]], df0[[i]])
+    expect_type(df2[[i]], "double")
+  }
 })
 
-test_that("Dataframe is unchanged", {
-  df0 <- data.frame(A = 1:2, B = 3:4, C = 5:6)
-  df1 <- factor_to_numeric(df0, c("A", "C"))
-  expect_equal(dim(df1), dim(df0))
-  expect_equal(df1$B, df0$B)
+test_that("factor_to_numeric catch errors and warnings", {
+  expect_warning(factor_to_numeric(data.frame(A = c(1, 2, "C")), "A")) # cannot convert to numeric
+  expect_error(factor_to_numeric(data.frame(A = c(1, 2), B = c(2, 3)), "C")) # factor_name not in colnames(df)
 })
