@@ -22,7 +22,7 @@
 illustrate_RPS <- function(mu = 5, sigma = 1, observed = 6) {
 
   if (observed < 0 | observed > 10) {
-    stop("observed should be between 0 and 10")
+    stop(as.character(substitute(observed)), "=", observed, " but should be between 0 and 10")
   }
   if ((mu / sigma) < -2 | (mu - 10) / sigma > 2) {
     stop("If the distribution mass is too much outside [0, 10], there will be numerical errors")
