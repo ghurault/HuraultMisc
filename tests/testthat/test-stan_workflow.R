@@ -187,13 +187,22 @@ test_that("extract_draws and related function works", {
   x <- rnorm(1e3)
   X <- matrix(x, ncol = 10)
 
-  expect_equal(nrow(extract_draws_from_array(x, 10)), 1)
-  expect_equal(nrow(extract_draws_from_array(X, 10)), 1 * ncol(X))
+  tmp <- list(extract_draws_from_array(x, 10),
+              extract_draws_from_array(X, 10),
+              extract_draws_from_array(x, 1:10),
+              extract_draws_from_array(X, 1:10),
+              extract_draws(list(x = x, X = X), 1:10))
+  sol_nrow <- c(1,
+                1 * ncol(X),
+                10,
+                10 * ncol(X),
+                10 + ncol(X) * 10)
+  sol_ncol <- c(3, 3, 3, 3, 4)
 
-  expect_equal(nrow(extract_draws_from_array(x, 1:10)), 10)
-  expect_equal(nrow(extract_draws_from_array(X, 1:10)), 10 * ncol(X))
-
-  expect_equal(nrow(extract_draws(list(x = x, X = X), 1:10)), 10 + ncol(X) * 10)
+  for (i in 1:length(tmp)) {
+    expect_equal(nrow(tmp[[i]]), sol_nrow[i])
+    expect_equal(ncol(tmp[[i]]), sol_ncol[i])
+  }
 
   tmp <- extract_parameters_from_draw(fit_prior, param, 1)
   expect_equal(nrow(tmp), N_parameters)
@@ -202,8 +211,12 @@ test_that("extract_draws and related function works", {
 
 test_that("extract_draws and related functions catch warnings and errors", {
   expect_error(extract_draws_from_array(list(1, 2), 1))
-  expect_error(extract_draws(ggplot(), 1))
+  expect_error(extract_draws_from_array(rnorm(1e2), 0))
+  expect_error(extract_draws_from_array(rnorm(1e2), 1e4))
+  expect_error(extract_draws(data.frame(rnorm(1e2)), 1))
+
   expect_error(extract_parameters_from_draw(rnorm(1e3), "x", 1))
+  expect_warning(extract_parameters_from_draw(fit_fake, "mu", c(1, 2)))
 })
 
 # Test PPC_group_distribution ----------------------------------------------------
@@ -211,6 +224,12 @@ test_that("extract_draws and related functions catch warnings and errors", {
 test_that("PPC_group_distribution returns a ggplot object", {
   expect_is(PPC_group_distribution(fit_fake, "mu", 1), "ggplot")
   expect_is(PPC_group_distribution(fit_fake, "mu", 100), "ggplot")
+})
+
+test_that("PPC_group_distribution catch errors", {
   expect_error(PPC_group_distribution(fit_fake, "mu", 0))
   expect_error(PPC_group_distribution(fit_fake, "mu", 1e5))
+  expect_error(PPC_group_distribution(matrix(rnorm(1e3), ncol = 10), "mu", 10))
+  expect_error(PPC_group_distribution(fit_fake, c("mu", "y_rep"), 1))
 })
+
