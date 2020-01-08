@@ -137,13 +137,18 @@ test_that("extract_distribution other failures and warnings", {
   expect_warning(extract_distribution(fit_fake, parName = "y_rep", type = "discrete", support = NULL)) # support warning
 })
 
-idx <- observations_dictionary(data_fake)
-
 test_that("process_replications works", {
+  idx <- observations_dictionary(data_fake)
+
+  # test support
   pred_cont <- process_replications(fit_fake, idx = idx, parName = "y_rep", bounds = c(-10, 10), type = "continuous")
   expect_equal(range(pred_cont[["y_rep"]]), c(-10, 10)) # support works
 
-  # need to test whether the truncation works
+  # test truncation
+  pred_eti <- process_replications(fit_fake, idx = idx, parName = "y_rep", bounds = c(-5, 5), type = "eti", CI_level = .99)
+  is_between <- function(x, lb, ub) {x >= lb & x <= ub}
+  expect_true(!any(!c(is_between(pred_eti[["Lower"]], -5, 5), is_between(pred_eti[["Upper"]], -5, 5)), na.rm = TRUE))
+
 })
 
 test_that("process_replications failures and warnings", {
