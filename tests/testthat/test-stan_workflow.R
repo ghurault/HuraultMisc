@@ -175,15 +175,6 @@ test_that("plot_coverage returns a ggplot object", {
   expect_is(plot_coverage(post_samples, truth), "ggplot")
 })
 
-# Test PPC_group_distribution ----------------------------------------------------
-
-test_that("PPC_group_distribution returns a ggplot object", {
-  expect_is(PPC_group_distribution(fit_fake, "mu", 1), "ggplot")
-  expect_is(PPC_group_distribution(fit_fake, "mu", 100), "ggplot")
-  expect_error(PPC_group_distribution(fit_fake, "mu", 0))
-  expect_error(PPC_group_distribution(fit_fake, "mu", 1e5))
-})
-
 # Test plot_prior_posterior -----------------------------------------------
 
 test_that("plot_prior_posterior returns a ggplot object", {
@@ -200,4 +191,13 @@ test_that("extract_parameters_from_draw works", {
   expect_warning(extract_parameters_from_draw(fit_prior, param, c(1, 2)))
   expect_error(extract_parameters_from_draw(fit_prior, param, 0))
   expect_error(extract_parameters_from_draw(fit_prior, param, 1e6))
+})
+
+# Test PPC_group_distribution ----------------------------------------------------
+
+test_that("PPC_group_distribution returns a ggplot object", {
+  expect_is(PPC_group_distribution(fit_fake, "mu", 1), "ggplot")
+  expect_is(PPC_group_distribution(fit_fake, "mu", 100), "ggplot")
+  expect_error(PPC_group_distribution(fit_fake, "mu", 0))
+  expect_error(PPC_group_distribution(fit_fake, "mu", 1e5))
 })
