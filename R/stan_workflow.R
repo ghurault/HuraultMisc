@@ -228,21 +228,25 @@ process_replications <- function(fit, idx = NULL, parName, bounds = NULL, ...) {
 #' @import ggplot2
 PPC_group_distribution <- function(fit, parName, nDraws = 1) {
 
-  tmp <- rstan::extract(fit, parName)[[1]]
-  if (nDraws < 1 | nDraws > nrow(tmp)) {
-    stop("nDraws should be between 1 and ", nrow(tmp), " (number of posterior samples)")
+  if (class(fit) != "stanfit") {
+    stop(as.character(substitute(fit)), " must be a stanfit object")
   }
-  tmp <- tmp[sample(1:nrow(tmp), nDraws), ]
-  if (nDraws == 1) {
-    tmp <- data.frame(Patient = 1:length(tmp), Draw = 1, Parameter = tmp)
-  } else {
-    tmp <- reshape2::melt(tmp,
-                          varnames = c("Draw", "Patient"),
-                          value.name = "Parameter")
+
+  if (length(parName) != 1) {
+    stop(as.character(substitute(parName)), " should be of length one")
   }
+
+  par <- rstan::extract(fit, pars = parName)[[1]]
+
+  max_draw <-nrow(par)
+  if (nDraws < 1 | nDraws > max_draw) {
+    stop("nDraws should be between 1 and ", max_draw, " (number of posterior samples)")
+  }
+
+  tmp <- extract_draws(par, sample(1:max_draw, nDraws, replace = FALSE))
   tmp$Draw <- factor(tmp$Draw)
 
-  ggplot(data = tmp, aes_string(x = "Parameter", group = "Draw")) +
+  ggplot(data = tmp, aes_string(x = "Value", group = "Draw")) +
     geom_density(colour = "#9ecae1") + # pastel blue
     scale_y_continuous(expand = c(0, 0)) +
     labs(x = parName, y = "Density") +
