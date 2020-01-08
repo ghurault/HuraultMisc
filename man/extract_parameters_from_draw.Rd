@@ -4,7 +4,7 @@
 \alias{extract_parameters_from_draw}
 \title{Extract parameters from a single draw}
 \usage{
-extract_parameters_from_draw(fit, param, draw = 1)
+extract_parameters_from_draw(fit, param, draw)
 }
 \arguments{
 \item{fit}{Stanfit object}

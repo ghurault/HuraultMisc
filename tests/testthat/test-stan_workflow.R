@@ -198,6 +198,6 @@ test_that("extract_parameters_from_draw works", {
   expect_equal(sort(param), sort(as.character(unique(tmp[["Parameter"]]))))
 
   expect_warning(extract_parameters_from_draw(fit_prior, param, c(1, 2)))
-  expect_warning(extract_parameters_from_draw(fit_prior, param, 0))
-  expect_warning(extract_parameters_from_draw(fit_prior, param, 1e6))
+  expect_error(extract_parameters_from_draw(fit_prior, param, 0))
+  expect_error(extract_parameters_from_draw(fit_prior, param, 1e6))
 })

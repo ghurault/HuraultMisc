@@ -357,7 +357,70 @@ plot_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05)) {
     theme_bw(base_size = 15)
 }
 
-# Parameters from a single draw -------------------------------------------
+# Extract parameters from draws -------------------------------------------
+
+#' Extract parameters' draws from an array
+#'
+#' @param obj Vector or matrix (columns represents different parameters) of draws
+#' @param draws Vector draws to extract
+#'
+#' @return Dataframe with columns: Draw, Index, Value
+extract_draws_from_array <- function(obj, draws) {
+
+  if (!(class(obj) %in% c("matrix", "array", "numeric"))) {
+    stop(obj, " should be a vector or a matrix")
+  }
+  obj <- as.array(obj)
+
+  draws <- as.integer(draws)
+  if (dim(obj)[1] < max(draws) | min(draws) < 1) {
+    stop("draw should be between 1 and the number of draws in the object: ", dim(obj)[1])
+  }
+
+  d <- dim(obj)
+  if (length(d) == 1) {
+    data.frame(Draw = draws, Index = NA, Value = obj[draws])
+  } else if (length(d) == 2) {
+    reshape2::melt(as.matrix(obj[draws, ]),
+                   varnames = c("Draw", "Index"),
+                   value.name = "Value")
+  } else {
+    stop("Parameters of more than one dimensions (e.g. matrix or array of array) are not supported yet")
+  }
+}
+
+#' Extract parameters' draws
+#'
+#' @param obj Vector, matrix (columns represents different parameters) of draws or list of it
+#' @param draws Vector of draws to extract
+#'
+#' @return Dataframe with columns: Draw, Index, Value, Parameter
+#' @export
+#'
+#' @examples
+#' x <- rnorm(1e3)
+#' X <- matrix(x, ncol = 10)
+#' extract_draws(x, sample(1:length(x), 10))
+#' extract_draws(X, sample(1:nrow(X), 10))
+#' extract_draws(list(x = x, X = X), 1:10)
+extract_draws <- function(obj, draws) {
+
+  if (!(class(obj) %in% c("list", "matrix", "array", "numeric"))) {
+    stop(as.character(substitute(obj)), " should be a vector or a matrix or a list of it")
+  }
+
+  if (class(obj) == "list") {
+    do.call(rbind,
+            lapply(1:length(obj),
+                   function(i) {
+                     tmp <- extract_draws_from_array(obj[[i]], draws)
+                     tmp[["Parameter"]] <- names(obj)[i]
+                     return(tmp)
+                   }))
+  } else {
+    extract_draws_from_array(obj, draws)
+  }
+}
 
 #' Extract parameters from a single draw
 #'
@@ -370,31 +433,18 @@ plot_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05)) {
 #'
 #' @return Dataframe
 #' @export
-extract_parameters_from_draw <- function(fit, param, draw = 1) {
+extract_parameters_from_draw <- function(fit, param, draw) {
 
-  par <- rstan::extract(fit, pars = param)
+  if (class(fit) != "stanfit") {
+    stop(as.character(substitute(fit)), " must be a stanfit object")
+  }
 
   draw <- as.integer(draw)
-  if (length(draw) > 1) {
-    warning("draw should be a single number, taking the first element")
+  if (length(draw) != 1) {
+    warning(as.character(draw), " should be a single number, taking the first element")
     draw <- draw[1]
   }
-  if (dim(par[[1]])[1] < draw | draw < 1) {
-    warning("draw should be between 1 and the number of draws in the stanfit object, taking the first draw")
-    draw <- 1
-  }
 
-  do.call(rbind,
-          lapply(1:length(par),
-                 function(i) {
-                   tmp <- par[[i]]
-                   d <- dim(tmp)
-                   if (length(d) == 1) {
-                     data.frame(Parameter = names(par)[i], Value = tmp[draw], Index = NA)
-                   } else if (length(d) == 2) {
-                     data.frame(Parameter = names(par)[i], Value = tmp[draw, ], Index = 1:ncol(tmp))
-                   } else {
-                     stop("Parameters of more than one dimensions (e.g. matrix or array of array) are not supported yet")
-                   }
-                 }))
+  par <- rstan::extract(fit, pars = param)
+  extract_draws(par, draw)
 }
