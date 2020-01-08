@@ -76,7 +76,6 @@ illustrate_RPS <- function(mu = 5, sigma = 1, observed = 6) {
   cowplot::plot_grid(pdf + labs(subtitle = paste("RPS = ", signif(RPS, 2), " ; RPSS = ", signif(RPSS, 3), sep = "")),
                      cdf,
                      nrow = 2)
-
 }
 
 # Forward chaining --------------------------------------------------------
@@ -118,5 +117,4 @@ illustrate_forward_chaining <- function(horizon = 7, n_it = 5) {
     theme_classic(base_size = 20) +
     theme(axis.title.y = element_text(angle = 90,vjust = 0.5),
           legend.position = "none")
-
 }
