@@ -40,7 +40,7 @@ The distribution can be extracted as:
 \itemize{
 \item a probability density function ("continuous").
 \item a probability mass unction ("discrete").
-\item draws from the distribution ("samples"), in that case, little processing is done.
+\item draws from the distribution ("samples"). In that case, the little processing that is being done is similar to extract_draws, except that only one parameter can be extracted.
 \item a series of equal-tailed confidence/credible intervals ("eti").
 \item a series of highest density confidence/credible intervals ("hdi").
 }
