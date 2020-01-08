@@ -181,16 +181,29 @@ test_that("plot_prior_posterior returns a ggplot object", {
   expect_is(plot_prior_posterior(par_fake, par_prior, param_pop), "ggplot")
 })
 
-# Test extract_parameters_from_draw ---------------------------------------
+# Test extract_draws (and related functions) ---------------------------------------
 
-test_that("extract_parameters_from_draw works", {
+test_that("extract_draws and related function works", {
+  x <- rnorm(1e3)
+  X <- matrix(x, ncol = 10)
+
+  expect_equal(nrow(extract_draws_from_array(x, 10)), 1)
+  expect_equal(nrow(extract_draws_from_array(X, 10)), 1 * ncol(X))
+
+  expect_equal(nrow(extract_draws_from_array(x, 1:10)), 10)
+  expect_equal(nrow(extract_draws_from_array(X, 1:10)), 10 * ncol(X))
+
+  expect_equal(nrow(extract_draws(list(x = x, X = X), 1:10)), 10 + ncol(X) * 10)
+
   tmp <- extract_parameters_from_draw(fit_prior, param, 1)
   expect_equal(nrow(tmp), N_parameters)
   expect_equal(sort(param), sort(as.character(unique(tmp[["Parameter"]]))))
+})
 
-  expect_warning(extract_parameters_from_draw(fit_prior, param, c(1, 2)))
-  expect_error(extract_parameters_from_draw(fit_prior, param, 0))
-  expect_error(extract_parameters_from_draw(fit_prior, param, 1e6))
+test_that("extract_draws and related functions catch warnings and errors", {
+  expect_error(extract_draws_from_array(list(1, 2), 1))
+  expect_error(extract_draws(ggplot(), 1))
+  expect_error(extract_parameters_from_draw(rnorm(1e3), "x", 1))
 })
 
 # Test PPC_group_distribution ----------------------------------------------------
