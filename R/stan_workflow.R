@@ -86,17 +86,17 @@ extract_distribution <- function(object,
   parName <- as.character(parName)
   if (length(parName) > 1) {
     parName <- parName[1]
-    warning("parName should be of length 1, taking the first element: ", parName)
+    warning(as.character(substitute(parName)), " should be of length 1, taking the first element: ", parName)
   }
 
   if (type %in% c("eti", "hdi")) {
     if (max(CI_level) > 1 | min(CI_level) < 0) {
-      stop("CI_level values must be between 0 and 1")
+      stop(as.character(substitute(CI_level)), " values must be between 0 and 1")
     }
   }
 
   if (class(transform) != "function") {
-    stop(transform, " should be a function")
+    stop(as.character(substitute(transform)), " should be a function")
   }
 
   if (is.null(support)) {
@@ -112,7 +112,7 @@ extract_distribution <- function(object,
 
   if (type == "samples") {
     if (nDraws < 1 | nDraws > nrow(ps)) {
-      warning("nDraws should be between 1 and ", nrow(ps), " (number of posterior samples). nDraws set to 1")
+      warning(as.character(substitute(nDraws)), " should be between 1 and ", nrow(ps), " (number of posterior samples). Set to 1")
       nDraws <- 1
     }
     smp <- sample(1:nrow(ps), nDraws)
@@ -185,7 +185,7 @@ extract_distribution <- function(object,
 process_replications <- function(fit, idx = NULL, parName, bounds = NULL, ...) {
 
   if (class(fit) != "stanfit") {
-    stop("fit must be a stanfit object and not of class ", class(fit))
+    stop(as.character(substitute(fit)), " must be a stanfit object and not of class ", class(fit))
   }
 
   if (is.null(bounds)) {
@@ -310,7 +310,11 @@ NULL
 compute_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05)) {
 
   if (ncol(post_samples) != length(truth)) {
-    stop("The number of columns in post_samples should be equal to the length of truth")
+    stop("The number of columns in ",
+         as.character(substitute(post_samples)),
+         " should be equal to the length of ",
+         as.character(substitute(truth)),
+         ": ", length(truth))
   }
 
   df <- do.call(rbind,
