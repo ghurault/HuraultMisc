@@ -210,157 +210,6 @@ process_replications <- function(fit, idx = NULL, parName, bounds = NULL, ...) {
   return(out)
 }
 
-
-# PPC distribution for single draw ----------------------------------------
-
-#' Posterior Predictive Check for Stan model
-#'
-#' Plot the distribution density of parameters within a same group from a single/multiple draw of the posterior distribution.
-#' In the case of a hierarchical model, we might look at the distribution of patient parameter and compare it to the prior for the population distribution.
-#'
-#' @param fit Stanfit object
-#' @param parName Name of the observation-dependent (e.g. patient-dependent) parameter to consider
-#' @param nDraws Number of draws to plot
-#'
-#' @return ggplot of the distribution
-#' @export
-#'
-#' @import ggplot2
-PPC_group_distribution <- function(fit, parName, nDraws = 1) {
-
-  if (class(fit) != "stanfit") {
-    stop(as.character(substitute(fit)), " must be a stanfit object")
-  }
-
-  if (length(parName) != 1) {
-    stop(as.character(substitute(parName)), " should be of length one")
-  }
-
-  par <- rstan::extract(fit, pars = parName)[[1]]
-
-  max_draw <-nrow(par)
-  if (nDraws < 1 | nDraws > max_draw) {
-    stop("nDraws should be between 1 and ", max_draw, " (number of posterior samples)")
-  }
-
-  tmp <- extract_draws(par, sample(1:max_draw, nDraws, replace = FALSE))
-  tmp$Draw <- factor(tmp$Draw)
-
-  ggplot(data = tmp, aes_string(x = "Value", group = "Draw")) +
-    geom_density(colour = "#9ecae1") + # pastel blue
-    scale_y_continuous(expand = c(0, 0)) +
-    labs(x = parName, y = "Density") +
-    theme_classic(base_size = 20)
-}
-
-# Compare posterior to prior estimates ------------------------------------
-
-#' Plot posterior estimates alongside prior estimates
-#'
-#' @param post Dataframe of posterior parameter estimates
-#' @param prior Dataframe of prior parameter estimates
-#' @param param Vector of parameter names to plot
-#'
-#' @return ggplot of parameter estimates
-#' @export
-#'
-#' @import ggplot2
-plot_prior_posterior <- function(post, prior, param) {
-
-  post$Distribution <- "Posterior"
-  prior$Distribution <- "Prior"
-  tmp <- rbind(post[post[["Variable"]] %in% param, ],
-               prior[prior[["Variable"]] %in% param, ])
-  tmp$Distribution <- factor(tmp$Distribution, levels = c("Prior", "Posterior")) # to show posterior on top
-
-  ggplot(data = tmp, aes_string(x = "Variable", y = "Mean", ymin = "`5%`", ymax = "`95%`", colour = "Distribution")) +
-    geom_pointrange(position = position_dodge2(width = .3), size = 1.2) +
-    scale_colour_manual(values = c("#E69F00", "#000000")) +
-    coord_flip() +
-    labs(colour = "", x = "", y = "Estimate") +
-    theme_bw(base_size = 20) +
-    theme(legend.position = "top")
-}
-
-# Plot coverage (not directly Stan-related) -----------------------------------------------------------
-
-#' Coverage probability
-#'
-#' Compute and plot coverage of CI for different confidence level.
-#' Useful for fake data check.
-#'
-#' @param post_samples Matrix of posterior samples. Rows represent a sample and columns represent variables.
-#' @param truth Vector of true parameter values (should be the same length as the number of columns in post_samples).
-#' @param CI Vector of confidence levels.
-#'
-#' @name coverage
-#'
-#' @return
-#' compute_coverage returns a dataframe containing coverage (and 95\% uncertainty interval for the coverage) for different confidence level (nominal coverage).
-#' plot_coverage returns a ggplot of the coverage as the function of the nominal coverage with 95\% uncertainty interval.
-#'
-#' @examples
-#' N <- 100
-#' N_post <- 1e3
-#' truth <- rep(0, N)
-#' post_samples <- sapply(rnorm(N, 0, 1), function(x) {rnorm(N_post, x, 1)})
-#'
-#' compute_coverage(post_samples, truth)
-#' plot_coverage(post_samples, truth)
-NULL
-
-#' @rdname coverage
-#' @export
-compute_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05)) {
-
-  if (ncol(post_samples) != length(truth)) {
-    stop("The number of columns in ",
-         as.character(substitute(post_samples)),
-         " should be equal to the length of ",
-         as.character(substitute(truth)),
-         ": ", length(truth))
-  }
-
-  df <- do.call(rbind,
-                lapply(1:ncol(post_samples),
-                       function(i) {
-                         # For each variable, compute Lower and Upper bounds for different confidence level, and check if the truth is in in the interval
-                         tmp <- do.call(rbind,
-                                        lapply(CI,
-                                               function(ci) {
-                                                 # Compute Lower and Upper bounds of CI for each confidence level
-                                                 alpha <- 1 - ci
-                                                 q <- quantile(post_samples[, i], probs = c(alpha / 2, 1 - alpha / 2))
-                                                 data.frame(Nominal = ci, Variable = i, Lower = q[1], Upper = q[2])
-                                               }))
-                         rownames(tmp) <- NULL
-                         tmp$Coverage <- (truth[i] > tmp$Lower & truth[i] < tmp$Upper)
-                         return(tmp)
-                       }))
-  # Compute coverage and confidence levels (95% fot coverage)
-  cov <- do.call(data.frame,
-                 aggregate(Coverage ~ Nominal, df, function(x) {
-                   Hmisc::binconf(sum(x), length(x), alpha = 0.05, method = "exact")
-                 }))
-  colnames(cov)[-1] <- c("Coverage", "Lower", "Upper")
-
-  return(cov)
-}
-
-#' @rdname coverage
-#' @export
-#' @import ggplot2
-plot_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05)) {
-
-  ggplot(data =  compute_coverage(post_samples, truth, CI),
-         aes_string(x = "Nominal", y = "Coverage", ymin = "Lower", ymax = "Upper")) +
-    geom_line() +
-    geom_ribbon(alpha = 0.5) +
-    geom_abline(intercept = 0, slope = 1, col = "red", linetype = "dashed") +
-    coord_cartesian(xlim = c(0, 1), ylim = c(0, 1), expand = FALSE) +
-    theme_bw(base_size = 15)
-}
-
 # Extract parameters from draws -------------------------------------------
 
 #' Extract parameters' draws from an array
@@ -451,4 +300,154 @@ extract_parameters_from_draw <- function(fit, param, draw) {
 
   par <- rstan::extract(fit, pars = param)
   extract_draws(par, draw)
+}
+
+# Compute and plot coverage (not directly Stan-related) -----------------------------------------------------------
+
+#' Coverage probability
+#'
+#' Compute and plot coverage of CI for different confidence level.
+#' Useful for fake data check.
+#'
+#' @param post_samples Matrix of posterior samples. Rows represent a sample and columns represent variables.
+#' @param truth Vector of true parameter values (should be the same length as the number of columns in post_samples).
+#' @param CI Vector of confidence levels.
+#'
+#' @name coverage
+#'
+#' @return
+#' compute_coverage returns a dataframe containing coverage (and 95\% uncertainty interval for the coverage) for different confidence level (nominal coverage).
+#' plot_coverage returns a ggplot of the coverage as the function of the nominal coverage with 95\% uncertainty interval.
+#'
+#' @examples
+#' N <- 100
+#' N_post <- 1e3
+#' truth <- rep(0, N)
+#' post_samples <- sapply(rnorm(N, 0, 1), function(x) {rnorm(N_post, x, 1)})
+#'
+#' compute_coverage(post_samples, truth)
+#' plot_coverage(post_samples, truth)
+NULL
+
+#' @rdname coverage
+#' @export
+compute_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05)) {
+
+  if (ncol(post_samples) != length(truth)) {
+    stop("The number of columns in ",
+         as.character(substitute(post_samples)),
+         " should be equal to the length of ",
+         as.character(substitute(truth)),
+         ": ", length(truth))
+  }
+
+  df <- do.call(rbind,
+                lapply(1:ncol(post_samples),
+                       function(i) {
+                         # For each variable, compute Lower and Upper bounds for different confidence level, and check if the truth is in in the interval
+                         tmp <- do.call(rbind,
+                                        lapply(CI,
+                                               function(ci) {
+                                                 # Compute Lower and Upper bounds of CI for each confidence level
+                                                 alpha <- 1 - ci
+                                                 q <- quantile(post_samples[, i], probs = c(alpha / 2, 1 - alpha / 2))
+                                                 data.frame(Nominal = ci, Variable = i, Lower = q[1], Upper = q[2])
+                                               }))
+                         rownames(tmp) <- NULL
+                         tmp$Coverage <- (truth[i] > tmp$Lower & truth[i] < tmp$Upper)
+                         return(tmp)
+                       }))
+  # Compute coverage and confidence levels (95% fot coverage)
+  cov <- do.call(data.frame,
+                 aggregate(Coverage ~ Nominal, df, function(x) {
+                   Hmisc::binconf(sum(x), length(x), alpha = 0.05, method = "exact")
+                 }))
+  colnames(cov)[-1] <- c("Coverage", "Lower", "Upper")
+
+  return(cov)
+}
+
+#' @rdname coverage
+#' @export
+#' @import ggplot2
+plot_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05)) {
+
+  ggplot(data =  compute_coverage(post_samples, truth, CI),
+         aes_string(x = "Nominal", y = "Coverage", ymin = "Lower", ymax = "Upper")) +
+    geom_line() +
+    geom_ribbon(alpha = 0.5) +
+    geom_abline(intercept = 0, slope = 1, col = "red", linetype = "dashed") +
+    coord_cartesian(xlim = c(0, 1), ylim = c(0, 1), expand = FALSE) +
+    theme_bw(base_size = 15)
+}
+
+# PPC distribution for single draw ----------------------------------------
+
+#' Posterior Predictive Check for Stan model
+#'
+#' Plot the distribution density of parameters within a same group from a single/multiple draw of the posterior distribution.
+#' In the case of a hierarchical model, we might look at the distribution of patient parameter and compare it to the prior for the population distribution.
+#'
+#' @param fit Stanfit object
+#' @param parName Name of the observation-dependent (e.g. patient-dependent) parameter to consider
+#' @param nDraws Number of draws to plot
+#'
+#' @return ggplot of the distribution
+#' @export
+#'
+#' @import ggplot2
+PPC_group_distribution <- function(fit, parName, nDraws = 1) {
+
+  if (class(fit) != "stanfit") {
+    stop(as.character(substitute(fit)), " must be a stanfit object")
+  }
+
+  if (length(parName) != 1) {
+    stop(as.character(substitute(parName)), " should be of length one")
+  }
+
+  par <- rstan::extract(fit, pars = parName)[[1]]
+
+  max_draw <-nrow(par)
+  if (nDraws < 1 | nDraws > max_draw) {
+    stop("nDraws should be between 1 and ", max_draw, " (number of posterior samples)")
+  }
+
+  tmp <- extract_draws(par, sample(1:max_draw, nDraws, replace = FALSE))
+  tmp$Draw <- factor(tmp$Draw)
+
+  ggplot(data = tmp, aes_string(x = "Value", group = "Draw")) +
+    geom_density(colour = "#9ecae1") + # pastel blue
+    scale_y_continuous(expand = c(0, 0)) +
+    labs(x = parName, y = "Density") +
+    theme_classic(base_size = 20)
+}
+
+# Compare posterior to prior estimates ------------------------------------
+
+#' Plot posterior estimates alongside prior estimates
+#'
+#' @param post Dataframe of posterior parameter estimates
+#' @param prior Dataframe of prior parameter estimates
+#' @param param Vector of parameter names to plot
+#'
+#' @return ggplot of parameter estimates
+#' @export
+#'
+#' @import ggplot2
+plot_prior_posterior <- function(post, prior, param) {
+
+  post$Distribution <- "Posterior"
+  prior$Distribution <- "Prior"
+  tmp <- rbind(post[post[["Variable"]] %in% param, ],
+               prior[prior[["Variable"]] %in% param, ])
+  tmp$Distribution <- factor(tmp$Distribution, levels = c("Prior", "Posterior")) # to show posterior on top
+
+  ggplot(data = tmp, aes_string(x = "Variable", y = "Mean", ymin = "`5%`", ymax = "`95%`", colour = "Distribution")) +
+    geom_pointrange(position = position_dodge2(width = .3), size = 1.2) +
+    scale_colour_manual(values = c("#E69F00", "#000000")) +
+    coord_flip() +
+    labs(colour = "", x = "", y = "Estimate") +
+    theme_bw(base_size = 20) +
+    theme(legend.position = "top")
 }
