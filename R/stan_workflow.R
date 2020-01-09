@@ -351,9 +351,13 @@ compute_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05)) {
   if (ncol(post_samples) != length(truth)) {
     stop("The number of columns in ",
          as.character(substitute(post_samples)),
-         " should be equal to the length of ",
+         " (",
+         ncol(post_samples),
+         ") should be equal to the length of ",
          as.character(substitute(truth)),
-         ": ", length(truth))
+         " (",
+         length(truth),
+         ")")
   }
 
   if (!is.vector(CI, mode = "numeric")) {
