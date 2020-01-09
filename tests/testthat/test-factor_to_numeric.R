@@ -18,7 +18,9 @@ test_that("factor_to_numeric works", {
   }
 })
 
-test_that("factor_to_numeric catch warnings", {
+test_that("factor_to_numeric catch errors and warnings", {
+  expect_error(factor_to_numeric(list(A = factor(1:10), B = "b"), "A")) # list input
+  expect_error(factor_to_numeric(data.frame(A = c(1, 2), B = c(2, 3)), 1)) # factor_name not a character
   expect_warning(factor_to_numeric(data.frame(A = c(1, 2, "C")), "A")) # cannot convert to numeric
   expect_warning(factor_to_numeric(data.frame(A = c(1, 2), B = c(2, 3)), "C")) # factor_name not in colnames(df)
 })
