@@ -98,6 +98,9 @@ extract_distribution <- function(object,
   }
 
   if (type %in% c("eti", "hdi")) {
+    if (!is.vector(CI_level, mode = "numeric")) {
+      stop(as.character(substitute(CI_level)), " must be a numeric vector")
+    }
     if (max(CI_level) > 1 | min(CI_level) < 0) {
       stop(as.character(substitute(CI_level)), " values must be between 0 and 1")
     }

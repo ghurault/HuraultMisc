@@ -135,6 +135,7 @@ test_that("extract_distribution works for different types", {
 
 test_that("extract_distribution other failures and warnings", {
   expect_error(extract_distribution(fit_fake, parName = "y_rep", type = "hdi", CI_level = seq(5, 95, 10))) # error in CI_level
+  expect_error(extract_distribution(fit_fake, parname = "y_rep", type = "hdi", CI_level = c("50%", "95%"))) # error in CI_level
   expect_warning(extract_distribution(fit_fake, parName = c("y_rep", "mu"))) # multiple parName
   expect_error(extract_distribution(fit_fake, parName = "y_rep", transform = "log")) # transform not a function
   expect_warning(extract_distribution(fit_fake, parName = "y_rep", type = "samples", nDraws = 1e5)) # nDraws warning
