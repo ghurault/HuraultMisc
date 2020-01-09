@@ -352,10 +352,10 @@ compute_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05)) {
          ": ", length(truth))
   }
 
+  # For each variable, compute Lower and Upper bounds for different confidence level, and check if the truth is in in the interval
   df <- do.call(rbind,
                 lapply(1:ncol(post_samples),
                        function(i) {
-                         # For each variable, compute Lower and Upper bounds for different confidence level, and check if the truth is in in the interval
                          tmp <- do.call(rbind,
                                         lapply(CI,
                                                function(ci) {
