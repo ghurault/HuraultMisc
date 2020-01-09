@@ -483,11 +483,19 @@ plot_prior_posterior <- function(post, prior, param) {
                prior[prior[["Variable"]] %in% param, ])
   tmp$Distribution <- factor(tmp$Distribution, levels = c("Prior", "Posterior")) # to show posterior on top
 
-  ggplot(data = tmp, aes_string(x = "Variable", y = "Mean", ymin = "`5%`", ymax = "`95%`", colour = "Distribution")) +
-    geom_pointrange(position = position_dodge2(width = .3), size = 1.2) +
-    scale_colour_manual(values = c("#E69F00", "#000000")) +
-    coord_flip() +
-    labs(colour = "", x = "", y = "Estimate") +
-    theme_bw(base_size = 20) +
-    theme(legend.position = "top")
+  if (nrow(tmp) == 0) {
+    warning(as.character(substitute(param)), " does not contain parameters present in post or in prior")
+    NULL
+  } else if (any(!c("Mean", "5%", "95%") %in% colnames(tmp))) {
+    warning("post or prior do not contain the columns `Mean`, `5%` or `95%`")
+    NULL
+  } else {
+    ggplot(data = tmp, aes_string(x = "Variable", y = "Mean", ymin = "`5%`", ymax = "`95%`", colour = "Distribution")) +
+      geom_pointrange(position = position_dodge2(width = .3), size = 1.2) +
+      scale_colour_manual(values = c("#E69F00", "#000000")) +
+      coord_flip() +
+      labs(colour = "", x = "", y = "Estimate") +
+      theme_bw(base_size = 20) +
+      theme(legend.position = "top")
+  }
 }
