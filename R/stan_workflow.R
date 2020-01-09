@@ -241,9 +241,15 @@ extract_draws_from_array <- function(obj, draws) {
   if (length(d) == 1) {
     data.frame(Draw = draws, Index = NA, Value = obj[draws])
   } else if (length(d) == 2) {
-    reshape2::melt(as.matrix(obj[draws, ]),
-                   varnames = c("Draw", "Index"),
-                   value.name = "Value")
+    tmp <- obj[draws, ]
+    if (length(draws) == 1) {
+      data.frame(Draw = draws, Index = 1:length(tmp), Value = tmp)
+    } else {
+      rownames(tmp) <- draws
+      reshape2::melt(tmp,
+                     varnames = c("Draw", "Index"),
+                     value.name = "Value")
+    }
   } else {
     stop("Parameters of more than one dimensions (e.g. matrix or array of array) are not supported yet")
   }
