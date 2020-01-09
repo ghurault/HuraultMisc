@@ -469,6 +469,18 @@ PPC_group_distribution <- function(fit, parName, nDraws = 1) {
 #' @import ggplot2
 plot_prior_posterior <- function(post, prior, param) {
 
+  if (!is.data.frame(post)) {
+    stop(as.character(substitute(post)), " must be a dataframe")
+  }
+
+  if (!is.data.frame(prior)) {
+    stop(as.character(substitute(prior)), " must be a dataframe")
+  }
+
+  if (!is.vector(param, mode = "character")) {
+    stop(as.character(substitute(param)), " must be a character vector")
+  }
+
   post$Distribution <- "Posterior"
   prior$Distribution <- "Prior"
   tmp <- rbind(post[post[["Variable"]] %in% param, ],

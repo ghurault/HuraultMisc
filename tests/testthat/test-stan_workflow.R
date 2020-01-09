@@ -192,6 +192,13 @@ test_that("plot_prior_posterior returns a ggplot object", {
   expect_is(plot_prior_posterior(par_fake, par_prior, param_pop), "ggplot")
 })
 
+test_that("plot_prior_posterior catches errors", {
+  expect_error(plot_prior_posterior(as.matrix(par_fake), par_prior, param_pop))
+  expect_error(plot_prior_posterior(par_fake, as.matrix(par_prior), param_pop))
+  expect_error(plot_prior_posterior(par_fake, as.matrix(par_prior), param_pop))
+  expect_error(plot_prior_posterior(par_fake, par_prior, as.list(param_pop)))
+})
+
 # Test extract_draws (and related functions) ---------------------------------------
 
 test_that("extract_draws and related function works", {
