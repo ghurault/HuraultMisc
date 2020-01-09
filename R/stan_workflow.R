@@ -140,7 +140,7 @@ extract_distribution <- function(object,
 
     x <- transform(x)
     if (type == "continuous") {
-      d <- density(x, kernel = "gaussian", from = min(support), to = max(support), n = nDensity)
+      d <- density(x, kernel = "gaussian", from = min(support), to = max(support), n = as.integer(nDensity))
       data.frame(Value = d$x,
                  Density = d$y)
     } else if (type == "discrete") {
