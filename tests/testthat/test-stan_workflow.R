@@ -175,6 +175,11 @@ test_that("coverage is accurate", {
 
 test_that("compute_coverage catch errors", {
   expect_error(compute_coverage(post_samples, truth[-1]))
+  expect_error(compute_coverage(data.frame(post_samples), truth))
+  expect_error(compute_coverage(post_samples, data.frame(truth)))
+  expect_error(compute_coverage(post_samples, as.character(truth)))
+  expect_error(compute_coverage(post_samples, truth, paste0(seq(0, 100, 5), "%")))
+  expect_error(compute_coverage(post_samples, truth, seq(0, 100, 5)))
 })
 
 test_that("plot_coverage returns a ggplot object", {

@@ -344,12 +344,28 @@ NULL
 #' @export
 compute_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05)) {
 
+  if (!is.matrix(post_samples)) {
+    stop(as.character(substitute(post_samples)), " must be a matrix")
+  }
+
+  if (!is.vector(truth, mode = "numeric")) {
+    stop(as.character(substitute(truth)), " must be a numeric vector")
+  }
+
   if (ncol(post_samples) != length(truth)) {
     stop("The number of columns in ",
          as.character(substitute(post_samples)),
          " should be equal to the length of ",
          as.character(substitute(truth)),
          ": ", length(truth))
+  }
+
+  if (!is.vector(CI, mode = "numeric")) {
+    stop(as.character(substitute(CI)), " must be a numeric vector")
+  }
+
+  if (min(CI) < 0 | max(CI) > 1) {
+    stop(as.character(substitute(CI)), " values must be in [0, 1]")
   }
 
   # For each variable, compute Lower and Upper bounds for different confidence level, and check if the truth is in in the interval
@@ -368,6 +384,7 @@ compute_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05)) {
                          tmp$Coverage <- (truth[i] > tmp$Lower & truth[i] < tmp$Upper)
                          return(tmp)
                        }))
+
   # Compute coverage and confidence levels (95% fot coverage)
   cov <- do.call(data.frame,
                  aggregate(Coverage ~ Nominal, df, function(x) {
