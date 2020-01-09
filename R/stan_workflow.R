@@ -77,7 +77,7 @@ extract_distribution <- function(object,
 
   if (class(object) == "stanfit") {
     ps <- rstan::extract(object, pars = parName)[[1]]
-  } else if (class(object) %in% c("matrix", "array", "numeric")) {
+  } else if (is.numeric(object) & (is.vector(object) | is.matrix(object) | is.array(object))) {
     ps <- as.array(object)
   } else {
     stop("object of class ", class(object), " not supported")
@@ -95,7 +95,7 @@ extract_distribution <- function(object,
     }
   }
 
-  if (class(transform) != "function") {
+  if (!is.function(transform)) {
     stop(as.character(substitute(transform)), " should be a function")
   }
 
@@ -220,14 +220,14 @@ process_replications <- function(fit, idx = NULL, parName, bounds = NULL, ...) {
 #' @return Dataframe with columns: Draw, Index, Value
 extract_draws_from_array <- function(obj, draws) {
 
-  if (!(class(obj) %in% c("matrix", "array", "numeric"))) {
-    stop(obj, " should be a vector or a matrix")
+  if (!(is.vector(obj, mode = "numeric") | is.matrix(obj) | is.array(obj))) {
+    stop(as.character(substitute(obj)), " should be a vector or a matrix")
   }
   obj <- as.array(obj)
 
   draws <- as.integer(draws)
   if (dim(obj)[1] < max(draws) | min(draws) < 1) {
-    stop("draw should be between 1 and the number of draws in the object: ", dim(obj)[1])
+    stop(as.character(substitute(draws)), " values should be between 1 and the number of draws in the object: ", dim(obj)[1])
   }
 
   d <- dim(obj)
@@ -258,11 +258,11 @@ extract_draws_from_array <- function(obj, draws) {
 #' extract_draws(list(x = x, X = X), 1:10)
 extract_draws <- function(obj, draws) {
 
-  if (!(class(obj) %in% c("list", "matrix", "array", "numeric"))) {
+  if (!(inherits(obj, "list") | is.vector(obj, mode = "numeric") | is.matrix(obj) | is.array(obj))) {
     stop(as.character(substitute(obj)), " should be a vector or a matrix or a list of it")
   }
 
-  if (class(obj) == "list") {
+  if (is.list(obj)) {
     do.call(rbind,
             lapply(1:length(obj),
                    function(i) {
