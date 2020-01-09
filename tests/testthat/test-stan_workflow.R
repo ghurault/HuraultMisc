@@ -72,6 +72,11 @@ test_that("summary_statistics returns a correct dataframe", {
   expect_equal(nrow(par_fake[par_fake$Variable == "y_rep", ]), N)
 })
 
+test_that("summary_statistics catches errors", {
+  expect_error(summary_statistics(rnorm(1e3), ""))
+  expect_error(summary_statistics(fit_fake, 1))
+})
+
 # Test extract_distribution and process_replications ----------------------
 
 test_that("extract_distribution works with different objects", {
