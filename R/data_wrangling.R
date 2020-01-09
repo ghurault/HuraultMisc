@@ -14,6 +14,14 @@
 #' df <- change_colnames(df, c("A", "C"), c("Aa", "Cc"))
 change_colnames <- function(df, current_names, new_names) {
 
+  if (!is.data.frame(df)) {
+    stop(as.character(substitute(df)), " should be a data.frame")
+  }
+
+  if (!(is.vector(current_names, mode = "character") & is.vector(new_names, mode = "character"))) {
+    stop(as.character(substitute(current_names)), " and ", as.character(substitute(new_names)), " should be character vectors")
+  }
+
   if (length(current_names) != length(new_names)){
     stop("The two input names should have the same length.")
   }
@@ -40,6 +48,14 @@ change_colnames <- function(df, current_names, new_names) {
 #' df <- factor_to_numeric(df, "A")
 factor_to_numeric <- function(df, factor_name) {
 
+  if (!is.data.frame(df)) {
+    stop(as.character(substitute(df)), " should be a dataframe")
+  }
+
+  if (!is.vector(factor_name, mode = "character")) {
+    stop(as.character(substitute(df)), " should be a character vector")
+  }
+
   factor_name <- intersect(colnames(df), factor_name)
   if (length(factor_name) == 0) {
     warning("The intersection of columns names of ",
@@ -55,5 +71,6 @@ factor_to_numeric <- function(df, factor_name) {
       }
     }
   }
+
   return(df)
 }
