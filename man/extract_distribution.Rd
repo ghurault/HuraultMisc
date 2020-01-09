@@ -30,7 +30,7 @@ extract_distribution(
 
 \item{nDraws}{Number of draws from the distribution. Applies when type = "samples"}
 
-\item{CI_level}{Vector containing the level of the confidence/credible intervals}
+\item{CI_level}{Vector containing the level of the confidence/credible intervals. Applies when type = "eti" or type = "hdi".}
 }
 \value{
 Dataframe

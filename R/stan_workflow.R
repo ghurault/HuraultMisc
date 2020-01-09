@@ -59,7 +59,7 @@ summary_statistics <- function(fit, param, quant = c(.05, .25, .5, .75, .95)) {
 #' @param transform Function to apply to the samples
 #' @param nDensity Number of equally spaced points at which the density is to be estimated (better to use a power of 2). Applies when type = "continuous".
 #' @param nDraws Number of draws from the distribution. Applies when type = "samples"
-#' @param CI_level Vector containing the level of the confidence/credible intervals
+#' @param CI_level Vector containing the level of the confidence/credible intervals. Applies when type = "eti" or type = "hdi".
 #'
 #' @return Dataframe
 #' @export
@@ -129,7 +129,7 @@ extract_distribution <- function(object,
 
     x <- transform(x)
     if (type == "continuous") {
-      d <- density(x, kernel = "gaussian", from = min(support), to = max(support), n = nDensity) # select a power of 2 for n, not too much or it takes memory
+      d <- density(x, kernel = "gaussian", from = min(support), to = max(support), n = nDensity)
       data.frame(Value = d$x,
                  Density = d$y)
     } else if (type == "discrete") {
