@@ -233,6 +233,7 @@ test_that("PPC_group_distribution returns a ggplot object", {
 })
 
 test_that("PPC_group_distribution catch errors", {
+  expect_error(PPC_group_distribution(fit_fake, 1))
   expect_error(PPC_group_distribution(fit_fake, "mu", 0))
   expect_error(PPC_group_distribution(fit_fake, "mu", 1e5))
   expect_error(PPC_group_distribution(matrix(rnorm(1e3), ncol = 10), "mu", 10))

@@ -413,6 +413,10 @@ PPC_group_distribution <- function(fit, parName, nDraws = 1) {
     stop(as.character(substitute(fit)), " must be a stanfit object")
   }
 
+  if (!is.character(parName)) {
+    stop(as.character(substitute(parName)), "must be a string")
+  }
+
   if (length(parName) != 1) {
     stop(as.character(substitute(parName)), " should be of length one")
   }
