@@ -42,19 +42,18 @@ factor_to_numeric <- function(df, factor_name) {
 
   factor_name <- intersect(colnames(df), factor_name)
   if (length(factor_name) == 0) {
-    stop("The intersection of columns names of ",
+    warning("The intersection of columns names of ",
          as.character(df),
          " and ",
          as.character(substitute(df)),
-         " should not be empty")
-  }
-
-  for (i in 1:length(factor_name)) {
-    tmp <- df[, factor_name[i]]
-    if (is.factor(tmp)) {
-      df[, factor_name[i]] <- as.numeric(levels(tmp))[tmp]
+         " is empty")
+  } else {
+    for (i in 1:length(factor_name)) {
+      tmp <- df[, factor_name[i]]
+      if (is.factor(tmp)) {
+        df[, factor_name[i]] <- as.numeric(levels(tmp))[tmp]
+      }
     }
   }
-
   return(df)
 }
