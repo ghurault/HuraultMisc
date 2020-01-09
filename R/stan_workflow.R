@@ -25,10 +25,6 @@ summary_statistics <- function(fit, param, quant = c(.05, .25, .5, .75, .95)) {
     stop(as.character(substitute(fit)), " must be a stanfit object")
   }
 
-  if (!is.vector(param, mode = "character")) {
-    stop(as.character(substitute(param)), " must be a character vector")
-  }
-
   par <- rstan::summary(fit, pars = param, probs = quant)$summary
   par <- as.data.frame(par)
 
