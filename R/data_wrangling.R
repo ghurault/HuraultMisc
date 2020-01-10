@@ -14,17 +14,10 @@
 #' df <- change_colnames(df, c("A", "C"), c("Aa", "Cc"))
 change_colnames <- function(df, current_names, new_names) {
 
-  if (!is.data.frame(df)) {
-    stop(as.character(substitute(df)), " should be a data.frame")
-  }
-
-  if (!(is.vector(current_names, mode = "character") & is.vector(new_names, mode = "character"))) {
-    stop(as.character(substitute(current_names)), " and ", as.character(substitute(new_names)), " should be character vectors")
-  }
-
-  if (length(current_names) != length(new_names)){
-    stop("The two input names should have the same length.")
-  }
+  stopifnot(is.data.frame(df),
+            is.vector(current_names, mode = "character"),
+            is.vector(new_names, mode = "character"),
+            length(current_names) == length(new_names))
 
   for (i in 1:length(current_names)) {
     colnames(df)[colnames(df) == current_names[i]] <- new_names[i]
@@ -48,13 +41,8 @@ change_colnames <- function(df, current_names, new_names) {
 #' df <- factor_to_numeric(df, "A")
 factor_to_numeric <- function(df, factor_name) {
 
-  if (!is.data.frame(df)) {
-    stop(as.character(substitute(df)), " should be a dataframe")
-  }
-
-  if (!is.vector(factor_name, mode = "character")) {
-    stop(as.character(substitute(df)), " should be a character vector")
-  }
+  stopifnot(is.data.frame(df),
+            is.vector(factor_name, mode = "character"))
 
   factor_name <- intersect(colnames(df), factor_name)
   if (length(factor_name) == 0) {

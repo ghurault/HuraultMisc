@@ -27,15 +27,12 @@ compute_calibration <- function(forecast, outcome, method = c("smoothing", "binn
 
   method <- match.arg(method)
 
-  if (max(forecast) > 1 | min(forecast) < 0) {
-    stop(as.character.condition(forecast), " values should be between 0 and 1")
-  }
+  stopifnot(max(forecast) <= 1,
+            min(forecast) >= 0,
+            is.null(CI) || (CI < 1 && CI > 0))
+
   if (sum(outcome == 0 | outcome == 1, na.rm = TRUE) != length(outcome)) {
     stop(as.character(substitute(outcome)), " values should be only 0 or 1")
-  }
-  if (!is.null(CI)){
-    if (CI >= 1 | CI <= 0)
-      stop(as.character(substitute(CI))," should be NULL or between 0 and 1")
   }
 
   if (method == "smoothing") {
@@ -60,10 +57,10 @@ compute_calibration <- function(forecast, outcome, method = c("smoothing", "binn
 
   } else if (method == "binning") {
 
+    stopifnot(is.null(binwidth) || (binwidth > 0 && binwidth < 1))
+
     if (is.null(binwidth)) {
       binwidth <- 1 / grDevices::nclass.Sturges(as.vector(as.matrix(forecast))) # Automatic bin width selection
-    } else if (binwidth <= 0 | binwidth >= 1) {
-      stop(as.character(substitute(binwidth)), " should be NULL or between 0 and 1")
     }
     forecast <- round(forecast / binwidth) * binwidth
     bins <- seq(0, 1, binwidth)
@@ -104,12 +101,10 @@ compute_calibration <- function(forecast, outcome, method = c("smoothing", "binn
 #' compute_resolution(seq(0, 1, .1), 0.5)
 compute_resolution <- function(f, p0) {
 
-  if (max(f) > 1 | min(f) < 0) {
-    stop(as.character(substitute(f)), " values should be between 0 and 1")
-  }
-  if (max(p0) > 1 | min(p0) < 0) {
-    stop(as.character(substitute(p0)), " values should be between 0 and 1")
-  }
+  stopifnot(min(f) >= 0,
+            max(f) <= 1,
+            min(p0) >= 0,
+            max(p0) <= 1)
 
   reso <- mean((f - p0)^2)
   uncertainty <- mean(p0 * (1 - p0))

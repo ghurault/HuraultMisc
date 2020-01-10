@@ -94,17 +94,11 @@ extract_distribution <- function(object,
   }
 
   if (type %in% c("eti", "hdi")) {
-    if (!is.vector(CI_level, mode = "numeric")) {
-      stop(as.character(substitute(CI_level)), " must be a numeric vector")
-    }
-    if (max(CI_level) > 1 | min(CI_level) < 0) {
-      stop(as.character(substitute(CI_level)), " values must be between 0 and 1")
-    }
+    stopifnot(is.vector(CI_level, mode = "numeric"),
+              min(CI_level) >=0 && max(CI_level) <= 1)
   }
 
-  if (!is.function(transform)) {
-    stop(as.character(substitute(transform)), " should be a function")
-  }
+  stopifnot(is.function(transform))
 
   if (is.null(support)) {
     if (type == "continuous" | type == "discrete") {
@@ -227,15 +221,13 @@ process_replications <- function(fit, idx = NULL, parName, bounds = NULL, ...) {
 #' @return Dataframe with columns: Draw, Index, Value
 extract_draws_from_array <- function(obj, draws) {
 
-  if (!(is.vector(obj, mode = "numeric") | is.matrix(obj) | is.array(obj))) {
-    stop(as.character(substitute(obj)), " should be a vector or a matrix")
-  }
-  obj <- as.array(obj)
+  stopifnot(is.vector(obj, mode = "numeric") || is.matrix(obj) || is.array(obj))
 
+  obj <- as.array(obj)
   draws <- as.integer(draws)
-  if (dim(obj)[1] < max(draws) | min(draws) < 1) {
-    stop(as.character(substitute(draws)), " values should be between 1 and the number of draws in the object: ", dim(obj)[1])
-  }
+
+  stopifnot(min(draws) >= 1,
+            max(draws) <= dim(obj)[1])
 
   d <- dim(obj)
   if (length(d) == 1) {
@@ -271,7 +263,7 @@ extract_draws_from_array <- function(obj, draws) {
 #' extract_draws(list(x = x, X = X), 1:10)
 extract_draws <- function(obj, draws) {
 
-  if (!(inherits(obj, "list") | is.vector(obj, mode = "numeric") | is.matrix(obj) | is.array(obj))) {
+  if (!(inherits(obj, "list") || is.vector(obj, mode = "numeric") || is.matrix(obj) || is.array(obj))) {
     stop(as.character(substitute(obj)), " should be a vector or a matrix or a list of it")
   }
 
@@ -346,33 +338,11 @@ NULL
 #' @export
 compute_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05)) {
 
-  if (!is.matrix(post_samples)) {
-    stop(as.character(substitute(post_samples)), " must be a matrix")
-  }
-
-  if (!is.vector(truth, mode = "numeric")) {
-    stop(as.character(substitute(truth)), " must be a numeric vector")
-  }
-
-  if (ncol(post_samples) != length(truth)) {
-    stop("The number of columns in ",
-         as.character(substitute(post_samples)),
-         " (",
-         ncol(post_samples),
-         ") should be equal to the length of ",
-         as.character(substitute(truth)),
-         " (",
-         length(truth),
-         ")")
-  }
-
-  if (!is.vector(CI, mode = "numeric")) {
-    stop(as.character(substitute(CI)), " must be a numeric vector")
-  }
-
-  if (min(CI) < 0 | max(CI) > 1) {
-    stop(as.character(substitute(CI)), " values must be in [0, 1]")
-  }
+  stopifnot(is.matrix(post_samples),
+            is.vector(truth, mode = "numeric"),
+            ncol(post_samples) == length(truth),
+            is.vector(CI, mode = "numeric"),
+            min(CI) >= 0 && max(CI) <= 1)
 
   # For each variable, compute Lower and Upper bounds for different confidence level, and check if the truth is in in the interval
   df <- do.call(rbind,
@@ -436,13 +406,8 @@ PPC_group_distribution <- function(fit, parName, nDraws = 1) {
     stop(as.character(substitute(fit)), " must be a stanfit object")
   }
 
-  if (!is.character(parName)) {
-    stop(as.character(substitute(parName)), "must be a string")
-  }
-
-  if (length(parName) != 1) {
-    stop(as.character(substitute(parName)), " should be of length one")
-  }
+  stopifnot(is.character(parName),
+            length(parName) == 1)
 
   par <- rstan::extract(fit, pars = parName)[[1]]
 
@@ -475,17 +440,9 @@ PPC_group_distribution <- function(fit, parName, nDraws = 1) {
 #' @import ggplot2
 plot_prior_posterior <- function(post, prior, param) {
 
-  if (!is.data.frame(post)) {
-    stop(as.character(substitute(post)), " must be a dataframe")
-  }
-
-  if (!is.data.frame(prior)) {
-    stop(as.character(substitute(prior)), " must be a dataframe")
-  }
-
-  if (!is.vector(param, mode = "character")) {
-    stop(as.character(substitute(param)), " must be a character vector")
-  }
+  stopifnot(is.data.frame(post),
+            is.data.frame(prior),
+            is.vector(param, mode = "character"))
 
   post$Distribution <- "Posterior"
   prior$Distribution <- "Prior"
