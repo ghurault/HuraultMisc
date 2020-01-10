@@ -164,7 +164,7 @@ test_that("extract_draws and related function works", {
              sample(1:length(x), 10),
              sample(1:nrow(X), 1),
              sample(1:nrow(X), 10),
-             11:20, 10)
+             11:20)
   tmp <- list(extract_draws_from_array(x, dr[[1]]),
               extract_draws_from_array(x, dr[[2]]),
               extract_draws_from_array(X, dr[[3]]),
