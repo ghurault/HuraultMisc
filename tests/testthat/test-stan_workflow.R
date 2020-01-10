@@ -160,21 +160,30 @@ test_that("extract_draws and related function works", {
   x <- rnorm(1e3)
   X <- matrix(x, ncol = 10)
 
-  tmp <- list(extract_draws_from_array(x, 10),
-              extract_draws_from_array(X, 10),
-              extract_draws_from_array(x, 1:10),
-              extract_draws_from_array(X, 1:10),
-              extract_draws(list(x = x, X = X), 1:10))
-  sol_nrow <- c(1,
-                1 * ncol(X),
-                10,
-                10 * ncol(X),
-                10 + ncol(X) * 10)
+  dr <- list(sample(1:length(x), 1),
+             sample(1:length(x), 10),
+             sample(1:nrow(X), 1),
+             sample(1:nrow(X), 10),
+             11:20, 10)
+  tmp <- list(extract_draws_from_array(x, dr[[1]]),
+              extract_draws_from_array(x, dr[[2]]),
+              extract_draws_from_array(X, dr[[3]]),
+              extract_draws_from_array(X, dr[[4]]),
+              extract_draws(list(x = x, X = X), dr[[5]]))
+  sol_nrow <- c(length(dr[[1]]),
+                length(dr[[2]]),
+                length(dr[[3]]) * ncol(X),
+                length(dr[[4]]) * ncol(X),
+                length(dr[[5]]) * (1 + ncol(X)))
   sol_ncol <- c(3, 3, 3, 3, 4)
 
   for (i in 1:length(tmp)) {
+    # Size dataframe
     expect_equal(nrow(tmp[[i]]), sol_nrow[i])
     expect_equal(ncol(tmp[[i]]), sol_ncol[i])
+    # Content dataframe
+    expect_equal(sort(unique(tmp[[i]][["Draw"]])), sort(dr[[i]]))
+    expect_true(!any(is.na(tmp[[i]][["Value"]])))
   }
 
   tmp <- extract_parameters_from_draw(fit_prior, param, 1)
