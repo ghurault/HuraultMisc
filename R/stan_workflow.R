@@ -381,6 +381,7 @@ plot_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05)) {
     geom_line() +
     geom_ribbon(alpha = 0.5) +
     geom_abline(intercept = 0, slope = 1, col = "red", linetype = "dashed") +
+    annotate("text", x = c(.2, .8), y = c(.8, .2), label = c("Inefficient", "Inaccurate"), size = 7) + # inefficient or sub-optimal
     coord_cartesian(xlim = c(0, 1), ylim = c(0, 1), expand = FALSE) +
     theme_bw(base_size = 15)
 }
