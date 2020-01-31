@@ -90,13 +90,15 @@ compute_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05), type = c
 #' @export
 #' @import ggplot2
 plot_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05), type = c("eti", "hdi")) {
+  col <- "#0072B2"
 
   ggplot(data =  compute_coverage(post_samples, truth, CI, type),
          aes_string(x = "Nominal", y = "Coverage", ymin = "Lower", ymax = "Upper")) +
-    geom_line() +
-    geom_ribbon(alpha = 0.5) +
-    geom_abline(intercept = 0, slope = 1, col = "red", linetype = "dashed") +
+    geom_line(colour = col, size = 1.5) +
+    geom_ribbon(alpha = 0.5, fill = col) +
+    geom_abline(intercept = 0, slope = 1, colour = "black", linetype = "dashed") +
     annotate("text", x = c(.2, .8), y = c(.8, .2), label = c("Inefficient", "Inaccurate"), size = 7) + # inefficient or sub-optimal
+    labs(x = "Nominal coverage", y = "Observed coverage") +
     coord_cartesian(xlim = c(0, 1), ylim = c(0, 1), expand = FALSE) +
-    theme_bw(base_size = 15)
+    theme_bw(base_size = 20)
 }
