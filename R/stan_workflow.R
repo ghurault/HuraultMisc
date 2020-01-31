@@ -337,6 +337,7 @@ extract_parameters_from_draw <- function(fit, param, draw) {
 #' @param post_samples Matrix of posterior samples. Rows represent a sample and columns represent variables.
 #' @param truth Vector of true parameter values (should be the same length as the number of columns in post_samples).
 #' @param CI Vector of confidence levels.
+#' @param type Type of confidence intervals: either "eti" (equal-tailed intervals) or "hdi" (highest density intervals)
 #'
 #' @name coverage
 #'
@@ -356,28 +357,39 @@ NULL
 
 #' @rdname coverage
 #' @export
-compute_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05)) {
+compute_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05), type = c("eti", "hdi")) {
 
   stopifnot(is.matrix(post_samples),
             is.vector(truth, mode = "numeric"),
             ncol(post_samples) == length(truth),
             is.vector(CI, mode = "numeric"),
             min(CI) >= 0 && max(CI) <= 1)
+  type <- match.arg(type)
+
+  if (type == "hdi") {
+    CI <- CI[CI > 0 & CI < 1]
+  }
 
   # For each variable, compute Lower and Upper bounds for different confidence level, and check if the truth is in in the interval
   df <- do.call(rbind,
                 lapply(1:ncol(post_samples),
                        function(i) {
-                         tmp <- do.call(rbind,
-                                        lapply(CI,
-                                               function(ci) {
-                                                 # Compute Lower and Upper bounds of CI for each confidence level
-                                                 alpha <- 1 - ci
-                                                 q <- quantile(post_samples[, i], probs = c(alpha / 2, 1 - alpha / 2))
-                                                 data.frame(Nominal = ci, Variable = i, Lower = q[1], Upper = q[2])
-                                               }))
+
+                         if (type == "eti") {
+                           tmp <- do.call(rbind,
+                                          lapply(CI,
+                                                 function(lvl) {
+                                                   # Compute Lower and Upper bounds of CI for each confidence level
+                                                   alpha <- 1 - lvl
+                                                   q <- quantile(post_samples[, i], probs = c(alpha / 2, 1 - alpha / 2))
+                                                   data.frame(Nominal = lvl, Variable = i, Lower = q[1], Upper = q[2])
+                                                 }))
+                         } else if (type == "hdi") {
+                           x <- sapply(CI, function(lvl) {HDInterval::hdi(post_samples[, i], credMass = lvl)})
+                           tmp <- data.frame(Nominal = CI, Variable = i, Lower = x["lower", ], Upper = x["upper", ])
+                         }
                          rownames(tmp) <- NULL
-                         tmp$Coverage <- (truth[i] > tmp$Lower & truth[i] < tmp$Upper)
+                         tmp$Coverage <- (truth[i] >= tmp$Lower & truth[i] <= tmp$Upper)
                          return(tmp)
                        }))
 
@@ -394,9 +406,9 @@ compute_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05)) {
 #' @rdname coverage
 #' @export
 #' @import ggplot2
-plot_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05)) {
+plot_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05), type = c("eti", "hdi")) {
 
-  ggplot(data =  compute_coverage(post_samples, truth, CI),
+  ggplot(data =  compute_coverage(post_samples, truth, CI, type),
          aes_string(x = "Nominal", y = "Coverage", ymin = "Lower", ymax = "Upper")) +
     geom_line() +
     geom_ribbon(alpha = 0.5) +

@@ -6,9 +6,19 @@
 \alias{plot_coverage}
 \title{Coverage probability}
 \usage{
-compute_coverage(post_samples, truth, CI = seq(0, 1, 0.05))
+compute_coverage(
+  post_samples,
+  truth,
+  CI = seq(0, 1, 0.05),
+  type = c("eti", "hdi")
+)
 
-plot_coverage(post_samples, truth, CI = seq(0, 1, 0.05))
+plot_coverage(
+  post_samples,
+  truth,
+  CI = seq(0, 1, 0.05),
+  type = c("eti", "hdi")
+)
 }
 \arguments{
 \item{post_samples}{Matrix of posterior samples. Rows represent a sample and columns represent variables.}
@@ -16,6 +26,8 @@ plot_coverage(post_samples, truth, CI = seq(0, 1, 0.05))
 \item{truth}{Vector of true parameter values (should be the same length as the number of columns in post_samples).}
 
 \item{CI}{Vector of confidence levels.}
+
+\item{type}{Type of confidence intervals: either "eti" (equal-tailed intervals) or "hdi" (highest density intervals)}
 }
 \value{
 compute_coverage returns a dataframe containing coverage (and 95\% uncertainty interval for the coverage) for different confidence level (nominal coverage).
