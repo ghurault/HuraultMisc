@@ -41,9 +41,7 @@ compute_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05), type = c
             min(CI) >= 0 && max(CI) <= 1)
   type <- match.arg(type)
 
-  if (type == "hdi") {
-    CI <- CI[CI > 0 & CI < 1]
-  }
+  CI <- CI[CI > 0 & CI < 1]
 
   # For each variable, compute Lower and Upper bounds for different confidence level, and check if the truth is in in the interval
   df <- do.call(rbind,
@@ -74,6 +72,14 @@ compute_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05), type = c
                    Hmisc::binconf(sum(x), length(x), alpha = 0.05, method = "exact")
                  }))
   colnames(cov)[-1] <- c("Coverage", "Lower", "Upper")
+
+  # Add extreme values
+  cov <- rbind(cov,
+               data.frame(Nominal = c(0, 1),
+                          Coverage = c(0, 1),
+                          Lower = c(0, 1),
+                          Upper = c(0, 1)))
+  cov <- cov[order(cov[["Nominal"]]), ]
 
   return(cov)
 }
