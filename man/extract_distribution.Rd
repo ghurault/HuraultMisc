@@ -45,3 +45,9 @@ The distribution can be extracted as:
 \item a series of highest density confidence/credible intervals ("hdi").
 }
 }
+\section{Alternative}{
+
+This function can notably be used to prepare the data for plotting fan charts when type = "eti" or "hdi".
+In that case, the tidybayes package offers an alternative with stat_lineribbon.
+}
+

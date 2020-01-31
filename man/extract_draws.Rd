@@ -12,7 +12,7 @@ extract_draws(obj, draws)
 \item{draws}{Vector of draws to extract}
 }
 \value{
-Dataframe with columns: Draw, Index, Value, Parameter
+Dataframe with columns: Draw, Index, Value and (only if input is a list) Parameter
 }
 \description{
 Extract parameters' draws

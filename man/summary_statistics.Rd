@@ -24,3 +24,13 @@ Extract summary statistics
 Not sure how this function works for more than one-dimensional (e.g. matrices) parameters
 }
 
+\section{Alternative}{
+
+The tidybayes package offers an alternative to this function, for example:
+
+fit \%>\% tidy_draws() \%>\% gather_variables \%>\% mean_qi()
+
+However, this does not provide information about Rhat or Neff, nor does it process the indexes.
+The tidybayes package is more useful for summarising the distribution of a handful of parameters (using spread_draws).
+}
+

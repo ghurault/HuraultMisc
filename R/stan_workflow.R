@@ -9,6 +9,14 @@
 #' @section Note:
 #' Not sure how this function works for more than one-dimensional (e.g. matrices) parameters
 #'
+#'@section Alternative:
+#' The tidybayes package offers an alternative to this function, for example:
+#'
+#' fit \%>\% tidy_draws() \%>\% gather_variables \%>\% mean_qi()
+#'
+#' However, this does not provide information about Rhat or Neff, nor does it process the indexes.
+#' The tidybayes package is more useful for summarising the distribution of a handful of parameters (using spread_draws).
+#'
 #' @return Dataframe of posterior summary statistics
 #' @export
 summary_statistics <- function(fit, param, quant = c(.05, .25, .5, .75, .95)) {
@@ -68,6 +76,10 @@ summary_statistics <- function(fit, param, quant = c(.05, .25, .5, .75, .95)) {
 #' @return Dataframe
 #' @export
 #' @import stats
+#'
+#' @section Alternative:
+#' This function can notably be used to prepare the data for plotting fan charts when type = "eti" or "hdi".
+#' In that case, the tidybayes package offers an alternative with stat_lineribbon.
 extract_distribution <- function(object,
                                  parName,
                                  type = c("continuous", "discrete", "samples", "eti", "hdi"),
@@ -252,7 +264,7 @@ extract_draws_from_array <- function(obj, draws) {
 #' @param obj Vector, matrix (columns represents different parameters) of draws or list of it
 #' @param draws Vector of draws to extract
 #'
-#' @return Dataframe with columns: Draw, Index, Value, Parameter
+#' @return Dataframe with columns: Draw, Index, Value and (only if input is a list) Parameter
 #' @export
 #'
 #' @examples
@@ -288,6 +300,14 @@ extract_draws <- function(obj, draws) {
 #'
 #' @section Note:
 #' Useful for to generate fake data.
+#'
+#' @section Alternative:
+#' The tidybayes package offers an alternative to this function, for example:
+#'
+#' fit \%>\% tidy_draws() \%>\% gather_variables() \%>\% filter(.draw == draw & .variable \%in\% param)
+#'
+#' However, the tidybayes version is less efficient as all draws and parameters are extracted and then filtered (also the draw IDs are not the same).
+#' Using tidybayes would be more recommended when we only want to extract specific parameters, and that it does not matter which draw are extracted (in that case using spread_draws).
 #'
 #' @return Dataframe
 #' @export
