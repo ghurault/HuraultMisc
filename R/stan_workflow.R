@@ -382,15 +382,27 @@ PPC_group_distribution <- function(fit, parName, nDraws = 1) {
 #' @import ggplot2
 plot_prior_posterior <- function(post, prior, param) {
 
+  id_vars <-  c("Variable", "Mean", "5%", "95%")
+
   stopifnot(is.data.frame(post),
             is.data.frame(prior),
-            is.vector(param, mode = "character"))
+            is.vector(param, mode = "character"),
+            all(id_vars %in% colnames(post)),
+            all(id_vars %in% colnames(prior)))
 
+  post <- post[post[["Variable"]] %in% param, ]
   post$Distribution <- "Posterior"
+
+  prior <- prior[prior[["Variable"]] %in% param, ]
   prior$Distribution <- "Prior"
-  tmp <- rbind(post[post[["Variable"]] %in% param, ],
-               prior[prior[["Variable"]] %in% param, ])
-  tmp$Distribution <- factor(tmp$Distribution, levels = c("Prior", "Posterior")) # to show posterior on top
+
+  stopifnot(nrow(post) > 0,
+            nrow(prior) > 0)
+
+  id_vars <-  c(id_vars, "Distribution")
+
+  tmp <- rbind(post[, id_vars], prior[, id_vars])
+  tmp[["Distribution"]] <- factor(tmp[["Distribution"]], levels = c("Prior", "Posterior")) # to show posterior on top
 
   if (nrow(tmp) == 0) {
     warning(as.character(substitute(param)), " does not contain parameters present in post or in prior")

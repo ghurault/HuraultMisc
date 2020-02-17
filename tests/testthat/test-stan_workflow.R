@@ -143,17 +143,13 @@ test_that("plot_prior_posterior catches errors", {
   expect_error(plot_prior_posterior(par_fake, as.matrix(par_prior), param_pop))
   expect_error(plot_prior_posterior(par_fake, as.matrix(par_prior), param_pop))
   expect_error(plot_prior_posterior(par_fake, par_prior, as.list(param_pop)))
-  expect_warning(plot_prior_posterior(par_fake, par_prior, "parameter_not_in_model"))
-
-  tmp <- par_fake
-  tmp[["AdditionalColumn"]] <- NA
-  expect_error(plot_prior_posterior(tmp, par_prior, param_pop))
+  expect_error(plot_prior_posterior(par_fake, par_prior, "parameter_not_in_model"))
 
   tmp1 <- par_fake
   tmp1[["5%"]] <- NULL
   tmp2 <- par_prior
   tmp2[["5%"]] <- NULL
-  expect_warning(plot_prior_posterior(tmp1, tmp2, param_pop))
+  expect_error(plot_prior_posterior(tmp1, tmp2, param_pop))
 })
 
 # Test extract_draws (and related functions) ---------------------------------------
