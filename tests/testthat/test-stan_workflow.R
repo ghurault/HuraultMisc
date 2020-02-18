@@ -135,19 +135,19 @@ test_that("plot_coverage returns a ggplot object", {
 # Test plot_prior_posterior -----------------------------------------------
 
 test_that("plot_prior_posterior returns a ggplot object", {
-  expect_is(plot_prior_posterior(par_fake, par_prior, param_pop), "ggplot")
+  expect_is(plot_prior_posterior(par_prior, par_fake, param_pop), "ggplot")
 })
 
 test_that("plot_prior_posterior catches errors", {
-  expect_error(plot_prior_posterior(as.matrix(par_fake), par_prior, param_pop))
-  expect_error(plot_prior_posterior(par_fake, as.matrix(par_prior), param_pop))
-  expect_error(plot_prior_posterior(par_fake, as.matrix(par_prior), param_pop))
-  expect_error(plot_prior_posterior(par_fake, par_prior, as.list(param_pop)))
-  expect_error(plot_prior_posterior(par_fake, par_prior, "parameter_not_in_model"))
+  expect_error(plot_prior_posterior(par_prior, as.matrix(par_fake), param_pop))
+  expect_error(plot_prior_posterior(as.matrix(par_prior), par_fake, param_pop))
+  expect_error(plot_prior_posterior(as.matrix(par_prior), par_fake, param_pop))
+  expect_error(plot_prior_posterior(par_prior, par_fake, as.list(param_pop)))
+  expect_error(plot_prior_posterior(par_prior, par_fake, "parameter_not_in_model"))
 
-  tmp1 <- par_fake
+  tmp1 <- par_prior
   tmp1[["5%"]] <- NULL
-  tmp2 <- par_prior
+  tmp2 <- par_fake
   tmp2[["5%"]] <- NULL
   expect_error(plot_prior_posterior(tmp1, tmp2, param_pop))
 })
