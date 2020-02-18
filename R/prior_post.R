@@ -77,6 +77,7 @@ check_model_sensitivity <-  function(prior, post, param) {
   # Useful when the model has subject-parameters with the same distribution (and when prior does not contain as many subjects as post for computational reasons)
   prior[which(prior[["Index"]] == 1), "Index"] <- NA
   prior <- prior[is.na(prior[["Index"]]), ]
+  prior[["Index"]] <- NULL
 
   tmp <- merge(prior,
                post,
