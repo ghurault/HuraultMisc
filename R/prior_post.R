@@ -45,3 +45,55 @@ plot_prior_posterior <- function(prior, post, param) {
     theme(legend.position = "top")
 }
 
+# Model sensitivity -------------------------------------------------------
+
+#' Checking how posterior are influenced by the prior
+#'
+#' Plot posterior shrinkage (capturing how much the model learns) vs Prior/Posterior distance (whether the prior "includes" the posterior).
+#' Inspired from https://betanalpha.github.io/assets/case_studies/principled_bayesian_workflow.html
+#'
+#' @param prior Dataframe of prior parameter estimates (with columns Variable, Index, Mean and sd, cf. output from summary_statistics)
+#' @param post Dataframe of posterior parameter estimates (with columns Variable, Index, Mean and sd, , cf. output from summary_statistics)
+#' @param param Vector of parameters' name to check
+#'
+#' @return Ggplot
+#' @export
+#'
+#' @import ggplot2
+check_model_sensitivity <-  function(prior, post, param) {
+
+  id_vars <- c("Variable", "Index", "Mean", "sd")
+
+  stopifnot(is.data.frame(prior),
+            is.data.frame(post),
+            is.vector(param, mode = "character"),
+            all(id_vars %in% colnames(prior)),
+            all(id_vars %in% colnames(post)))
+
+  tmp <- merge(post[post[["Variable"]] %in% param, id_vars],
+               prior[prior[["Variable"]] %in% param, id_vars],
+               by = c("Variable", "Index"),
+               suffixes = c(".Posterior", ".Prior"))
+
+  tmp[["PostShrinkage"]] <- 1 - (tmp[["sd.Posterior"]] / tmp[["sd.Prior"]])^2
+  tmp[["DistPrior"]] <- abs(tmp[["Mean.Posterior"]] - tmp[["Mean.Prior"]]) / tmp[["sd.Prior"]]
+
+  p <- ggplot(data = tmp,
+              aes_string(x = "PostShrinkage", y = "DistPrior", colour = "Variable")) +
+    geom_point(alpha = 0.8, size = 2) +
+    annotate("text",
+             x = c(0.5, 0.1, 0.9),
+             y = c(2, 0.25, 0.25),
+             label = c("Prior/Observational\nconflict", "Poorly\nidentified", "Ideal"),
+             size = 5) +
+    scale_y_continuous(limits = c(0, NA), expand = expand_scale(mult = c(0, 0.1))) +
+    scale_x_continuous(limits = c(0, 1), expand = expand_scale(mult = c(0, 0.01))) +
+    labs(x =  "Posterior shrinkage", y = "Prior/Posterior distance", colour = "") +
+    theme_classic(base_size = 15)
+
+  if (length(unique(tmp[["Variable"]])) <= 8) {
+    p <- p + scale_colour_manual(values = c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7"))
+  }
+
+  return(p)
+}

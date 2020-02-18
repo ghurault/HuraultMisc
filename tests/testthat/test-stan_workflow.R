@@ -152,6 +152,19 @@ test_that("plot_prior_posterior catches errors", {
   expect_error(plot_prior_posterior(tmp1, tmp2, param_pop))
 })
 
+# Test check_model_sensitivity --------------------------------------------
+
+test_that("check_model_sensitivity returns a ggplot object", {
+  expect_is(check_model_sensitivity(par_prior, par_fake, c(param_pop, param_sub)), "ggplot")
+})
+
+test_that("check_model_sensitivity catches error", {
+  expect_error(check_model_sensitivity(par_prior, as.matrix(par_fake), param_pop))
+  expect_error(check_model_sensitivity(as.matrix(par_prior), par_fake, param_pop))
+  expect_error(check_model_sensitivity(as.matrix(par_prior), par_fake, param_pop))
+  expect_error(check_model_sensitivity(par_prior, par_fake, as.list(param_pop)))
+})
+
 # Test extract_draws (and related functions) ---------------------------------------
 
 test_that("extract_draws and related function works", {
