@@ -70,10 +70,19 @@ check_model_sensitivity <-  function(prior, post, param) {
             all(id_vars %in% colnames(prior)),
             all(id_vars %in% colnames(post)))
 
-  tmp <- merge(post[post[["Variable"]] %in% param, id_vars],
-               prior[prior[["Variable"]] %in% param, id_vars],
-               by = c("Variable", "Index"),
-               suffixes = c(".Posterior", ".Prior"))
+  prior <- prior[prior[["Variable"]] %in% param, id_vars]
+  post <- post[post[["Variable"]] %in% param, id_vars]
+
+  # Eliminate index for prior by taking the first one
+  # Useful when the model has subject-parameters with the same distribution (and when prior does not contain as many subjects as post for computational reasons)
+  prior[which(prior[["Index"]] == 1), "Index"] <- NA
+  prior <- prior[is.na(prior[["Index"]]), ]
+
+  tmp <- merge(prior,
+               post,
+               by = "Variable",
+               all.y = TRUE, # cf. individual parameters
+               suffixes = c(".Prior", ".Posterior"))
 
   tmp[["PostShrinkage"]] <- 1 - (tmp[["sd.Posterior"]] / tmp[["sd.Prior"]])^2
   tmp[["DistPrior"]] <- abs(tmp[["Mean.Posterior"]] - tmp[["Mean.Prior"]]) / tmp[["sd.Prior"]]
@@ -83,11 +92,11 @@ check_model_sensitivity <-  function(prior, post, param) {
     geom_point(alpha = 0.8, size = 2) +
     annotate("text",
              x = c(0.5, 0.1, 0.9),
-             y = c(2, 0.25, 0.25),
+             y = c(2.5, 0.25, 0.25),
              label = c("Prior/Observational\nconflict", "Poorly\nidentified", "Ideal"),
              size = 5) +
     scale_y_continuous(limits = c(0, NA), expand = expand_scale(mult = c(0, 0.1))) +
-    scale_x_continuous(limits = c(0, 1), expand = expand_scale(mult = c(0, 0.01))) +
+    scale_x_continuous(limits = c(min(0, min(tmp[["PostShrinkage"]])), 1), expand = expand_scale(mult = c(0, 0.01))) +
     labs(x =  "Posterior shrinkage", y = "Prior/Posterior distance", colour = "") +
     theme_classic(base_size = 15)
 
