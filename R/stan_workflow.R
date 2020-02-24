@@ -342,6 +342,8 @@ extract_parameters_from_draw <- function(fit, param, draw) {
 #' @export
 #'
 #' @import ggplot2
+#'
+#' @references A. Gelman, J. B. B. Carlin, H. S. S. Stern, and D. B. B. Rubin, Bayesian Data Analysis (Chapter 6), Third Edition, 2014.
 PPC_group_distribution <- function(fit, parName, nDraws = 1) {
 
   if (class(fit) != "stanfit") {

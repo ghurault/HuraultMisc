@@ -47,10 +47,12 @@ plot_prior_posterior <- function(prior, post, param) {
 
 # Model sensitivity -------------------------------------------------------
 
+# use @references tag
+
 #' Checking how posterior are influenced by the prior
 #'
-#' Plot posterior shrinkage (capturing how much the model learns) vs Prior/Posterior distance (whether the prior "includes" the posterior).
-#' Inspired from https://betanalpha.github.io/assets/case_studies/principled_bayesian_workflow.html
+#' Plot posterior shrinkage (capturing how much the model learns) vs Prior/Posterior "distance" (whether the prior "includes" the posterior).
+#' See reference for the inspiration.
 #'
 #' @param prior Dataframe of prior parameter estimates (with columns Variable, Index, Mean and sd, cf. output from summary_statistics)
 #' @param post Dataframe of posterior parameter estimates (with columns Variable, Index, Mean and sd, , cf. output from summary_statistics)
@@ -60,6 +62,8 @@ plot_prior_posterior <- function(prior, post, param) {
 #' @export
 #'
 #' @import ggplot2
+#'
+#' @references M. Betancourt, \href{https://betanalpha.github.io/assets/case_studies/principled_bayesian_workflow.html}{“Towards a Principled Bayesian Workflow”}, 2018.
 check_model_sensitivity <-  function(prior, post, param) {
 
   id_vars <- c("Variable", "Index", "Mean", "sd")

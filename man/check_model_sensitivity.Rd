@@ -17,6 +17,9 @@ check_model_sensitivity(prior, post, param)
 Ggplot
 }
 \description{
-Plot posterior shrinkage (capturing how much the model learns) vs Prior/Posterior distance (whether the prior "includes" the posterior).
-Inspired from https://betanalpha.github.io/assets/case_studies/principled_bayesian_workflow.html
+Plot posterior shrinkage (capturing how much the model learns) vs Prior/Posterior "distance" (whether the prior "includes" the posterior).
+See reference for the inspiration.
+}
+\references{
+M. Betancourt, \href{https://betanalpha.github.io/assets/case_studies/principled_bayesian_workflow.html}{“Towards a Principled Bayesian Workflow”}, 2018.
 }
