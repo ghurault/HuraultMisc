@@ -47,12 +47,9 @@ plot_prior_posterior <- function(prior, post, param) {
 
 # Model sensitivity -------------------------------------------------------
 
-# use @references tag
-
 #' Checking how posterior are influenced by the prior
 #'
-#' Plot posterior shrinkage (capturing how much the model learns) vs Prior/Posterior "distance" (whether the prior "includes" the posterior).
-#' See reference for the inspiration.
+#' Plot posterior shrinkage (capturing how much the model learns, cf. reference) vs Mahalanobis distance between the mean posterior and the prior (whether the prior "includes" the posterior).
 #'
 #' @param prior Dataframe of prior parameter estimates (with columns Variable, Index, Mean and sd, cf. output from summary_statistics)
 #' @param post Dataframe of posterior parameter estimates (with columns Variable, Index, Mean and sd, , cf. output from summary_statistics)
