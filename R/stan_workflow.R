@@ -367,6 +367,6 @@ PPC_group_distribution <- function(fit, parName, nDraws = 1) {
     geom_density(colour = "#9ecae1") + # pastel blue
     scale_y_continuous(expand = c(0, 0)) +
     labs(x = parName, y = "Density") +
-    theme_classic(base_size = 20)
+    theme_classic(base_size = 15)
 }
 

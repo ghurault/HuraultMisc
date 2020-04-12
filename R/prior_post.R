@@ -41,7 +41,7 @@ plot_prior_posterior <- function(prior, post, param) {
     scale_colour_manual(values = c("#E69F00", "#000000")) +
     coord_flip() +
     labs(colour = "", x = "", y = "Estimate") +
-    theme_bw(base_size = 20) +
+    theme_bw(base_size = 15) +
     theme(legend.position = "top")
 }
 

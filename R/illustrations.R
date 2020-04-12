@@ -51,7 +51,7 @@ illustrate_RPS <- function(mu = 5, sigma = 1, observed = 6) {
     scale_y_continuous(expand = c(0,0), limits = c(0, max(df1$Density) * 1.05)) +
     scale_x_continuous(breaks = 0:10) +
     scale_colour_manual(values = cbbPalette) +
-    theme_classic(base_size = 20)
+    theme_classic(base_size = 15)
 
   # CDF
   df2 <- data.frame(x,
@@ -70,7 +70,7 @@ illustrate_RPS <- function(mu = 5, sigma = 1, observed = 6) {
     scale_colour_manual(values = cbbPalette) +
     scale_fill_manual(values = "grey12") +
     labs(x = "Severity", y = "Cumulative Density") +
-    theme_classic(base_size = 20) +
+    theme_classic(base_size = 15) +
     theme(legend.title = element_blank(), legend.position = "top")
 
   cowplot::plot_grid(pdf + labs(subtitle = paste("RPS = ", signif(RPS, 2), " ; RPSS = ", signif(RPSS, 3), sep = "")),
@@ -114,7 +114,7 @@ illustrate_forward_chaining <- function(horizon = 7, n_it = 5) {
     scale_y_continuous(breaks = 1:max(df$Iteration), trans = "reverse", expand = c(0, 0)) +
     scale_x_continuous(breaks = seq(0, max(df$Day), horizon), expand = c(0, 0)) +
     scale_fill_manual(values = c("#009E73", "#F0E442")) +
-    theme_classic(base_size = 20) +
+    theme_classic(base_size = 15) +
     theme(axis.title.y = element_text(angle = 90,vjust = 0.5),
           legend.position = "none")
 }

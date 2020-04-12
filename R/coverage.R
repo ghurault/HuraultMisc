@@ -100,5 +100,5 @@ plot_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05), type = c("e
     annotate("text", x = c(.2, .8), y = c(.8, .2), label = c("Inefficient", "Inaccurate"), size = 7) + # inefficient or sub-optimal
     labs(x = "Nominal coverage", y = "Observed coverage") +
     coord_cartesian(xlim = c(0, 1), ylim = c(0, 1), expand = FALSE) +
-    theme_bw(base_size = 20)
+    theme_bw(base_size = 15)
 }
