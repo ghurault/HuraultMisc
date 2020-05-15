@@ -29,7 +29,7 @@ summary_statistics <- function(fit, param, quant = c(.05, .25, .5, .75, .95)) {
   #
   # Returns: dataframe containing posterior summary statistics of the parameters
 
-  if (class(fit) != "stanfit") {
+  if (!any(class(fit) == "stanfit")) {
     stop(as.character(substitute(fit)), " must be a stanfit object")
   }
 
@@ -91,7 +91,7 @@ extract_distribution <- function(object,
 
   type <- match.arg(type)
 
-  if (class(object) == "stanfit") {
+  if (any(class(object) == "stanfit")) {
     ps <- rstan::extract(object, pars = parName)[[1]]
   } else if (is.numeric(object) & (is.vector(object) | is.matrix(object) | is.array(object))) {
     ps <- as.array(object)
@@ -197,7 +197,7 @@ extract_distribution <- function(object,
 #' @export
 process_replications <- function(fit, idx = NULL, parName, bounds = NULL, ...) {
 
-  if (class(fit) != "stanfit") {
+  if (!any(class(fit) == "stanfit")) {
     stop(as.character(substitute(fit)), " must be a stanfit object and not of class ", class(fit))
   }
 
@@ -316,7 +316,7 @@ extract_draws <- function(obj, draws) {
 #' @export
 extract_parameters_from_draw <- function(fit, param, draw) {
 
-  if (class(fit) != "stanfit") {
+  if (!any(class(fit) == "stanfit")) {
     stop(as.character(substitute(fit)), " must be a stanfit object")
   }
 
@@ -349,7 +349,7 @@ extract_parameters_from_draw <- function(fit, param, draw) {
 #' @references A. Gelman, J. B. B. Carlin, H. S. S. Stern, and D. B. B. Rubin, Bayesian Data Analysis (Chapter 6), Third Edition, 2014.
 PPC_group_distribution <- function(fit, parName, nDraws = 1) {
 
-  if (class(fit) != "stanfit") {
+  if (!any(class(fit) == "stanfit")) {
     stop(as.character(substitute(fit)), " must be a stanfit object")
   }
 
