@@ -1,10 +1,10 @@
 Package: HuraultMisc
-Type: Package
 Title: Guillem Hurault personal functions' library
 Version: 1.0.0
-Author: Guillem Hurault
-Maintainer: Guillem Hurault <guillem.hurault@hotmail.fr>
+Authors@R: person("Guillem", "Hurault", email = "guillem.hurault@hotmail.fr", role = c("aut", "cre"))
 Description: Mainly contains functions for data analysis.
+URL: https://github.com/ghurault/HuraultMisc
+BugReports: https://github.com/ghurault/HuraultMisc/issues
 Depends: R (>= 3.5.0)
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -18,7 +18,7 @@ Imports:
     stats,
     grDevices,
     HDInterval
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 Suggests: 
     testthat (>= 2.1.0),
     covr
