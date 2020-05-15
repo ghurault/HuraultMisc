@@ -97,8 +97,8 @@ check_model_sensitivity <-  function(prior, post, param) {
              y = c(2.5, 0.25, 0.25),
              label = c("Prior/Observational\nconflict", "Poorly\nidentified", "Ideal"),
              size = 5) +
-    scale_y_continuous(limits = c(0, NA), expand = expand_scale(mult = c(0, 0.1))) +
-    scale_x_continuous(limits = c(min(0, min(tmp[["PostShrinkage"]])), 1), expand = expand_scale(mult = c(0, 0.01))) +
+    scale_y_continuous(limits = c(0, NA), expand = expansion(mult = c(0, 0.1))) +
+    scale_x_continuous(limits = c(min(0, min(tmp[["PostShrinkage"]])), 1), expand = expansion(mult = c(0, 0.01))) +
     labs(x =  "Posterior shrinkage", y = "Prior/Posterior distance", colour = "") +
     theme_classic(base_size = 15)
 
