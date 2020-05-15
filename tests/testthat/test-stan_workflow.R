@@ -1,6 +1,8 @@
 # Initialisation ----------------------------------------------------------
 
-source("init-stan_workflow.R")
+load(system.file("testdata", "env_hierarchical.Rdata", package = "HuraultMisc", mustWork = TRUE))
+fit_prior <- readRDS(system.file("testdata", "prior_hierarchical.rds", package = "HuraultMisc", mustWork = TRUE))
+fit_fake <- readRDS(system.file("testdata", "fake_hierarchical.rds", package = "HuraultMisc", mustWork = TRUE))
 
 # Test summary_statistics -------------------------------------------------------------------
 
@@ -108,7 +110,7 @@ test_that("process_replications failures and warnings", {
 
 # Test coverage -----------------------------------------------------------
 
-truth <- rstan::extract(fit_prior, pars = "mu")[[1]][draw, ]
+truth <- rstan::extract(fit_prior, pars = "mu")[[1]][draw, ] # draw used to generate the fake data
 post_samples <- rstan::extract(fit_fake, pars = "mu")[[1]]
 
 for (t in c("eti", "hdi")) {
