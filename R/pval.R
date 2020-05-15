@@ -74,7 +74,7 @@ post_pred_pval <- function(yrep, y, test_statistic = mean, alternative = c("two.
     out[["plot"]] <- ggplot(data = data.frame(x = t_rep)) +
       geom_density(aes_string(x = "x"), fill = "#9ecae1", alpha = 0.8) +
       geom_vline(xintercept = t, size = 2) +
-      scale_y_continuous(expand = expand_scale(mult = c(0, 0.1))) +
+      scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
       labs(x = "test statistic") +
       theme_bw(base_size = 15)
   }
