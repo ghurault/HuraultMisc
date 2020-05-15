@@ -227,10 +227,13 @@ process_replications <- function(fit, idx = NULL, parName, bounds = NULL, ...) {
 
 #' Extract parameters' draws from an array
 #'
+#' Not exported.
+#'
 #' @param obj Vector or matrix (columns represents different parameters) of draws
 #' @param draws Vector draws to extract
 #'
 #' @return Dataframe with columns: Draw, Index, Value
+#' @noRd
 extract_draws_from_array <- function(obj, draws) {
 
   stopifnot(is.vector(obj, mode = "numeric") || is.matrix(obj) || is.array(obj))
@@ -369,4 +372,3 @@ PPC_group_distribution <- function(fit, parName, nDraws = 1) {
     labs(x = parName, y = "Density") +
     theme_classic(base_size = 15)
 }
-
