@@ -42,15 +42,11 @@ change_colnames <- function(df, current_names, new_names) {
 factor_to_numeric <- function(df, factor_name) {
 
   stopifnot(is.data.frame(df),
-            is.vector(factor_name, mode = "character"))
+            is.character(factor_name))
 
   factor_name <- intersect(colnames(df), factor_name)
   if (length(factor_name) == 0) {
-    warning("The intersection of columns names of ",
-         as.character(df),
-         " and ",
-         as.character(substitute(df)),
-         " is empty")
+    warning("The intersection of columns names of df and factor_name is empty")
   } else {
     for (i in 1:length(factor_name)) {
       tmp <- df[, factor_name[i]]
