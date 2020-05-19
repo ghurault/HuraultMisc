@@ -219,13 +219,14 @@ test_that("extract_draws and related functions catch warnings and errors", {
 test_that("PPC_group_distribution returns a ggplot object", {
   expect_is(PPC_group_distribution(fit_fake, "mu", 1), "ggplot")
   expect_is(PPC_group_distribution(fit_fake, "mu", 100), "ggplot")
+  expect_is(PPC_group_distribution(rstan::extract(fit_fake, pars = "mu")[[1]], "mu", 1), "ggplot")
+  expect_is(PPC_group_distribution(matrix(rnorm(1e3), ncol = 10), "mu", 10), "ggplot")
 })
 
 test_that("PPC_group_distribution catches errors and warnings", {
   expect_error(PPC_group_distribution(fit_fake, 1))
   expect_error(PPC_group_distribution(fit_fake, "mu", 0))
   expect_error(PPC_group_distribution(fit_fake, "mu", 1e5))
-  expect_error(PPC_group_distribution(matrix(rnorm(1e3), ncol = 10), "mu"))
   expect_error(PPC_group_distribution(fit_fake, c("mu", "y_rep")))
   expect_error(PPC_group_distribution(fit_fake, "parameter_not_in_model"))
 })

@@ -4,21 +4,25 @@
 \alias{PPC_group_distribution}
 \title{Posterior Predictive Check for Stan model}
 \usage{
-PPC_group_distribution(fit, parName, nDraws = 1)
+PPC_group_distribution(obj, parName = "", nDraws = 1)
 }
 \arguments{
-\item{fit}{Stanfit object}
+\item{obj}{Matrix (rows: samples, cols: parameter) or Stanfit object}
 
-\item{parName}{Name of the observation-dependent (e.g. patient-dependent) parameter to consider}
+\item{parName}{Name of the observation-dependent (e.g. patient-dependent) parameter to consider (optional when obj is a matrix)}
 
 \item{nDraws}{Number of draws to plot}
 }
 \value{
-ggplot of the distribution
+Ggplot of the distribution
 }
 \description{
 Plot the distribution density of parameters within a same group from a single/multiple draw of the posterior distribution.
 In the case of a hierarchical model, we might look at the distribution of patient parameter and compare it to the prior for the population distribution.
+}
+\examples{
+X <- matrix(rnorm(1e3), ncol = 10)
+PPC_group_distribution(X, "", 10)
 }
 \references{
 A. Gelman, J. B. B. Carlin, H. S. S. Stern, and D. B. B. Rubin, Bayesian Data Analysis (Chapter 6), Third Edition, 2014.

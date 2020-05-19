@@ -337,28 +337,32 @@ extract_parameters_from_draw <- function(fit, param, draw) {
 #' Plot the distribution density of parameters within a same group from a single/multiple draw of the posterior distribution.
 #' In the case of a hierarchical model, we might look at the distribution of patient parameter and compare it to the prior for the population distribution.
 #'
-#' @param fit Stanfit object
-#' @param parName Name of the observation-dependent (e.g. patient-dependent) parameter to consider
+#' @param obj Matrix (rows: samples, cols: parameter) or Stanfit object
+#' @param parName Name of the observation-dependent (e.g. patient-dependent) parameter to consider (optional when obj is a matrix)
 #' @param nDraws Number of draws to plot
 #'
-#' @return ggplot of the distribution
+#' @return Ggplot of the distribution
+#' @references A. Gelman, J. B. B. Carlin, H. S. S. Stern, and D. B. B. Rubin, Bayesian Data Analysis (Chapter 6), Third Edition, 2014.
 #' @export
-#'
 #' @import ggplot2
 #'
-#' @references A. Gelman, J. B. B. Carlin, H. S. S. Stern, and D. B. B. Rubin, Bayesian Data Analysis (Chapter 6), Third Edition, 2014.
-PPC_group_distribution <- function(fit, parName, nDraws = 1) {
+#' @examples
+#' X <- matrix(rnorm(1e3), ncol = 10)
+#' PPC_group_distribution(X, "", 10)
+PPC_group_distribution <- function(obj, parName = "", nDraws = 1) {
 
-  if (!any(class(fit) == "stanfit")) {
-    stop(as.character(substitute(fit)), " must be a stanfit object")
+  is_stanfit <- any(class(obj) == "stanfit")
+  stopifnot(is_stanfit || is.matrix(obj))
+
+  if (is_stanfit) {
+    stopifnot(is.character(parName),
+              length(parName) == 1)
+    par <- rstan::extract(obj, pars = parName)[[1]] # parName in obj checked here
+  } else {
+    par <- obj
   }
 
-  stopifnot(is.character(parName),
-            length(parName) == 1)
-
-  par <- rstan::extract(fit, pars = parName)[[1]]
-
-  max_draw <-nrow(par)
+  max_draw <- nrow(par)
   if (nDraws < 1 | nDraws > max_draw) {
     stop("nDraws should be between 1 and ", max_draw, " (number of posterior samples)")
   }
@@ -368,7 +372,7 @@ PPC_group_distribution <- function(fit, parName, nDraws = 1) {
 
   ggplot(data = tmp, aes_string(x = "Value", group = "Draw")) +
     geom_density(colour = "#9ecae1") + # pastel blue
-    scale_y_continuous(expand = c(0, 0)) +
+    scale_y_continuous(expand = expansion(mult = c(0, .05))) +
     labs(x = parName, y = "Density") +
     theme_classic(base_size = 15)
 }
