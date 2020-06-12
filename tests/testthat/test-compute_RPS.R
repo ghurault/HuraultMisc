@@ -6,6 +6,9 @@ test_that("compute_RPS returns the correct values", {
     expect_equal(E_RPS, (k + 1) / 6 / k)
   }
 
+  expect_equal(compute_RPS(c(.1, .4, .5), NA), NA)
+  expect_equal(compute_RPS(c(NA, .2, NA), 2), NA)
+
 })
 
 test_that("compute_RPS catches errors", {
