@@ -3,6 +3,7 @@
 export(PPC_group_distribution)
 export(change_colnames)
 export(check_model_sensitivity)
+export(compute_RPS)
 export(compute_calibration)
 export(compute_coverage)
 export(compute_resolution)

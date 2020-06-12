@@ -25,3 +25,32 @@ compute_resolution <- function(f, p0) {
   reso / uncertainty
 }
 
+# Compute RPS -------------------------------------------------------------
+
+#' Compute RPS for a single forecast
+#'
+#' @param forecast Vector of length N (forecast)
+#' @param outcome Index of the true outcome (between 1 and N)
+#'
+#' @return RPS
+#' @export
+#'
+#' @examples
+#' compute_RPS(c(.2, .5, .3), 2)
+compute_RPS <- function(forecast, outcome) {
+
+  stopifnot(is.vector(forecast, mode = "numeric"),
+            length(forecast) > 1)
+
+  if (any(is.na(c(forecast, outcome)))) {
+    RPS <- NA
+  } else {
+    stopifnot(all(forecast >=0 & forecast <= 1),
+              round(sum(forecast), 2) == 1,
+              outcome %in% 1:length(forecast))
+    dummy_outcome <- 0 * forecast
+    dummy_outcome[outcome] <- 1
+    RPS <- sum((cumsum(forecast) - cumsum(dummy_outcome))^2) / (length(forecast) - 1)
+  }
+  return(RPS)
+}
