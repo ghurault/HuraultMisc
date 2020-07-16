@@ -7,12 +7,12 @@
 extract_draws(obj, draws)
 }
 \arguments{
-\item{obj}{Vector, matrix (columns represents different parameters) of draws or list of it}
+\item{obj}{Array/Vector/Matrix of draws (cf. first dimension) or list of it}
 
 \item{draws}{Vector of draws to extract}
 }
 \value{
-Dataframe with columns: Draw, Index, Value and (only if input is a list) Parameter
+Dataframe with columns: Draw, Index, Value and Parameter
 }
 \description{
 Extract parameters' draws
@@ -20,7 +20,9 @@ Extract parameters' draws
 \examples{
 x <- rnorm(1e3)
 X <- matrix(x, ncol = 10)
+a <- array(rnorm(80), dim = c(10, 2, 2, 2))
 extract_draws(x, sample(1:length(x), 10))
 extract_draws(X, sample(1:nrow(X), 10))
-extract_draws(list(x = x, X = X), 1:10)
+extract_draws(a, sample(1:10, 5))
+extract_draws(list(x = x, X = X, a = a), 1:10)
 }
