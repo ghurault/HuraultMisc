@@ -4,14 +4,14 @@
 \alias{summary_statistics}
 \title{Extract summary statistics}
 \usage{
-summary_statistics(fit, param, quant = c(0.05, 0.25, 0.5, 0.75, 0.95))
+summary_statistics(fit, pars, probs = c(0.05, 0.25, 0.5, 0.75, 0.95))
 }
 \arguments{
 \item{fit}{Stanfit object}
 
-\item{param}{Parameters to extract}
+\item{pars}{Character vector of parameters to extract}
 
-\item{quant}{Quantiles to extract}
+\item{probs}{Numeric vector of quantiles to extract}
 }
 \value{
 Dataframe of posterior summary statistics
@@ -22,9 +22,7 @@ Extract summary statistics
 \section{Alternative}{
 
 The tidybayes package offers an alternative to this function, for example:
-
-fit \%>\% tidy_draws() \%>\% gather_variables \%>\% mean_qi()
-
+\code{fit \%>\% tidy_draws() \%>\% gather_variables \%>\% mean_qi()}.
 However, this does not provide information about Rhat or Neff, nor does it process the indexes.
 The tidybayes package is more useful for summarising the distribution of a handful of parameters (using spread_draws).
 }

@@ -3,38 +3,28 @@
 #' Extract summary statistics
 #'
 #' @param fit Stanfit object
-#' @param param Parameters to extract
-#' @param quant Quantiles to extract
+#' @param pars Character vector of parameters to extract
+#' @param probs Numeric vector of quantiles to extract
 #'
 #'@section Alternative:
 #' The tidybayes package offers an alternative to this function, for example:
-#'
-#' fit \%>\% tidy_draws() \%>\% gather_variables \%>\% mean_qi()
-#'
+#' `fit %>% tidy_draws() %>% gather_variables %>% mean_qi()`.
 #' However, this does not provide information about Rhat or Neff, nor does it process the indexes.
 #' The tidybayes package is more useful for summarising the distribution of a handful of parameters (using spread_draws).
 #'
 #' @return Dataframe of posterior summary statistics
 #' @export
-summary_statistics <- function(fit, param, quant = c(.05, .25, .5, .75, .95)) {
-  # Extract parameters' summary
-  #
-  # Args:
-  # fit: stanfit object
-  # param: parameters to extract
-  # quant: Quantiles to extract
-  #
-  # Returns: dataframe containing posterior summary statistics of the parameters
+#' @md
+summary_statistics <- function(fit, pars, probs = c(.05, .25, .5, .75, .95)) {
 
-  if (!any(class(fit) == "stanfit")) {
-    stop(as.character(substitute(fit)), " must be a stanfit object")
-  }
+  stopifnot(class(fit) == "stanfit")
 
-  par <- rstan::summary(fit, pars = param, probs = quant)$summary
+  par <- rstan::summary(fit, pars = pars, probs = probs)$summary
   par <- as.data.frame(par)
   colnames(par)[colnames(par) == "mean"] <- "Mean"
   par <- cbind(par, extract_index_1d(rownames(par))) # Extract index for 1d array/vectors
   rownames(par) <- NULL
+
   return(par)
 }
 
