@@ -6,9 +6,6 @@
 #' @param param Parameters to extract
 #' @param quant Quantiles to extract
 #'
-#' @section Note:
-#' Not sure how this function works for more than one-dimensional (e.g. matrices) parameters
-#'
 #'@section Alternative:
 #' The tidybayes package offers an alternative to this function, for example:
 #'
@@ -40,13 +37,15 @@ summary_statistics <- function(fit, param, quant = c(.05, .25, .5, .75, .95)) {
   rownames(par) <- NULL
   colnames(par)[colnames(par) == "mean"] <- "Mean"
 
+  ## Extract index for 1d array or or vectors
   par$Index <- NA
-  # Fill index column if needed
-  for (parName in param) {
-    id_var <- grep(paste(parName, "\\[", sep = ""), par$Variable) # index of variables of interest in par
-    par$Index[id_var] <- as.numeric(sub(".*\\[(.*)\\].*", "\\1", par$Variable[id_var], perl = TRUE)) # extract index in brackets
-    par$Variable[id_var] <- parName
-  }
+  re <- "(.*)\\[([0-9]+)\\]$"
+  # Identify variables ending in with a single number inside bracket
+  id_var <- grep(re, par$Variable)
+  # Extract what's inside the bracket for Index and remove bracket for Variable
+  par$Index[id_var] <- as.numeric(sub(re, "\\2", par$Variable[id_var], perl = TRUE))
+  par$Variable[id_var] <- sub(re, "\\1", par$Variable[id_var], perl = TRUE)
+
   return(par)
 }
 
