@@ -35,6 +35,7 @@ plot_prior_posterior <- function(prior, post, param) {
 
   tmp <- rbind(post[, id_vars], prior[, id_vars])
   tmp[["Distribution"]] <- factor(tmp[["Distribution"]], levels = c("Prior", "Posterior")) # to show posterior on top
+  tmp[["Variable"]] <- factor(tmp[["Variable"]], levels = rev(param)) # show parameters in the order of param
 
   ggplot(data = tmp, aes_string(x = "Variable", y = "Mean", ymin = "`5%`", ymax = "`95%`", colour = "Distribution")) +
     geom_pointrange(position = position_dodge2(width = .3), size = 1.2) +
@@ -85,6 +86,7 @@ check_model_sensitivity <-  function(prior, post, param) {
                by = "Variable",
                all.y = TRUE, # cf. individual parameters
                suffixes = c(".Prior", ".Posterior"))
+  tmp[["Variable"]] <- factor(tmp[["Variable"]], levels = param)
 
   tmp[["PostShrinkage"]] <- 1 - (tmp[["sd.Posterior"]] / tmp[["sd.Prior"]])^2
   tmp[["DistPrior"]] <- abs(tmp[["Mean.Posterior"]] - tmp[["Mean.Prior"]]) / tmp[["sd.Prior"]]
