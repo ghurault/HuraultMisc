@@ -4,6 +4,15 @@ load(system.file("testdata", "env_hierarchical.Rdata", package = "HuraultMisc", 
 fit_prior <- readRDS(system.file("testdata", "prior_hierarchical.rds", package = "HuraultMisc", mustWork = TRUE))
 fit_fake <- readRDS(system.file("testdata", "fake_hierarchical.rds", package = "HuraultMisc", mustWork = TRUE))
 
+# Test extract_index_1d ---------------------------------------------------
+
+x <- c("sigma", "sigma[1]", "sigma[1, 1]", "sigma[1][1]")
+sol <- data.frame(Variable = c("sigma", "sigma", "sigma[1, 1]", "sigma[1]"),
+                  Index = c(NA, 1, NA, 1))
+out <- extract_index_1d(x)
+expect_equal(out, sol)
+expect_is(out, "data.frame")
+
 # Test summary_statistics -------------------------------------------------------------------
 
 par_prior <- summary_statistics(fit_prior, param)

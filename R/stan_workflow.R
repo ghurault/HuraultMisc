@@ -32,20 +32,9 @@ summary_statistics <- function(fit, param, quant = c(.05, .25, .5, .75, .95)) {
 
   par <- rstan::summary(fit, pars = param, probs = quant)$summary
   par <- as.data.frame(par)
-
-  par$Variable <- rownames(par)
-  rownames(par) <- NULL
   colnames(par)[colnames(par) == "mean"] <- "Mean"
-
-  ## Extract index for 1d array or or vectors
-  par$Index <- NA
-  re <- "(.*)\\[([0-9]+)\\]$"
-  # Identify variables ending in with a single number inside bracket
-  id_var <- grep(re, par$Variable)
-  # Extract what's inside the bracket for Index and remove bracket for Variable
-  par$Index[id_var] <- as.numeric(sub(re, "\\2", par$Variable[id_var], perl = TRUE))
-  par$Variable[id_var] <- sub(re, "\\1", par$Variable[id_var], perl = TRUE)
-
+  par <- cbind(par, extract_index_1d(rownames(par))) # Extract index for 1d array/vectors
+  rownames(par) <- NULL
   return(par)
 }
 

@@ -58,3 +58,29 @@ factor_to_numeric <- function(df, factor_name) {
 
   return(df)
 }
+
+# Extract index inside bracket --------------------------------------------
+
+#' Extract index inside bracket
+#'
+#' Not exported.
+#'
+#' @param x Character vector
+#'
+#' @return
+#' @noRd
+#'
+#' @examples
+#' extract_index_1d(c("sigma", "sigma[1]", "sigma[1, 1]", "sigma[1][1]"))
+extract_index_1d <- function(x) {
+  stopifnot(is.vector(x, mode = "character"))
+
+  out <- data.frame(Variable = x, Index = NA)
+  re <- "(.*)\\[([0-9]+)\\]$"
+  # Identify variables ending in with a single number inside bracket
+  id_var <- grep(re, x)
+  # Extract what's inside the bracket for Index and remove bracket for Variable
+  out$Index[id_var] <- as.numeric(sub(re, "\\2", x[id_var], perl = TRUE))
+  out$Variable[id_var] <- sub(re, "\\1", x[id_var], perl = TRUE)
+  return(out)
+}
