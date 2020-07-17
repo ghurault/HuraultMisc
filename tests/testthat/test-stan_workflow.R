@@ -14,6 +14,8 @@ test_that("summary_statistics returns a correct dataframe", {
   expect_equal(nrow(par_fake), N_parameters)
   expect_equal(nrow(par_fake[par_fake$Variable == "mu", ]), N_subject)
   expect_equal(nrow(par_fake[par_fake$Variable == "y_rep", ]), N)
+  expect_equal(sort(par_fake$Index[par_fake$Variable == "mu"]), 1:N_subject)
+  expect_true(all(is.na(par_fake$Index[par_fake$Variable %in% c("mu_pop", "sigma_pop")])))
 })
 
 test_that("summary_statistics catches errors", {

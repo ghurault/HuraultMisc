@@ -67,7 +67,7 @@ factor_to_numeric <- function(df, factor_name) {
 #'
 #' @param x Character vector
 #'
-#' @return
+#' @return Dataframe with columns Variable and Index
 #' @noRd
 #'
 #' @examples
@@ -76,6 +76,7 @@ extract_index_1d <- function(x) {
   stopifnot(is.vector(x, mode = "character"))
 
   out <- data.frame(Variable = x, Index = NA)
+  out$Variable <- as.character(out$Variable)
   re <- "(.*)\\[([0-9]+)\\]$"
   # Identify variables ending in with a single number inside bracket
   id_var <- grep(re, x)
