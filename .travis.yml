@@ -7,6 +7,12 @@ cache: packages
 r_packages:
   - covr
 
+# Fix build error package v8
+addons:
+  apt:
+    packages:
+      - libv8-dev
+
 # only report coverage after build is successful
 after_success:
   - Rscript -e 'covr::codecov()'
