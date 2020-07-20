@@ -9,7 +9,7 @@ fit_fake <- readRDS(system.file("testdata", "fake_hierarchical.rds", package = "
 par_prior <- summary_statistics(fit_prior, param)
 par_fake <- summary_statistics(fit_fake, param)
 
-test_that("summary_statistics returns a correct dataframe", {
+test_that("summary_statistics returns the right content", {
   expect_equal(dim(par_fake), dim(par_prior))
   expect_equal(nrow(par_fake), N_parameters)
   expect_equal(nrow(par_fake[par_fake$Variable == "mu", ]), N_subject)
@@ -18,7 +18,7 @@ test_that("summary_statistics returns a correct dataframe", {
   expect_true(all(is.na(par_fake$Index[par_fake$Variable %in% c("mu_pop", "sigma_pop")])))
 })
 
-test_that("summary_statistics catches errors", {
+test_that("summary_statistics catches wrong inputs", {
   expect_error(summary_statistics(rnorm(1e3), ""))
   expect_error(summary_statistics(fit_fake, param, paste0(seq(5, 95, 5), "%")))
   expect_error(summary_statistics(fit_fake, "parameter_not_in_model"))

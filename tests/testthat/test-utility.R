@@ -16,7 +16,7 @@ test_that("changes_colnames leaves the content of the dataframe unchanged", {
   }
 })
 
-test_that("change_colnames catch errors", {
+test_that("change_colnames catches incorrect inputs", {
   arr <- array(rnorm(1e3), dim = c(10, 10), dimnames = list(paste0("R", 1:10), paste0("C", 1:10)))
   expect_error(change_colnames(arr, c("C1"), c("V1")))
   expect_error(change_colnames(df0, 1, "V1"))
@@ -45,11 +45,20 @@ test_that("factor_to_numeric works", {
   }
 })
 
-test_that("factor_to_numeric catch errors and warnings", {
-  expect_error(factor_to_numeric(list(A = factor(1:10), B = "b"), "A")) # list input
-  expect_error(factor_to_numeric(data.frame(A = c(1, 2), B = c(2, 3)), 1)) # factor_name not a character
-  expect_warning(factor_to_numeric(data.frame(A = factor(c(1, 2, "C"))), "A")) # cannot convert to numeric
-  expect_warning(factor_to_numeric(data.frame(A = c(1, 2), B = c(2, 3)), "C")) # factor_name not in colnames(df)
+test_that("factor_to_numeric does not accept a list for df", {
+  expect_error(factor_to_numeric(list(A = factor(1:10), B = "b"), "A"))
+})
+
+test_that("factor_to_numeric does not accept non-string for factor_name", {
+  expect_error(factor_to_numeric(data.frame(A = c(1, 2), B = c(2, 3)), 1))
+})
+
+test_that("factor_to_numeric warns that variable cannot be converted to numeric", {
+  expect_warning(factor_to_numeric(data.frame(A = factor(c(1, 2, "C"))), "A"))
+})
+
+test_that("factor_to_numeric warns that the input factor_name is not in df", {
+  expect_warning(factor_to_numeric(data.frame(A = c(1, 2), B = c(2, 3)), "C"))
 })
 
 # Test extract_index_1d ---------------------------------------------------
