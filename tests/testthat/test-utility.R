@@ -67,5 +67,7 @@ x <- c("sigma", "sigma[1]", "sigma[1, 1]", "sigma[1][1]")
 sol <- data.frame(Variable = c("sigma", "sigma", "sigma[1, 1]", "sigma[1]"),
                   Index = c(NA, 1, NA, 1))
 out <- extract_index_1d(x)
-expect_equal(out, sol)
-expect_is(out, "data.frame")
+test_that("extract_index_1d returns a correct dataframe", {
+  expect_equal(out, sol)
+  expect_is(out, "data.frame")
+})
