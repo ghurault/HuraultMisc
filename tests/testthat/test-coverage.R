@@ -12,8 +12,9 @@ for (t in c("eti", "hdi")) {
     expect_lt(cov_rmse, 0.1)
   })
 
-  test_that("compute_coverage catch errors", {
+  test_that("compute_coverage identify input of wrong dimensions", {
     expect_error(compute_coverage(post_samples, truth[-1], type = t))
+    expect_error(compute_coverage(post_samples[, -1], truth, type = t))
   })
 
   test_that("plot_coverage returns a ggplot object", {
