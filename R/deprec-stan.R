@@ -1,3 +1,5 @@
+# Extract posterior predictive distribution ----------------------------------------------------
+
 #' Extract posterior predictive distribution
 #'
 #' @param fit Stanfit object
@@ -35,6 +37,8 @@ process_replications <- function(fit, idx = NULL, parName, bounds = NULL, ...) {
   }
   return(out)
 }
+
+# Extract parameters from single draw -------------------------------------
 
 #' Extract parameters from a single draw
 #'
