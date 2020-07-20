@@ -1,3 +1,15 @@
+# Predicates --------------------------------------------------------------
+
+#' Test whether an object is of class "stanfit"
+#'
+#' @param obj Object
+#'
+#' @return Boolean
+#' @noRd
+is_stanfit <- function(obj) {
+  any(class(obj) == "stanfit")
+}
+
 # Changing column names ---------------------------------------------------
 
 #' Change column names of a dataframe

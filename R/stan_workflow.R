@@ -17,7 +17,7 @@
 #' @md
 summary_statistics <- function(fit, pars, probs = c(.05, .25, .5, .75, .95)) {
 
-  stopifnot(class(fit) == "stanfit")
+  stopifnot(is_stanfit(fit))
 
   par <- rstan::summary(fit, pars = pars, probs = probs)$summary
   par <- as.data.frame(par)
@@ -69,7 +69,7 @@ extract_distribution <- function(object,
 
   type <- match.arg(type)
 
-  if (any(class(object) == "stanfit")) {
+  if (is_stanfit(object)) {
     ps <- rstan::extract(object, pars = parName)[[1]]
   } else if (is.numeric(object) & (is.vector(object) | is.matrix(object) | is.array(object))) {
     ps <- as.array(object)
@@ -267,9 +267,7 @@ extract_draws <- function(obj, draws) {
 #' @export
 extract_parameters_from_draw <- function(fit, param, draw) {
 
-  if (!any(class(fit) == "stanfit")) {
-    stop(as.character(substitute(fit)), " must be a stanfit object")
-  }
+  stopifnot(is_stanfit(fit))
 
   draw <- as.integer(draw)
   if (length(draw) != 1) {
@@ -302,10 +300,9 @@ extract_parameters_from_draw <- function(fit, param, draw) {
 #' PPC_group_distribution(X, "", 10)
 PPC_group_distribution <- function(obj, parName = "", nDraws = 1) {
 
-  is_stanfit <- any(class(obj) == "stanfit")
-  stopifnot(is_stanfit || is.matrix(obj))
+  stopifnot(is_stanfit(obj) || is.matrix(obj))
 
-  if (is_stanfit) {
+  if (is_stanfit(obj)) {
     stopifnot(is.character(parName),
               length(parName) == 1)
     par <- rstan::extract(obj, pars = parName)[[1]] # parName in obj checked here

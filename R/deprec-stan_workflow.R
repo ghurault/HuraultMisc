@@ -12,9 +12,7 @@ process_replications <- function(fit, idx = NULL, parName, bounds = NULL, ...) {
 
   .Deprecated("extract_distribution")
 
-  if (!any(class(fit) == "stanfit")) {
-    stop(as.character(substitute(fit)), " must be a stanfit object and not of class ", class(fit))
-  }
+  stopifnot(is_stanfit(fit))
 
   if (is.null(bounds)) {
     support <- NULL
