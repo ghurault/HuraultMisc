@@ -74,3 +74,31 @@ test_that("PPC_group_distribution incorrect inputs", {
   expect_error(PPC_group_distribution(fit_fake, c("mu", "y_rep")))
   expect_error(PPC_group_distribution(fit_fake, "parameter_not_in_model"))
 })
+
+# extract_distribution with stanfit object --------------------------------
+
+test_that("extract_distribution works with stanfit object", {
+  dist <- extract_distribution(fit_fake, parName = "y_rep", type = "continuous", support = c(-10, 10))
+  expect_true(all(c("Value", "Density", "Index", "Variable") %in% colnames(dist)))
+  expect_equal(length(unique(dist[["Index"]])), N)
+  expect_equal(range(dist[["Value"]]), c(-10, 10))
+})
+
+test_that("process_replications works", {
+  idx <- observations_dictionary(data_fake)
+
+  # test support
+  pred_cont <- process_replications(fit_fake, idx = idx, parName = "y_rep", bounds = c(-10, 10), type = "continuous")
+  expect_equal(range(pred_cont[["y_rep"]]), c(-10, 10)) # support works
+
+  # test truncation
+  pred_eti <- process_replications(fit_fake, idx = idx, parName = "y_rep", bounds = c(-5, 5), type = "eti", CI_level = .99)
+  is_between <- function(x, lb, ub) {x >= lb & x <= ub}
+  expect_true(!any(!c(is_between(pred_eti[["Lower"]], -5, 5), is_between(pred_eti[["Upper"]], -5, 5)), na.rm = TRUE))
+
+})
+
+test_that("process_replications failures and warnings", {
+  expect_warning(process_replications(fit_fake, idx = NULL, parName = "y_rep", bounds = NULL)) # support warning from extract_distribution
+  expect_error(process_replications(rnorm(1e3), idx = NULL, parName = "y_rep")) # fit is not a stanfit object
+})

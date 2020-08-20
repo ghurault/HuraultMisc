@@ -7,28 +7,25 @@
 extract_distribution(
   object,
   parName,
-  type = c("continuous", "discrete", "samples", "eti", "hdi"),
+  type = c("continuous", "discrete", "eti", "hdi"),
   support = NULL,
   transform = identity,
   nDensity = 2^7,
-  nDraws = 100,
   CI_level = seq(0.1, 0.9, 0.1)
 )
 }
 \arguments{
 \item{object}{Object specifying the distribution as samples: can be a Stanfit object, a matrix (columns represents parameters, rows samples) or a vector.}
 
-\item{parName}{Name of the parameter to extract}
+\item{parName}{Name of the parameter to extract.}
 
 \item{type}{Indicates how the distribution is summarised.}
 
 \item{support}{Support of the distribution. For type = "continuous", this must be the range of the distribution. For type = "discrete", this must be a vector of all possible values that the distribution can take. Can be NULL.}
 
-\item{transform}{Function to apply to the samples}
+\item{transform}{Function to apply to the samples.}
 
 \item{nDensity}{Number of equally spaced points at which the density is to be estimated (better to use a power of 2). Applies when type = "continuous".}
-
-\item{nDraws}{Number of draws from the distribution. Applies when type = "samples"}
 
 \item{CI_level}{Vector containing the level of the confidence/credible intervals. Applies when type = "eti" or type = "hdi".}
 }
@@ -39,8 +36,7 @@ Dataframe
 The distribution can be extracted as:
 \itemize{
 \item a probability density function ("continuous").
-\item a probability mass unction ("discrete").
-\item draws from the distribution ("samples"). In that case, the little processing that is being done is similar to extract_draws, except that only one parameter can be extracted.
+\item a probability mass function ("discrete").
 \item a series of equal-tailed confidence/credible intervals ("eti").
 \item a series of highest density confidence/credible intervals ("hdi").
 }
@@ -51,3 +47,6 @@ This function can notably be used to prepare the data for plotting fan charts wh
 In that case, the tidybayes package offers an alternative with stat_lineribbon.
 }
 
+\seealso{
+[extract_draws()] for extracting draws of an object.
+}
