@@ -43,35 +43,22 @@ compute_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05), type = c
 
   CI <- CI[CI > 0 & CI < 1]
 
-  # For each variable, compute Lower and Upper bounds for different confidence level, and check if the truth is in in the interval
-  df <- do.call(rbind,
-                lapply(1:ncol(post_samples),
-                       function(i) {
+  # Compute lower and upper bounds for different confidence levels, for each variable
+  df <- extract_distribution(post_samples,
+                             parName = "",
+                             type = type,
+                             CI_level = CI)
 
-                         if (type == "eti") {
-                           tmp <- do.call(rbind,
-                                          lapply(CI,
-                                                 function(lvl) {
-                                                   # Compute Lower and Upper bounds of CI for each confidence level
-                                                   alpha <- 1 - lvl
-                                                   q <- quantile(post_samples[, i], probs = c(alpha / 2, 1 - alpha / 2))
-                                                   data.frame(Nominal = lvl, Variable = i, Lower = q[1], Upper = q[2])
-                                                 }))
-                         } else if (type == "hdi") {
-                           x <- sapply(CI, function(lvl) {HDInterval::hdi(post_samples[, i], credMass = lvl)})
-                           tmp <- data.frame(Nominal = CI, Variable = i, Lower = x["lower", ], Upper = x["upper", ])
-                         }
-                         rownames(tmp) <- NULL
-                         tmp$Coverage <- (truth[i] >= tmp$Lower & truth[i] <= tmp$Upper)
-                         return(tmp)
-                       }))
+  # Check if the truth is in the interval
+  df <- merge(df, data.frame(Truth = truth, Index = 1:length(truth)))
+  df$Coverage <- with(df, Truth >= Lower & Truth <= Upper)
 
-  # Compute coverage and confidence levels (95% fot coverage)
+  # Compute coverage and confidence levels (95% for coverage)
   cov <- do.call(data.frame,
-                 aggregate(Coverage ~ Nominal, df, function(x) {
+                 aggregate(Coverage ~ Level, df, function(x) {
                    Hmisc::binconf(sum(x), length(x), alpha = 0.05, method = "exact")
                  }))
-  colnames(cov)[-1] <- c("Coverage", "Lower", "Upper")
+  colnames(cov) <- c("Nominal", "Coverage", "Lower", "Upper")
 
   # Add extreme values
   cov <- rbind(cov,
