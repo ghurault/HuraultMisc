@@ -41,13 +41,16 @@ test_that("factor_to_numeric works", {
 
   df1 <- df0
   df1[["A"]] <- factor(df1[["A"]])
+
+  # One factor
+  expect_equal(factor_to_numeric(df1, "A"), df0)
+  expect_type(factor_to_numeric(df1, "A")$A, "double")
+
+  # Multiple factors
   df1[["C"]] <- factor(df1[["C"]])
-
   df2 <- factor_to_numeric(df1, c("A", "C"))
-
   expect_equal(dim(df1), dim(df2))
   expect_equal(df1[["B"]], df2[["B"]])
-
   for (i in c("A", "C")) {
     expect_equal(df2[[i]], df0[[i]])
     expect_type(df2[[i]], "double")

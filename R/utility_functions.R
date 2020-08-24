@@ -61,9 +61,9 @@ factor_to_numeric <- function(df, factor_name) {
     warning("The intersection of columns names of df and factor_name is empty")
   } else {
     for (i in 1:length(factor_name)) {
-      tmp <- df[, factor_name[i]]
+      tmp <- df[[factor_name[i]]]
       if (is.factor(tmp)) {
-        df[, factor_name[i]] <- as.numeric(levels(tmp))[tmp]
+        df[[factor_name[i]]] <- as.numeric(levels(tmp))[tmp]
       }
     }
   }
