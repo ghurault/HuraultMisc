@@ -47,6 +47,23 @@ test_that("plot_prior_posterior identifies incorrect inputs", {
 
 # Test check_model_sensitivity --------------------------------------------
 
+test_that("compute_prior_influence returns correct values", {
+  prior <- data.frame(Variable = c("a", "b", "b"),
+                      Index = c(NA, 1, 2),
+                      Mean = c(0, 1, NA),
+                      sd = c(1, 2, NA)) # test that prior for b[2] does not matter
+  post <- data.frame(Variable = c("a", "b", "b"),
+                     Index = c(NA, 1, 2),
+                     Mean = c(0, 1, 1.5),
+                     sd = c(0.1, 1, 2))
+  expected_output <- data.frame(Variable = c("a", "b", "b"),
+                                Index = c(NA, 1, 2),
+                                PostShrinkage = c(0.99, 0.75, 0),
+                                DistPrior = c(0, 0, 0.25))
+  expect_equal(compute_prior_influence(prior, post, c("a", "b")),
+               expected_output)
+})
+
 test_that("check_model_sensitivity returns a ggplot object", {
   expect_is(check_model_sensitivity(par_prior, par_fake, c(param_pop, param_sub)), "ggplot")
 })

@@ -46,23 +46,28 @@ plot_prior_posterior <- function(prior, post, param) {
     theme(legend.position = "top")
 }
 
-# Model sensitivity -------------------------------------------------------
+# Model sensitivity to priors -------------------------------------------------------
 
-#' Checking how posterior are influenced by the prior
+#' Compute diagnostics of how the posterior is influenced by the prior
 #'
-#' Plot posterior shrinkage (capturing how much the model learns, cf. reference) vs Mahalanobis distance between the mean posterior and the prior (whether the prior "includes" the posterior).
+#' \itemize{
+#' \item Posterior shrinkage (`PostShrinkage`) = 1 - Var(Post) / Var(Prior), capturing how much the model is learning.
+#' Shrinkage near 0 indicates that the data provides little information beyond the prior.
+#' Shrinkage near 1 indicates that the data is much more informative than the prior.
+#' \item Mahalanobis distance between the mean posterior and the prior (`DistPrior`), capturing whether the prior "includes" the posterior.
+#' }
 #'
 #' @param prior Dataframe of prior parameter estimates (with columns Variable, Index, Mean and sd, cf. output from summary_statistics)
 #' @param post Dataframe of posterior parameter estimates (with columns Variable, Index, Mean and sd, , cf. output from summary_statistics)
 #' @param param Vector of parameters' name to check
 #'
-#' @return Ggplot
+#' @return Dataframe with columns: Variable, Index, PostShrinkage, DistPrior
 #' @export
 #'
-#' @import ggplot2
-#'
+#' @md
+#' @seealso [plot_prior_influence()] to directly plot PostShrink vs DistPrior
 #' @references M. Betancourt, \href{https://betanalpha.github.io/assets/case_studies/principled_bayesian_workflow.html}{“Towards a Principled Bayesian Workflow”}, 2018.
-check_model_sensitivity <-  function(prior, post, param) {
+compute_prior_influence <- function(prior, post, param) {
 
   id_vars <- c("Variable", "Index", "Mean", "sd")
 
@@ -81,15 +86,38 @@ check_model_sensitivity <-  function(prior, post, param) {
   prior <- prior[is.na(prior[["Index"]]), ]
   prior[["Index"]] <- NULL
 
-  tmp <- merge(prior,
+  out <- merge(prior,
                post,
                by = "Variable",
                all.y = TRUE, # cf. individual parameters
                suffixes = c(".Prior", ".Posterior"))
-  tmp[["Variable"]] <- factor(tmp[["Variable"]], levels = param)
 
-  tmp[["PostShrinkage"]] <- 1 - (tmp[["sd.Posterior"]] / tmp[["sd.Prior"]])^2
-  tmp[["DistPrior"]] <- abs(tmp[["Mean.Posterior"]] - tmp[["Mean.Prior"]]) / tmp[["sd.Prior"]]
+  out[["PostShrinkage"]] <- 1 - (out[["sd.Posterior"]] / out[["sd.Prior"]])^2
+  out[["DistPrior"]] <- abs(out[["Mean.Posterior"]] - out[["Mean.Prior"]]) / out[["sd.Prior"]]
+  out <- out[, c("Variable", "Index", "PostShrinkage", "DistPrior")]
+
+  return(out)
+}
+
+#' Plot prior influence diagnostics
+#'
+#' Plot posterior shrinkage (capturing how much the model learns) vs Mahalanobis distance between the mean posterior and the prior (whether the prior "includes" the posterior).
+#'
+#' @param prior Dataframe of prior parameter estimates (with columns Variable, Index, Mean and sd, cf. output from summary_statistics)
+#' @param post Dataframe of posterior parameter estimates (with columns Variable, Index, Mean and sd, , cf. output from summary_statistics)
+#' @param param Vector of parameters' name to check
+#'
+#' @return Ggplot
+#' @export
+#'
+#' @import ggplot2
+#'
+#' @seealso [compute_prior_influence()] to return a dataframe with posterior shrinkage and prior/posterior distance.
+#' @md
+plot_prior_influence <-  function(prior, post, param) {
+
+  tmp <- compute_prior_influence(prior, post, param)
+  tmp[["Variable"]] <- factor(tmp[["Variable"]], levels = param)
 
   p <- ggplot(data = tmp,
               aes_string(x = "PostShrinkage", y = "DistPrior", colour = "Variable")) +
@@ -109,4 +137,11 @@ check_model_sensitivity <-  function(prior, post, param) {
   }
 
   return(p)
+}
+
+#' @rdname plot_prior_influence
+#' @export
+check_model_sensitivity <- function(prior, post, param) {
+  .Deprecated("plot_prior_influence")
+  plot_prior_influence(prior, post, param)
 }
