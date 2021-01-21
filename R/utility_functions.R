@@ -135,8 +135,8 @@ extract_index_nd <- function(x) {
   # Remove prefix and split at the brackets
   re2 <- "^(\\w+)+(\\[.*\\])?$"
   out$Index[id_var] <- gsub(re2, "\\2", out$Variable[id_var]) %>%
-    strsplit(., "[\\[\\]]", perl = TRUE) %>%
-    lapply(., function(x) {as.numeric(x[x != ""])})
+    strsplit("[\\[\\]]", perl = TRUE) %>%
+    lapply(function(x) {as.numeric(x[x != ""])})
   # Rename variable
   out$Variable[id_var] <- gsub(re1, "\\1", out$Variable[id_var], perl = TRUE)
 
@@ -146,8 +146,8 @@ extract_index_nd <- function(x) {
   id_var <- grep(re3, out$Variable)
   # Extract what's inside the bracket and split at the comma
   out$Index[id_var] <- gsub(re3, "\\2", out$Variable[id_var], perl = TRUE) %>%
-    strsplit(., ",") %>%
-    lapply(., as.numeric)
+    strsplit(",") %>%
+    lapply(as.numeric)
   # Rename variable
   out$Variable[id_var] <- gsub(re3, "\\1", out$Variable[id_var], perl = TRUE)
 
