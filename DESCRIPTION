@@ -17,7 +17,8 @@ Imports:
     Hmisc,
     stats,
     grDevices,
-    HDInterval
+    HDInterval,
+    magrittr
 RoxygenNote: 7.1.1
 Suggests: 
     testthat (>= 2.1.0),
