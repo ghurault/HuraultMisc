@@ -54,6 +54,7 @@ extract_pmf <- function(x, support = NULL) {
   } else {
     stopifnot(is.vector(support, mode = "numeric"),
               length(support) >= 2)
+    support <- sort(support)
   }
 
   if (!(all(x == round(x)))) {
@@ -146,7 +147,7 @@ extract_hdi <- function(x, CI_level = seq(0.1, 0.9, 0.1)) {
 #' This function can notably be used to prepare the data for plotting fan charts when type = "eti" or "hdi".
 #' In that case, the tidybayes package offers an alternative with stat_lineribbon.
 extract_distribution <- function(object,
-                                 parName,
+                                 parName = "",
                                  type = c("continuous", "discrete", "eti", "hdi"),
                                  support = NULL,
                                  transform = identity,
@@ -155,18 +156,18 @@ extract_distribution <- function(object,
 
   type <- match.arg(type)
 
+  parName <- as.character(parName)
+  if (length(parName) > 1) {
+    parName <- parName[1]
+    warning(as.character(substitute(parName)), " should be of length 1, taking the first element: ", parName)
+  }
+
   if (is_stanfit(object)) {
     object <- rstan::extract(object, pars = parName)[[1]]
   }
 
   stopifnot(is.numeric(object),
             is.vector(object) || is.matrix(object))
-
-  parName <- as.character(parName)
-  if (length(parName) > 1) {
-    parName <- parName[1]
-    warning(as.character(substitute(parName)), " should be of length 1, taking the first element: ", parName)
-  }
 
   stopifnot(is.function(transform))
 

@@ -6,7 +6,7 @@
 \usage{
 extract_distribution(
   object,
-  parName,
+  parName = "",
   type = c("continuous", "discrete", "eti", "hdi"),
   support = NULL,
   transform = identity,
