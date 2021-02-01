@@ -6,26 +6,30 @@
 #'
 #' @param post Dataframe of posterior parameter estimates
 #' @param prior Dataframe of prior parameter estimates
-#' @param param Vector of parameter names to plot
+#' @param pars Vector of parameter names to plot. Defaults to all parameters presents in post and prior.
 #'
-#' @return ggplot of parameter estimates
+#' @return Ggplot of parameter estimates
 #' @export
 #'
 #' @import ggplot2
-plot_prior_posterior <- function(prior, post, param) {
+plot_prior_posterior <- function(prior, post, pars = NULL) {
 
   id_vars <-  c("Variable", "Mean", "5%", "95%")
 
   stopifnot(is.data.frame(post),
             is.data.frame(prior),
-            is.vector(param, mode = "character"),
+            is.vector(pars, mode = "character"),
             all(id_vars %in% colnames(post)),
             all(id_vars %in% colnames(prior)))
 
-  post <- post[post[["Variable"]] %in% param, ]
+  if (is.null(pars)) {
+    pars <- intersect(post[["Variable"]], prior[["Variable"]])
+  }
+
+  post <- post[post[["Variable"]] %in% pars, ]
   post$Distribution <- "Posterior"
 
-  prior <- prior[prior[["Variable"]] %in% param, ]
+  prior <- prior[prior[["Variable"]] %in% pars, ]
   prior$Distribution <- "Prior"
 
   stopifnot(nrow(post) > 0,
@@ -35,7 +39,7 @@ plot_prior_posterior <- function(prior, post, param) {
 
   tmp <- rbind(post[, id_vars], prior[, id_vars])
   tmp[["Distribution"]] <- factor(tmp[["Distribution"]], levels = c("Prior", "Posterior")) # to show posterior on top
-  tmp[["Variable"]] <- factor(tmp[["Variable"]], levels = rev(param)) # show parameters in the order of param
+  tmp[["Variable"]] <- factor(tmp[["Variable"]], levels = rev(pars)) # show parameters in the order of pars
 
   ggplot(data = tmp, aes_string(x = "Variable", y = "Mean", ymin = "`5%`", ymax = "`95%`", colour = "Distribution")) +
     geom_pointrange(position = position_dodge2(width = .3), size = 1.2) +
@@ -59,7 +63,7 @@ plot_prior_posterior <- function(prior, post, param) {
 #'
 #' @param prior Dataframe of prior parameter estimates (with columns Variable, Index, Mean and sd, cf. output from summary_statistics)
 #' @param post Dataframe of posterior parameter estimates (with columns Variable, Index, Mean and sd, , cf. output from summary_statistics)
-#' @param param Vector of parameters' name to check
+#' @param pars Vector of parameters' name to check. Defaults to all parameters presents in post and prior.
 #'
 #' @return Dataframe with columns: Variable, Index, PostShrinkage, DistPrior
 #' @export
@@ -67,18 +71,22 @@ plot_prior_posterior <- function(prior, post, param) {
 #' @md
 #' @seealso [plot_prior_influence()] to directly plot PostShrink vs DistPrior
 #' @references M. Betancourt, \href{https://betanalpha.github.io/assets/case_studies/principled_bayesian_workflow.html}{“Towards a Principled Bayesian Workflow”}, 2018.
-compute_prior_influence <- function(prior, post, param) {
+compute_prior_influence <- function(prior, post, pars) {
 
   id_vars <- c("Variable", "Index", "Mean", "sd")
 
   stopifnot(is.data.frame(prior),
             is.data.frame(post),
-            is.vector(param, mode = "character"),
+            is.vector(pars, mode = "character"),
             all(id_vars %in% colnames(prior)),
             all(id_vars %in% colnames(post)))
 
-  prior <- prior[prior[["Variable"]] %in% param, id_vars]
-  post <- post[post[["Variable"]] %in% param, id_vars]
+  if (is.null(pars)) {
+    pars <- intersect(post[["Variable"]], prior[["Variable"]])
+  }
+
+  prior <- prior[prior[["Variable"]] %in% pars, id_vars]
+  post <- post[post[["Variable"]] %in% pars, id_vars]
 
   # Eliminate index for prior by taking the first one
   # Useful when the model has subject-parameters with the same distribution (and when prior does not contain as many subjects as post for computational reasons)
@@ -105,7 +113,7 @@ compute_prior_influence <- function(prior, post, param) {
 #'
 #' @param prior Dataframe of prior parameter estimates (with columns Variable, Index, Mean and sd, cf. output from summary_statistics)
 #' @param post Dataframe of posterior parameter estimates (with columns Variable, Index, Mean and sd, , cf. output from summary_statistics)
-#' @param param Vector of parameters' name to check
+#' @param pars Vector of parameters' name to check
 #'
 #' @return Ggplot
 #' @export
@@ -114,10 +122,10 @@ compute_prior_influence <- function(prior, post, param) {
 #'
 #' @seealso [compute_prior_influence()] to return a dataframe with posterior shrinkage and prior/posterior distance.
 #' @md
-plot_prior_influence <-  function(prior, post, param) {
+plot_prior_influence <-  function(prior, post, pars = NULL) {
 
-  tmp <- compute_prior_influence(prior, post, param)
-  tmp[["Variable"]] <- factor(tmp[["Variable"]], levels = param)
+  tmp <- compute_prior_influence(prior, post, pars)
+  tmp[["Variable"]] <- factor(tmp[["Variable"]], levels = pars)
 
   p <- ggplot(data = tmp,
               aes_string(x = "PostShrinkage", y = "DistPrior", colour = "Variable")) +
@@ -141,7 +149,7 @@ plot_prior_influence <-  function(prior, post, param) {
 
 #' @rdname plot_prior_influence
 #' @export
-check_model_sensitivity <- function(prior, post, param) {
+check_model_sensitivity <- function(prior, post, pars = NULL) {
   .Deprecated("plot_prior_influence")
-  plot_prior_influence(prior, post, param)
+  plot_prior_influence(prior, post, pars)
 }

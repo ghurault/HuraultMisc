@@ -4,14 +4,14 @@
 \alias{compute_prior_influence}
 \title{Compute diagnostics of how the posterior is influenced by the prior}
 \usage{
-compute_prior_influence(prior, post, param)
+compute_prior_influence(prior, post, pars)
 }
 \arguments{
 \item{prior}{Dataframe of prior parameter estimates (with columns Variable, Index, Mean and sd, cf. output from summary_statistics)}
 
 \item{post}{Dataframe of posterior parameter estimates (with columns Variable, Index, Mean and sd, , cf. output from summary_statistics)}
 
-\item{param}{Vector of parameters' name to check}
+\item{pars}{Vector of parameters' name to check. Defaults to all parameters presents in post and prior.}
 }
 \value{
 Dataframe with columns: Variable, Index, PostShrinkage, DistPrior

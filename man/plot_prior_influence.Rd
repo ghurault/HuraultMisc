@@ -5,16 +5,16 @@
 \alias{check_model_sensitivity}
 \title{Plot prior influence diagnostics}
 \usage{
-plot_prior_influence(prior, post, param)
+plot_prior_influence(prior, post, pars = NULL)
 
-check_model_sensitivity(prior, post, param)
+check_model_sensitivity(prior, post, pars = NULL)
 }
 \arguments{
 \item{prior}{Dataframe of prior parameter estimates (with columns Variable, Index, Mean and sd, cf. output from summary_statistics)}
 
 \item{post}{Dataframe of posterior parameter estimates (with columns Variable, Index, Mean and sd, , cf. output from summary_statistics)}
 
-\item{param}{Vector of parameters' name to check}
+\item{pars}{Vector of parameters' name to check}
 }
 \value{
 Ggplot

@@ -3,7 +3,7 @@
 #' Extract summary statistics
 #'
 #' @param fit Stanfit object
-#' @param pars Character vector of parameters to extract
+#' @param pars Character vector of parameters to extract. Defaults to all parameters.
 #' @param probs Numeric vector of quantiles to extract
 #'
 #'@section Alternative:

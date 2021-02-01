@@ -4,17 +4,17 @@
 \alias{plot_prior_posterior}
 \title{Plot posterior CI alongside prior CI}
 \usage{
-plot_prior_posterior(prior, post, param)
+plot_prior_posterior(prior, post, pars = NULL)
 }
 \arguments{
 \item{prior}{Dataframe of prior parameter estimates}
 
 \item{post}{Dataframe of posterior parameter estimates}
 
-\item{param}{Vector of parameter names to plot}
+\item{pars}{Vector of parameter names to plot. Defaults to all parameters presents in post and prior.}
 }
 \value{
-ggplot of parameter estimates
+Ggplot of parameter estimates
 }
 \description{
 Plot posterior CI alongside prior CI

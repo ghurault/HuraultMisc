@@ -9,7 +9,7 @@ summary_statistics(fit, pars, probs = c(0.05, 0.25, 0.5, 0.75, 0.95))
 \arguments{
 \item{fit}{Stanfit object}
 
-\item{pars}{Character vector of parameters to extract}
+\item{pars}{Character vector of parameters to extract. Defaults to all parameters.}
 
 \item{probs}{Numeric vector of quantiles to extract}
 }
