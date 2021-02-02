@@ -87,7 +87,6 @@ plot_prior_posterior <- function(prior, post, pars = NULL, match_exact = TRUE) {
 
   stopifnot(is.data.frame(post),
             is.data.frame(prior),
-            is.vector(pars, mode = "character"),
             all(id_vars %in% colnames(post)),
             all(id_vars %in% colnames(prior)))
 
@@ -95,7 +94,9 @@ plot_prior_posterior <- function(prior, post, pars = NULL, match_exact = TRUE) {
 
   tmp <- combine_prior_posterior(prior, post, pars = pars, match_exact = match_exact)[, id_vars]
   tmp[["Distribution"]] <- factor(tmp[["Distribution"]], levels = c("Prior", "Posterior")) # to show posterior on top
-  tmp[["Variable"]] <- factor(tmp[["Variable"]], levels = rev(pars)) # show parameters in the order of pars
+  if (!is.null(pars) & match_exact) {
+    tmp[["Variable"]] <- factor(tmp[["Variable"]], levels = rev(pars)) # show parameters in the order of pars
+  }
 
   ggplot(data = tmp, aes_string(x = "Variable", y = "Mean", ymin = "`5%`", ymax = "`95%`", colour = "Distribution")) +
     geom_pointrange(position = position_dodge2(width = .3), size = 1.2) +
@@ -149,7 +150,9 @@ compute_prior_influence <- function(prior, post, pars = NULL, match_exact = TRUE
 plot_prior_influence <-  function(prior, post, pars = NULL, match_exact = TRUE) {
 
   tmp <- compute_prior_influence(prior = prior, post = post, pars = pars, match_exact = match_exact)
-  tmp[["Variable"]] <- factor(tmp[["Variable"]], levels = pars)
+  if (!is.null(pars) & match_exact) {
+    tmp[["Variable"]] <- factor(tmp[["Variable"]], levels = pars)
+  }
 
   p <- ggplot(data = tmp,
               aes_string(x = "PostShrinkage", y = "DistPrior", colour = "Variable")) +
