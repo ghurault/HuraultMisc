@@ -1,18 +1,87 @@
-# Compare prior to posterior
+# Documentation -----------------------------------------------------------
+
+#' Compare prior to posterior
+#'
+#' - combine_prior_posterior subsets and binds the prior and posterior dataframes
+#' - plot_prior_posterior plots posterior CI alongside prior CI
+#' - compute_prior_influence computes diagnostics of how the posterior is influenced by the prior
+#' - plot_prior_influence plots diagnostics from compute_prior_influence
+#'
+#' @param post Dataframe of posterior parameter estimates
+#' @param prior Dataframe of prior parameter estimates
+#' @param pars Vector of parameter names to plot. Defaults to all parameters presents in post and prior.
+#' @param match_exact Logical indicating whether parameters should be matched exactly (e.g. "p" does not match "p\[1\]").
+#'
+#' @return
+#' - combine_prior_posterior returns a dataframe with the same columns as in prior and post + "Distribution".
+#' - compute_prior_influence returns a dataframe with columns: Variable, Index, PostShrinkage, DistPrior.
+#' - plot_prior_posterior and plot_prior_influence returns a ggplot object
+#'
+#' @details
+#' - Posterior shrinkage (`PostShrinkage`) = 1 - Var(Post) / Var(Prior), capturing how much the model is learning.
+#' Shrinkage near 0 indicates that the data provides little information beyond the prior.
+#' Shrinkage near 1 indicates that the data is much more informative than the prior.
+#' - Mahalanobis distance between the mean posterior and the prior (`DistPrior`), capturing whether the prior "includes" the posterior.
+#'
+#' @references M. Betancourt, \href{https://betanalpha.github.io/assets/case_studies/principled_bayesian_workflow.html}{“Towards a Principled Bayesian Workflow”}, 2018.
+#'
+#' @name prior_posterior
+#' @md
+NULL
+
+# Combine prior and posterior dataframe -----------------------------------
+
+#' @rdname prior_posterior
+#' @export
+#' @import dplyr
+combine_prior_posterior <- function(prior, post, pars = NULL, match_exact = TRUE) {
+
+  stopifnot(is.data.frame(prior),
+            is.data.frame(post),
+            is.logical(match_exact) & length(match_exact) == 1)
+
+  if (is.null(pars)) {
+    pars <- intersect(post[["Variable"]], prior[["Variable"]])
+  }
+  stopifnot(is.vector(pars, mode = "character"),
+            length(pars) > 0)
+
+  if (!is.null(pars) & !match_exact) {
+    rg <- paste0("^", pars, "(\\[.+\\])?$")
+
+    pars <- sapply(list(prior[["Variable"]],
+                        post[["Variable"]]),
+                   function(x) {
+                     id <- sapply(rg, function(rgi) {grepl(rgi, x)})
+                     id <- apply(id, 1, any)
+                     return(x[id])
+                   })
+    pars <- unique(c(pars))
+  }
+
+  post <- post %>%
+    filter(.data$Variable %in% pars) %>%
+    mutate(Distribution = "Posterior")
+
+  prior <- prior %>%
+    filter(.data$Variable %in% pars) %>%
+    mutate(Distribution = "Prior")
+
+  stopifnot(nrow(post) > 0,
+            nrow(prior) > 0)
+
+  out <- bind_rows(prior, post)
+  return(out)
+}
 
 # Plot prior vs posterior estimates  ------------------------------------
 
 #' Plot posterior CI alongside prior CI
 #'
-#' @param post Dataframe of posterior parameter estimates
-#' @param prior Dataframe of prior parameter estimates
-#' @param pars Vector of parameter names to plot. Defaults to all parameters presents in post and prior.
-#'
-#' @return Ggplot of parameter estimates
+#' @rdname prior_posterior
 #' @export
-#'
 #' @import ggplot2
-plot_prior_posterior <- function(prior, post, pars = NULL) {
+plot_prior_posterior <- function(prior, post, pars = NULL, match_exact = TRUE) {
 
   id_vars <-  c("Variable", "Mean", "5%", "95%")
 
@@ -22,22 +91,9 @@ plot_prior_posterior <- function(prior, post, pars = NULL) {
             all(id_vars %in% colnames(post)),
             all(id_vars %in% colnames(prior)))
 
-  if (is.null(pars)) {
-    pars <- intersect(post[["Variable"]], prior[["Variable"]])
-  }
-
-  post <- post[post[["Variable"]] %in% pars, ]
-  post$Distribution <- "Posterior"
-
-  prior <- prior[prior[["Variable"]] %in% pars, ]
-  prior$Distribution <- "Prior"
-
-  stopifnot(nrow(post) > 0,
-            nrow(prior) > 0)
-
   id_vars <-  c(id_vars, "Distribution")
 
-  tmp <- rbind(post[, id_vars], prior[, id_vars])
+  tmp <- combine_prior_posterior(prior, post, pars = pars, match_exact = match_exact)[, id_vars]
   tmp[["Distribution"]] <- factor(tmp[["Distribution"]], levels = c("Prior", "Posterior")) # to show posterior on top
   tmp[["Variable"]] <- factor(tmp[["Variable"]], levels = rev(pars)) # show parameters in the order of pars
 
@@ -52,26 +108,10 @@ plot_prior_posterior <- function(prior, post, pars = NULL) {
 
 # Model sensitivity to priors -------------------------------------------------------
 
-#' Compute diagnostics of how the posterior is influenced by the prior
-#'
-#' \itemize{
-#' \item Posterior shrinkage (`PostShrinkage`) = 1 - Var(Post) / Var(Prior), capturing how much the model is learning.
-#' Shrinkage near 0 indicates that the data provides little information beyond the prior.
-#' Shrinkage near 1 indicates that the data is much more informative than the prior.
-#' \item Mahalanobis distance between the mean posterior and the prior (`DistPrior`), capturing whether the prior "includes" the posterior.
-#' }
-#'
-#' @param prior Dataframe of prior parameter estimates (with columns Variable, Index, Mean and sd, cf. output from summary_statistics)
-#' @param post Dataframe of posterior parameter estimates (with columns Variable, Index, Mean and sd, , cf. output from summary_statistics)
-#' @param pars Vector of parameters' name to check. Defaults to all parameters presents in post and prior.
-#'
-#' @return Dataframe with columns: Variable, Index, PostShrinkage, DistPrior
+#' @rdname prior_posterior
 #' @export
-#'
-#' @md
-#' @seealso [plot_prior_influence()] to directly plot PostShrink vs DistPrior
-#' @references M. Betancourt, \href{https://betanalpha.github.io/assets/case_studies/principled_bayesian_workflow.html}{“Towards a Principled Bayesian Workflow”}, 2018.
-compute_prior_influence <- function(prior, post, pars) {
+#' @import dplyr
+compute_prior_influence <- function(prior, post, pars = NULL, match_exact = TRUE) {
 
   id_vars <- c("Variable", "Index", "Mean", "sd")
 
@@ -81,50 +121,34 @@ compute_prior_influence <- function(prior, post, pars) {
             all(id_vars %in% colnames(prior)),
             all(id_vars %in% colnames(post)))
 
-  if (is.null(pars)) {
-    pars <- intersect(post[["Variable"]], prior[["Variable"]])
-  }
-
-  prior <- prior[prior[["Variable"]] %in% pars, id_vars]
-  post <- post[post[["Variable"]] %in% pars, id_vars]
-
   # Eliminate index for prior by taking the first one
   # Useful when the model has subject-parameters with the same distribution (and when prior does not contain as many subjects as post for computational reasons)
   prior[which(prior[["Index"]] == 1), "Index"] <- NA
   prior <- prior[is.na(prior[["Index"]]), ]
-  prior[["Index"]] <- NULL
 
-  out <- merge(prior,
-               post,
-               by = "Variable",
-               all.y = TRUE, # cf. individual parameters
-               suffixes = c(".Prior", ".Posterior"))
+  tmp <- combine_prior_posterior(prior = prior, post = post, pars = pars, match_exact = match_exact) %>%
+    select(all_of(c(id_vars, "Distribution")))
 
-  out[["PostShrinkage"]] <- 1 - (out[["sd.Posterior"]] / out[["sd.Prior"]])^2
-  out[["DistPrior"]] <- abs(out[["Mean.Posterior"]] - out[["Mean.Prior"]]) / out[["sd.Prior"]]
-  out <- out[, c("Variable", "Index", "PostShrinkage", "DistPrior")]
+  prior <- tmp %>% filter(.data$Distribution == "Prior") %>% select(-.data$Distribution, -.data$Index)
+  post <- tmp %>% filter(.data$Distribution == "Posterior") %>% select(-.data$Distribution)
+
+  out <- right_join(prior,
+                    post,
+                    by = "Variable",
+                    suffix = c("_Prior", "_Posterior")) %>%
+    mutate(PostShrinkage = 1 - (.data$sd_Posterior / .data$sd_Prior)^2,
+           DistPrior = abs(.data$Mean_Posterior - .data$Mean_Prior) / .data$sd_Prior) %>%
+    select(all_of(c("Variable", "Index", "PostShrinkage", "DistPrior")))
 
   return(out)
 }
 
-#' Plot prior influence diagnostics
-#'
-#' Plot posterior shrinkage (capturing how much the model learns) vs Mahalanobis distance between the mean posterior and the prior (whether the prior "includes" the posterior).
-#'
-#' @param prior Dataframe of prior parameter estimates (with columns Variable, Index, Mean and sd, cf. output from summary_statistics)
-#' @param post Dataframe of posterior parameter estimates (with columns Variable, Index, Mean and sd, , cf. output from summary_statistics)
-#' @param pars Vector of parameters' name to check
-#'
-#' @return Ggplot
+#' @rdname prior_posterior
 #' @export
-#'
 #' @import ggplot2
-#'
-#' @seealso [compute_prior_influence()] to return a dataframe with posterior shrinkage and prior/posterior distance.
-#' @md
-plot_prior_influence <-  function(prior, post, pars = NULL) {
+plot_prior_influence <-  function(prior, post, pars = NULL, match_exact = TRUE) {
 
-  tmp <- compute_prior_influence(prior, post, pars)
+  tmp <- compute_prior_influence(prior = prior, post = post, pars = pars, match_exact = match_exact)
   tmp[["Variable"]] <- factor(tmp[["Variable"]], levels = pars)
 
   p <- ggplot(data = tmp,
@@ -147,9 +171,9 @@ plot_prior_influence <-  function(prior, post, pars = NULL) {
   return(p)
 }
 
-#' @rdname plot_prior_influence
+#' @rdname prior_posterior
 #' @export
 check_model_sensitivity <- function(prior, post, pars = NULL) {
   .Deprecated("plot_prior_influence")
-  plot_prior_influence(prior, post, pars)
+  plot_prior_influence(prior, post, pars, match_exact = TRUE)
 }

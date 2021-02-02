@@ -25,6 +25,30 @@ test_that("summary_statistics catches wrong inputs", {
   expect_error(summary_statistics(fit_fake, 1))
 })
 
+# Test combine_prior_posterior --------------------------------------------
+
+test_that("combine_prior_posterior works", {
+  cpp1 <- combine_prior_posterior(par_prior, par_fake, pars = NULL, match_exact = TRUE)
+  expect_true(is.data.frame(cpp1))
+  expect_true(all(colnames(par_prior) %in% colnames(cpp1)))
+  expect_true(all(colnames(par_fake) %in% colnames(cpp1)))
+  expect_true("Distribution" %in% colnames(cpp1))
+  expect_true(all(as.character(unique(cpp1[["Distribution"]])) %in% c("Prior", "Posterior")))
+  expect_true(all(unique(cpp1[["Variable"]]) %in% param))
+
+  cpp2 <- combine_prior_posterior(par_prior, par_fake, pars = "mu", match_exact = TRUE)
+  expect_equal(as.character(unique(cpp2[["Variable"]])), "mu")
+
+  par_prior2 <- par_prior %>% na.omit() %>% mutate(Variable = paste0(Variable, "[", Index, "]")) %>% select(-Index)
+  par_fake2 <- par_fake %>% na.omit() %>% mutate(Variable = paste0(Variable, "[", Index, "]")) %>% select(-Index)
+
+  cpp3 <- combine_prior_posterior(par_prior2, par_prior2, pars = "mu", match_exact = FALSE)
+  expect_equal(as.character(unique(cpp2[["Variable"]])), "mu")
+  expect_equal(nrow(cpp2), nrow(cpp3))
+
+  expect_error(combine_prior_posterior(par_prior2, par_prior2, pars = "mu", match_exact = TRUE))
+})
+
 # Test plot_prior_posterior -----------------------------------------------
 
 test_that("plot_prior_posterior returns a ggplot object", {
@@ -45,7 +69,7 @@ test_that("plot_prior_posterior identifies incorrect inputs", {
   expect_error(plot_prior_posterior(tmp1, tmp2, param_pop))
 })
 
-# Test check_model_sensitivity --------------------------------------------
+# Test prior_influence --------------------------------------------
 
 test_that("compute_prior_influence returns correct values", {
   prior <- data.frame(Variable = c("a", "b", "b"),
@@ -64,15 +88,16 @@ test_that("compute_prior_influence returns correct values", {
                expected_output)
 })
 
-test_that("check_model_sensitivity returns a ggplot object", {
+test_that("plot_prior_influence returns a ggplot object", {
+  expect_is(plot_prior_influence(par_prior, par_fake, c(param_pop, param_sub)), "ggplot")
   expect_is(check_model_sensitivity(par_prior, par_fake, c(param_pop, param_sub)), "ggplot")
 })
 
 test_that("check_model_sensitivity identifies incorrect inputs", {
-  expect_error(check_model_sensitivity(par_prior, as.matrix(par_fake), param_pop))
-  expect_error(check_model_sensitivity(as.matrix(par_prior), par_fake, param_pop))
-  expect_error(check_model_sensitivity(as.matrix(par_prior), par_fake, param_pop))
-  expect_error(check_model_sensitivity(par_prior, par_fake, as.list(param_pop)))
+  expect_error(plot_prior_influence(par_prior, as.matrix(par_fake), param_pop))
+  expect_error(plot_prior_influence(as.matrix(par_prior), par_fake, param_pop))
+  expect_error(plot_prior_influence(as.matrix(par_prior), par_fake, param_pop))
+  expect_error(plot_prior_influence(par_prior, par_fake, as.list(param_pop)))
 })
 
 # Test PPC_group_distribution ----------------------------------------------------
