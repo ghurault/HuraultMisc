@@ -20,14 +20,14 @@ extract_pdf <- function(x, support = NULL, n_density = 2^7) {
             is.numeric(n_density))
 
   if (is.null(support)) {
-    support <- quantile(x, probs = c(.001, 0.999))
+    support <- stats::quantile(x, probs = c(.001, 0.999))
     warning("support is NULL, taking the range: ", paste(support, collapse = ", "))
   } else {
     stopifnot(is.vector(support, mode = "numeric"),
               length(support) >= 2)
   }
 
-  d <- density(x, kernel = "gaussian", from = min(support), to = max(support), n = as.integer(n_density))
+  d <- stats::density(x, kernel = "gaussian", from = min(support), to = max(support), n = as.integer(n_density))
   data.frame(Value = d$x, Density = d$y)
 }
 
@@ -86,8 +86,8 @@ extract_eti <- function(x, CI_level = seq(0.1, 0.9, 0.1)) {
             is.vector(CI_level, mode = "numeric"),
             min(CI_level) >=0 && max(CI_level) <= 1)
 
-  data.frame(Lower = quantile(x, probs = 0.5 - CI_level / 2),
-             Upper = quantile(x, probs = 0.5 + CI_level / 2),
+  data.frame(Lower = stats::quantile(x, probs = 0.5 - CI_level / 2),
+             Upper = stats::quantile(x, probs = 0.5 + CI_level / 2),
              Level = CI_level)
 }
 
@@ -139,7 +139,6 @@ extract_hdi <- function(x, CI_level = seq(0.1, 0.9, 0.1)) {
 #'
 #' @return Dataframe
 #' @export
-#' @import stats
 #'
 #' @seealso [extract_draws()] for extracting draws of an object.
 #'

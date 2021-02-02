@@ -39,8 +39,8 @@ test_that("combine_prior_posterior works", {
   cpp2 <- combine_prior_posterior(par_prior, par_fake, pars = "mu", match_exact = TRUE)
   expect_equal(as.character(unique(cpp2[["Variable"]])), "mu")
 
-  par_prior2 <- par_prior %>% na.omit() %>% mutate(Variable = paste0(Variable, "[", Index, "]")) %>% select(-Index)
-  par_fake2 <- par_fake %>% na.omit() %>% mutate(Variable = paste0(Variable, "[", Index, "]")) %>% select(-Index)
+  par_prior2 <- par_prior %>% drop_na() %>% mutate(Variable = paste0(Variable, "[", Index, "]")) %>% select(-Index)
+  par_fake2 <- par_fake %>% drop_na() %>% mutate(Variable = paste0(Variable, "[", Index, "]")) %>% select(-Index)
 
   cpp3 <- combine_prior_posterior(par_prior2, par_prior2, pars = "mu", match_exact = FALSE)
   expect_equal(as.character(unique(cpp2[["Variable"]])), "mu")

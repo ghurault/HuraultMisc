@@ -11,7 +11,6 @@
 #'
 #' @return Dataframe with colums Forecast (bins), Frequency (frequency of outcomes in the bin), Lower (lower bound of the CI) and Upper (upper bound of the CI)
 #' @export
-#' @import stats
 #'
 #' @examples
 #' N <- 1e4
@@ -29,38 +28,40 @@ compute_calibration <- function(forecast, outcome, method = c("smoothing", "binn
 
   stopifnot(max(forecast) <= 1,
             min(forecast) >= 0,
-            is.null(CI) || (CI < 1 && CI > 0))
-
-  if (sum(outcome == 0 | outcome == 1, na.rm = TRUE) != length(outcome)) {
-    stop(as.character(substitute(outcome)), " values should be only 0 or 1")
-  }
+            is.null(CI) || (CI < 1 && CI > 0),
+            all(outcome %in% c(0, 1, NA, NaN)))
 
   if (method == "smoothing") {
 
-    fit <- loess(outcome ~ forecast, ...)
+    fit <- stats::loess(outcome ~ forecast, ...)
 
     out <- data.frame(Forecast = seq(0, 1, .01))
     if (!is.null(CI)) {
-      tmp <- predict(fit, newdata = out$Forecast, se = TRUE)
-      out$Frequency <- tmp$fit
-      t <- .5 + CI / 2
-      out$Lower <- with(tmp, pmax(0, fit - qt(t, df) * se.fit))
-      out$Upper <- with(tmp, pmin(1, fit + qt(t, df) * se.fit))
-      out <- rbind(data.frame(Forecast = 0, Frequency = 0, Lower = 0, Upper = 0),
-                   na.omit(out)) # Remove missing and add 0
+      tmp <- stats::predict(fit, newdata = out$Forecast, se = TRUE)
+      tval <- stats::qt(.5 + CI / 2, tmp$df)
+      out <- out %>%
+        mutate(Frequency = tmp$fit,
+               SE = tmp$se.fit,
+               Lower = .data$Frequency - tval * .data$SE,
+               Lower = pmax(0, .data$Lower),
+               Upper = .data$Frequency + tval * .data$SE,
+               Upper = pmin(1, .data$Upper)) %>%
+        bind_rows(tibble(Forecast = 0, Frequency = 0, Lower = 0, Upper = 0))
     } else {
-      tmp <- predict(fit, newdata = out$Forecast, se = FALSE)
-      out$Frequency <- tmp
-      out <- rbind(data.frame(Forecast = 0, Frequency = 0),
-                   na.omit(out)) # Remove missing and add 0
+      out <- out %>%
+        mutate(Frequency = stats::predict(fit, newdata = out$Forecast, se = FALSE)) %>%
+        bind_rows(tibble(Forecast = 0, Frequency = 0))
     }
 
-  } else if (method == "binning") {
+  }
 
-    stopifnot(is.null(binwidth) || (binwidth > 0 && binwidth < 1))
+  if (method == "binning") {
 
     if (is.null(binwidth)) {
       binwidth <- 1 / grDevices::nclass.Sturges(as.vector(as.matrix(forecast))) # Automatic bin width selection
+    } else {
+      stopifnot(length(binwidth) == 1,
+                binwidth > 0 & binwidth < 1)
     }
     forecast <- round(forecast / binwidth) * binwidth
     bins <- seq(0, 1, binwidth)
@@ -69,17 +70,17 @@ compute_calibration <- function(forecast, outcome, method = c("smoothing", "binn
     count_a <- table(factor(forecast[outcome == 1], levels = bins)) # Number of outcomes in each bin
 
     if (!is.null(CI)){
-      out <- Hmisc::binconf(count_a, count_f, alpha = 1 - CI, method = "exact")
-      out <- as.data.frame(out)
-      colnames(out)[1] <- "Frequency"
-      out <- cbind(data.frame(Forecast = bins), out)
+      out <- Hmisc::binconf(count_a, count_f, alpha = 1 - CI, method = "exact", return.df = TRUE) %>%
+        rename(Frequency = .data$PointEst) %>%
+        mutate(Forecast = bins) %>%
+        relocate(.data$Forecast)
       rownames(out) <- NULL
-      out <- na.omit(out)
     } else {
       out <- data.frame(Forecast = bins, Frequency = as.numeric(count_a / count_f))
     }
 
   }
+  out <- drop_na(out)
 
   return(out)
 }

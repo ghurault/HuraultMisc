@@ -18,10 +18,10 @@
 #' @examples
 #' illustrate_RPS()
 #'
-#' @import ggplot2 stats
+#' @import ggplot2
 illustrate_RPS <- function(mu = 5, sigma = 1, observed = 6) {
 
-  stopifnot(observed >=0,
+  stopifnot(observed >= 0,
             observed <= 10)
 
   if ((mu / sigma) < -2 | (mu - 10) / sigma > 2) {
@@ -33,8 +33,8 @@ illustrate_RPS <- function(mu = 5, sigma = 1, observed = 6) {
   x <- seq(0, 10, .01)
 
   # RPS calculation
-  Z <- pnorm(10, mu, sigma) - pnorm(0, mu, sigma) # Normalisation constant (cf. truncation)
-  cumForecast <- (pnorm(pmin(0:10 + .5, 10), mu, sigma) -  pnorm(pmax(0:10 - .5, 0), mu, sigma)) / Z # Discretise Gaussian
+  Z <- stats::pnorm(10, mu, sigma) - stats::pnorm(0, mu, sigma) # Normalisation constant (cf. truncation)
+  cumForecast <- (stats::pnorm(pmin(0:10 + .5, 10), mu, sigma) -  stats::pnorm(pmax(0:10 - .5, 0), mu, sigma)) / Z # Discretise Gaussian
   cumForecast <- cumsum(cumForecast)
   cumOutcome <- rep(0, 11)
   cumOutcome[observed + 1] <- 1
@@ -44,7 +44,7 @@ illustrate_RPS <- function(mu = 5, sigma = 1, observed = 6) {
   RPSS <- 1 - RPS / RPS0
 
   # PDF
-  df1 <- data.frame(Severity = x, Density = dnorm(x, mean = mu, sd = sigma) / Z)
+  df1 <- data.frame(Severity = x, Density = stats::dnorm(x, mean = mu, sd = sigma) / Z)
   pdf <- ggplot(data = df1, aes_string(x = "Severity")) +
     geom_line(aes_string(y = "Density"), lwd = lwidth) +
     geom_vline(xintercept = observed, colour = cbbPalette[2], lwd = lwidth) +
@@ -55,14 +55,15 @@ illustrate_RPS <- function(mu = 5, sigma = 1, observed = 6) {
 
   # CDF
   df2 <- data.frame(x,
-                    Forecast = pnorm(x, mean = mu, sd = sigma) / Z,
-                    Outcome = as.numeric(x > observed))
-  df2$Lower <- pmin(df2$Forecast, df2$Outcome)
-  df2$Upper <- pmax(df2$Forecast, df2$Outcome)
-  df2$Fill <- "|Error|"
+                    Forecast = stats::pnorm(x, mean = mu, sd = sigma) / Z,
+                    Outcome = as.numeric(x > observed)) %>%
+    mutate(Lower = pmin(.data$Forecast, .data$Outcome),
+           Upper = pmax(.data$Forecast, .data$Outcome),
+           Fill = "|Error|")
   cdf <- ggplot()+
-    geom_line(data = reshape2::melt(df2[, c("x", "Forecast", "Outcome")],
-                                    id="x", variable.name = "Distribution", value.name = "CD"),
+    geom_line(data = df2 %>%
+                select(x, .data$Forecast, .data$Outcome) %>%
+                pivot_longer(-x, names_to = "Distribution", values_to = "CD"),
               aes_string(x = "x", y = "CD", colour = "Distribution"), lwd = lwidth) +
     geom_ribbon(data = df2, aes_string(x = "x", ymin = "Lower", ymax = "Upper", fill = "Fill"), alpha = .3) +
     scale_y_continuous(expand = c(0, 0)) +
@@ -91,18 +92,20 @@ illustrate_RPS <- function(mu = 5, sigma = 1, observed = 6) {
 #' @examples
 #' illustrate_forward_chaining()
 #'
-#' @import ggplot2 stats
+#' @import ggplot2
 illustrate_forward_chaining <- function(horizon = 7, n_it = 5) {
 
-  df <- do.call(rbind,
+  df <- do.call(bind_rows,
                 lapply(1:n_it,
                        function(it) {
                          data.frame(Iteration = it,
                                     Day = 1:((it + 1) * horizon),
                                     Subset = c(rep("Train", it * horizon), rep("Test", horizon))
                          )}))
-  lbl <- aggregate(Day ~ Iteration + Subset, df, median)
-  colnames(lbl)[colnames(lbl) == "Subset"] <- "Label"
+  lbl <- df %>%
+    group_by(.data$Iteration, .data$Subset) %>%
+    summarise(Day = stats::median(.data$Day)) %>%
+    rename(Label = .data$Subset)
 
   ggplot() +
     geom_rect(data = df,
@@ -111,8 +114,8 @@ illustrate_forward_chaining <- function(horizon = 7, n_it = 5) {
     geom_text(data = lbl,
               aes_string(x = "Day", y = "Iteration", label = "Label"),
               fontface = "bold", size = 8) +
-    scale_y_continuous(breaks = 1:max(df$Iteration), trans = "reverse", expand = c(0, 0)) +
-    scale_x_continuous(breaks = seq(0, max(df$Day), horizon), expand = c(0, 0)) +
+    scale_y_continuous(breaks = 1:max(df[["Iteration"]]), trans = "reverse", expand = c(0, 0)) +
+    scale_x_continuous(breaks = seq(0, max(df[["Day"]]), horizon), expand = c(0, 0)) +
     scale_fill_manual(values = c("#009E73", "#F0E442")) +
     theme_classic(base_size = 15) +
     theme(axis.title.y = element_text(angle = 90,vjust = 0.5),

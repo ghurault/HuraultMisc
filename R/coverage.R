@@ -32,6 +32,7 @@ NULL
 
 #' @rdname coverage
 #' @export
+#' @import tidyr
 compute_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05), type = c("eti", "hdi")) {
 
   stopifnot(is.matrix(post_samples),
@@ -50,23 +51,30 @@ compute_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05), type = c
                              CI_level = CI)
 
   # Check if the truth is in the interval
-  df <- merge(df, data.frame(Truth = truth, Index = 1:length(truth)))
-  df$Coverage <- with(df, Truth >= Lower & Truth <= Upper)
+  df <- inner_join(df,
+                   data.frame(Truth = truth, Index = 1:length(truth)),
+                   by = "Index") %>%
+    mutate(Coverage = (.data$Truth >= .data$Lower & .data$Truth <= .data$Upper))
 
   # Compute coverage and confidence levels (95% for coverage)
-  cov <- do.call(data.frame,
-                 aggregate(Coverage ~ Level, df, function(x) {
-                   Hmisc::binconf(sum(x), length(x), alpha = 0.05, method = "exact")
-                 }))
-  colnames(cov) <- c("Nominal", "Coverage", "Lower", "Upper")
+  cov <- df %>%
+    group_by(.data$Level) %>%
+    summarise(cv = Hmisc::binconf(sum(.data$Coverage),
+                                  length(.data$Coverage),
+                                  alpha = 0.05,
+                                  method = "exact",
+                                  return.df = TRUE)) %>%
+    unpack(.data$cv) %>%
+    rename(Nominal = .data$Level,
+           Coverage = .data$PointEst)
 
   # Add extreme values
-  cov <- rbind(cov,
-               data.frame(Nominal = c(0, 1),
-                          Coverage = c(0, 1),
-                          Lower = c(0, 1),
-                          Upper = c(0, 1)))
-  cov <- cov[order(cov[["Nominal"]]), ]
+  cov <- bind_rows(cov,
+                   data.frame(Nominal = c(0, 1),
+                              Coverage = c(0, 1),
+                              Lower = c(0, 1),
+                              Upper = c(0, 1))) %>%
+    arrange(.data$Nominal)
 
   return(cov)
 }
