@@ -153,3 +153,26 @@ extract_index_nd <- function(x) {
 
   return(out)
 }
+
+# Logit and inverse logit -------------------------------------------------
+
+#' Logit and Inverse logit
+#'
+#' @param x Numeric vector
+#'
+#' @return Numeric vector
+#'
+#' @name logit
+#'
+#' @examples
+#' logit(0.5)
+#' inv_logit(0)
+NULL
+
+#' @rdname logit
+#' @export
+logit <- function(x) {log(x / (1 - x))}
+
+#' @rdname logit
+#' @export
+inv_logit <- function(x) {1 / (1 + exp(-x))}

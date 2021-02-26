@@ -91,3 +91,19 @@ test_that("extract_index_nd returns a correct dataframe", {
   expect_equal(out, sol)
   expect_is(out, "data.frame")
 })
+
+# Test logit --------------------------------------------------------------
+
+test_that("logit works", {
+  expect_equal(logit(0.5), 0)
+  expect_equal(logit(c(0, 1)), c(-Inf, Inf))
+  expect_warning(logit(2))
+  expect_error(logit("a"))
+})
+
+test_that("inv_logit works", {
+  expect_equal(inv_logit(0), 0.5)
+  expect_equal(inv_logit(c(-Inf, Inf)), c(0, 1))
+  expect_error(inv_logit("a"))
+})
+
