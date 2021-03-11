@@ -7,10 +7,18 @@
 #' - `compute_prior_influence` computes diagnostics of how the posterior is influenced by the prior
 #' - `plot_prior_influence` plots diagnostics from `compute_prior_influence`
 #'
-#' @param post Dataframe of posterior parameter estimates
-#' @param prior Dataframe of prior parameter estimates
+#' @param prior Dataframe of prior parameter estimates.
+#' The dataframe is expected to have columns "Variable", "Mean".
+#' For `plot_prior_posterior`, columns "5%" and "95%" should also be present.
+#' For `compute_prior_influence` and `plot_prior_influence`, columns "Index" and "sd" should also be present.
+#' @param post Dataframe of posterior parameter estimates, with same columns as `prior`.
 #' @param pars Vector of parameter names to plot. Defaults to all parameters presents in `post` and `prior.`
 #' @param match_exact Logical indicating whether parameters should be matched exactly (e.g. "p" does not match "p\[1\]").
+#' @param lb Name of the column in `prior` and `post` corresponding to lower bound of error bar
+#' @param ub Name of the column in `prior` and `post` corresponding to upper bound of error bar
+#' @param remove_index_prior Whether to remove the index variable for `prior` except the first one.
+#' This is useful if a parameter with multiple index have the same prior distribution
+#' (e.g. with subject parameters, when `prior` does not contain as many subjects as post for computational reasons).
 #'
 #' @return
 #' - `combine_prior_posterior` returns a dataframe with the same columns as in prior and post + "Distribution".
@@ -22,6 +30,11 @@
 #' Shrinkage near 0 indicates that the data provides little information beyond the prior.
 #' Shrinkage near 1 indicates that the data is much more informative than the prior.
 #' - Mahalanobis distance between the mean posterior and the prior (`DistPrior`), capturing whether the prior "includes" the posterior.
+#'
+#' @section Note:
+#' For `plot_prior_posterior`, parameters with the same name but different indices are plotted together.
+#' If their prior distribution is the same, it can be useful to only keep one index in `prior`.
+#' If not, we can use `match_exact = FALSE` to plot `parameter[1]` and `parameter[2]` separately.
 #'
 #' @references M. Betancourt,  [“Towards a Principled Bayesian Workflow”](https://betanalpha.github.io/assets/case_studies/principled_bayesian_workflow.html), 2018.
 #'
@@ -80,9 +93,9 @@ combine_prior_posterior <- function(prior, post, pars = NULL, match_exact = TRUE
 #' @rdname prior_posterior
 #' @export
 #' @import ggplot2
-plot_prior_posterior <- function(prior, post, pars = NULL, match_exact = TRUE) {
+plot_prior_posterior <- function(prior, post, pars = NULL, match_exact = TRUE, lb = "5%", ub = "95%") {
 
-  id_vars <-  c("Variable", "Mean", "5%", "95%")
+  id_vars <-  c("Variable", "Mean", lb, ub)
 
   stopifnot(is.data.frame(post),
             is.data.frame(prior),
@@ -97,7 +110,10 @@ plot_prior_posterior <- function(prior, post, pars = NULL, match_exact = TRUE) {
     tmp[["Variable"]] <- factor(tmp[["Variable"]], levels = rev(pars)) # show parameters in the order of pars
   }
 
-  ggplot(data = tmp, aes_string(x = "Variable", y = "Mean", ymin = "`5%`", ymax = "`95%`", colour = "Distribution")) +
+  tmp %>%
+    mutate(Lower = all_of(lb),
+           Upper = all_of(ub)) %>%
+    ggplot(aes_string(x = "Variable", y = "Mean", ymin = "Lower", ymax = "Upper", colour = "Distribution")) +
     geom_pointrange(position = position_dodge2(width = .3), size = 1.2) +
     scale_colour_manual(values = c("#E69F00", "#000000")) +
     coord_flip() +
@@ -111,7 +127,7 @@ plot_prior_posterior <- function(prior, post, pars = NULL, match_exact = TRUE) {
 #' @rdname prior_posterior
 #' @export
 #' @import dplyr
-compute_prior_influence <- function(prior, post, pars = NULL, match_exact = TRUE) {
+compute_prior_influence <- function(prior, post, pars = NULL, match_exact = TRUE, remove_index_prior = TRUE) {
 
   id_vars <- c("Variable", "Index", "Mean", "sd")
 
@@ -121,10 +137,10 @@ compute_prior_influence <- function(prior, post, pars = NULL, match_exact = TRUE
             all(id_vars %in% colnames(prior)),
             all(id_vars %in% colnames(post)))
 
-  # Eliminate index for prior by taking the first one
-  # Useful when the model has subject-parameters with the same distribution (and when prior does not contain as many subjects as post for computational reasons)
-  prior[which(prior[["Index"]] == 1), "Index"] <- NA
-  prior <- prior[is.na(prior[["Index"]]), ]
+  if (remove_index_prior) {
+    prior[which(prior[["Index"]] == 1), "Index"] <- NA
+    prior <- prior[is.na(prior[["Index"]]), ]
+  }
 
   tmp <- combine_prior_posterior(prior = prior, post = post, pars = pars, match_exact = match_exact) %>%
     select(all_of(c(id_vars, "Distribution")))
