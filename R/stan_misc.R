@@ -10,11 +10,10 @@
 #' The tidybayes package offers an alternative to this function, for example:
 #' `fit %>% tidy_draws() %>% gather_variables %>% mean_qi()`.
 #' However, this does not provide information about Rhat or Neff, nor does it process the indexes.
-#' The tidybayes package is more useful for summarising the distribution of a handful of parameters (using spread_draws).
+#' The tidybayes package is more useful for summarising the distribution of a handful of parameters (using [tidybayes::spread_draws()]).
 #'
 #' @return Dataframe of posterior summary statistics
 #' @export
-#' @md
 summary_statistics <- function(fit, pars, probs = c(.05, .25, .5, .75, .95)) {
 
   stopifnot(is_stanfit(fit))

@@ -15,8 +15,8 @@
 #' @name coverage
 #'
 #' @return
-#' compute_coverage returns a dataframe containing coverage (and 95\% uncertainty interval for the coverage) for different confidence level (nominal coverage).
-#' plot_coverage returns a ggplot of the coverage as the function of the nominal coverage with 95\% uncertainty interval.
+#' `compute_coverage` returns a dataframe containing coverage (and 95% uncertainty interval for the coverage) for different confidence level (nominal coverage).
+#' `plot_coverage` returns a ggplot of the coverage as the function of the nominal coverage with 95% uncertainty interval.
 #'
 #' @examples
 #' N <- 100

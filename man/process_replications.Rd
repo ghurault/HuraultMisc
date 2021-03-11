@@ -15,7 +15,7 @@ process_replications(fit, idx = NULL, parName, bounds = NULL, ...)
 
 \item{bounds}{NULL or vector of length 2 representing the bounds of the distribution if it needs to be truncated.}
 
-\item{...}{Parameters to be passed to extract_distribution}
+\item{...}{Parameters to be passed to \code{\link[=extract_distribution]{extract_distribution()}}}
 }
 \value{
 Dataframe

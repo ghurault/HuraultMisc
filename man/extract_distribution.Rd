@@ -15,17 +15,22 @@ extract_distribution(
 )
 }
 \arguments{
-\item{object}{Object specifying the distribution as samples: can be a Stanfit object, a matrix (columns represents parameters, rows samples) or a vector.}
+\item{object}{Object specifying the distribution as samples: can be a Stanfit object,
+a matrix (columns represents parameters, rows samples) or a vector.}
 
 \item{parName}{Name of the parameter to extract.}
 
 \item{type}{Indicates how the distribution is summarised.}
 
-\item{support}{Support of the distribution. For type = "continuous", this must be the range of the distribution. For type = "discrete", this must be a vector of all possible values that the distribution can take. Can be NULL.}
+\item{support}{Support of the distribution.
+For type = "continuous", this must be the range of the distribution.
+For type = "discrete", this must be a vector of all possible values that the distribution can take.
+Can be NULL.}
 
 \item{transform}{Function to apply to the samples.}
 
-\item{nDensity}{Number of equally spaced points at which the density is to be estimated (better to use a power of 2). Applies when type = "continuous".}
+\item{nDensity}{Number of equally spaced points at which the density is to be estimated (better to use a power of 2).
+Applies when type = "continuous".}
 
 \item{CI_level}{Vector containing the level of the confidence/credible intervals. Applies when type = "eti" or type = "hdi".}
 }
@@ -44,9 +49,9 @@ The distribution can be extracted as:
 \section{Alternative}{
 
 This function can notably be used to prepare the data for plotting fan charts when type = "eti" or "hdi".
-In that case, the tidybayes package offers an alternative with stat_lineribbon.
+In that case, the ggdist package offers an alternative with \code{\link[ggdist:stat_lineribbon]{ggdist::stat_lineribbon()}}.
 }
 
 \seealso{
-[extract_draws()] for extracting draws of an object.
+\code{\link[=extract_draws]{extract_draws()}} for extracting draws of an object.
 }

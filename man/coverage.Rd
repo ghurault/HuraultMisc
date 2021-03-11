@@ -30,8 +30,8 @@ plot_coverage(
 \item{type}{Type of confidence intervals: either "eti" (equal-tailed intervals) or "hdi" (highest density intervals)}
 }
 \value{
-compute_coverage returns a dataframe containing coverage (and 95\% uncertainty interval for the coverage) for different confidence level (nominal coverage).
-plot_coverage returns a ggplot of the coverage as the function of the nominal coverage with 95\% uncertainty interval.
+\code{compute_coverage} returns a dataframe containing coverage (and 95\% uncertainty interval for the coverage) for different confidence level (nominal coverage).
+\code{plot_coverage} returns a ggplot of the coverage as the function of the nominal coverage with 95\% uncertainty interval.
 }
 \description{
 Compute and plot coverage of CI for different confidence level.

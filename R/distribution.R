@@ -129,12 +129,17 @@ extract_hdi <- function(x, CI_level = seq(0.1, 0.9, 0.1)) {
 #' \item a series of highest density confidence/credible intervals ("hdi").
 #' }
 #'
-#' @param object Object specifying the distribution as samples: can be a Stanfit object, a matrix (columns represents parameters, rows samples) or a vector.
+#' @param object Object specifying the distribution as samples: can be a Stanfit object,
+#' a matrix (columns represents parameters, rows samples) or a vector.
 #' @param parName Name of the parameter to extract.
 #' @param type Indicates how the distribution is summarised.
-#' @param support Support of the distribution. For type = "continuous", this must be the range of the distribution. For type = "discrete", this must be a vector of all possible values that the distribution can take. Can be NULL.
+#' @param support Support of the distribution.
+#' For type = "continuous", this must be the range of the distribution.
+#' For type = "discrete", this must be a vector of all possible values that the distribution can take.
+#' Can be NULL.
 #' @param transform Function to apply to the samples.
-#' @param nDensity Number of equally spaced points at which the density is to be estimated (better to use a power of 2). Applies when type = "continuous".
+#' @param nDensity Number of equally spaced points at which the density is to be estimated (better to use a power of 2).
+#' Applies when type = "continuous".
 #' @param CI_level Vector containing the level of the confidence/credible intervals. Applies when type = "eti" or type = "hdi".
 #'
 #' @return Dataframe
@@ -144,7 +149,7 @@ extract_hdi <- function(x, CI_level = seq(0.1, 0.9, 0.1)) {
 #'
 #' @section Alternative:
 #' This function can notably be used to prepare the data for plotting fan charts when type = "eti" or "hdi".
-#' In that case, the tidybayes package offers an alternative with stat_lineribbon.
+#' In that case, the ggdist package offers an alternative with [ggdist::stat_lineribbon()].
 extract_distribution <- function(object,
                                  parName = "",
                                  type = c("continuous", "discrete", "eti", "hdi"),

@@ -28,9 +28,10 @@ Useful for to generate fake data.
 
 The tidybayes package offers an alternative to this function, for example:
 
-fit \%>\% tidy_draws() \%>\% gather_variables() \%>\% filter(.draw == draw & .variable \%in\% param)
+\code{fit \%>\% tidy_draws() \%>\% gather_variables() \%>\% filter(.draw == draw & .variable \%in\% param)}
 
 However, the tidybayes version is less efficient as all draws and parameters are extracted and then filtered (also the draw IDs are not the same).
-Using tidybayes would be more recommended when we only want to extract specific parameters, and that it does not matter which draw are extracted (in that case using spread_draws).
+Using tidybayes would be more recommended when we only want to extract specific parameters,
+and that it does not matter which draw are extracted (in that case using \code{\link[tidybayes:spread_draws]{tidybayes::spread_draws()}}).
 }
 

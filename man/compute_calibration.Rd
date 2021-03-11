@@ -24,10 +24,11 @@ compute_calibration(
 
 \item{binwidth}{Binwidth when calibration is estimated by binning.  If NULL, automatic bin width selection with Sturges' method.}
 
-\item{...}{Arguments of stats::loess function (e.g.span)}
+\item{...}{Arguments of \code{\link[stats:loess]{stats::loess()}} function (e.g. span)}
 }
 \value{
-Dataframe with colums Forecast (bins), Frequency (frequency of outcomes in the bin), Lower (lower bound of the CI) and Upper (upper bound of the CI)
+Dataframe with colums Forecast (bins), Frequency (frequency of outcomes in the bin),
+Lower (lower bound of the CI) and Upper (upper bound of the CI)
 }
 \description{
 Estimate calibration given forecasts and corresponding outcomes

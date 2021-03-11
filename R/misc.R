@@ -2,11 +2,13 @@
 
 #' Compute resolution of forecasts, normalised by the uncertainty
 #'
-#' The resolution is computed as the mean squared distance to a base rate (reference forecast) and is then normalised by the uncertainty (maximum resolution).
+#' The resolution is computed as the mean squared distance to a base rate (reference forecast) and
+#' is then normalised by the uncertainty (maximum resolution).
 #' This means the output is between 0 and 1, 1 corresponding to the maximum resolution.
 #'
 #' @param f Vector of forecasts
-#' @param p0 Vector of base rate. In the case rate is usually the prevalence of a uniform forecast (e.g. 1 / number of categories) but can depend on the observation (hence the vector).
+#' @param p0 Vector of base rate. In the case rate is usually the prevalence of a uniform forecast (e.g. 1 / number of categories)
+#' but can depend on the observation (hence the vector).
 #'
 #' @return Resolution
 #' @export

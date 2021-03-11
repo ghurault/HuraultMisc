@@ -2,20 +2,20 @@
 
 #' Compare prior to posterior
 #'
-#' - combine_prior_posterior subsets and binds the prior and posterior dataframes
-#' - plot_prior_posterior plots posterior CI alongside prior CI
-#' - compute_prior_influence computes diagnostics of how the posterior is influenced by the prior
-#' - plot_prior_influence plots diagnostics from compute_prior_influence
+#' - `combine_prior_posterior` subsets and binds the prior and posterior dataframes
+#' - `plot_prior_posterior` plots posterior CI alongside prior CI
+#' - `compute_prior_influence` computes diagnostics of how the posterior is influenced by the prior
+#' - `plot_prior_influence` plots diagnostics from `compute_prior_influence`
 #'
 #' @param post Dataframe of posterior parameter estimates
 #' @param prior Dataframe of prior parameter estimates
-#' @param pars Vector of parameter names to plot. Defaults to all parameters presents in post and prior.
+#' @param pars Vector of parameter names to plot. Defaults to all parameters presents in `post` and `prior.`
 #' @param match_exact Logical indicating whether parameters should be matched exactly (e.g. "p" does not match "p\[1\]").
 #'
 #' @return
-#' - combine_prior_posterior returns a dataframe with the same columns as in prior and post + "Distribution".
-#' - compute_prior_influence returns a dataframe with columns: Variable, Index, PostShrinkage, DistPrior.
-#' - plot_prior_posterior and plot_prior_influence returns a ggplot object
+#' - `combine_prior_posterior` returns a dataframe with the same columns as in prior and post + "Distribution".
+#' - `compute_prior_influence` returns a dataframe with columns: Variable, Index, PostShrinkage, DistPrior.
+#' - `plot_prior_posterior` and `plot_prior_influence` returns a ggplot object
 #'
 #' @details
 #' - Posterior shrinkage (`PostShrinkage`) = 1 - Var(Post) / Var(Prior), capturing how much the model is learning.
@@ -23,10 +23,9 @@
 #' Shrinkage near 1 indicates that the data is much more informative than the prior.
 #' - Mahalanobis distance between the mean posterior and the prior (`DistPrior`), capturing whether the prior "includes" the posterior.
 #'
-#' @references M. Betancourt, \href{https://betanalpha.github.io/assets/case_studies/principled_bayesian_workflow.html}{“Towards a Principled Bayesian Workflow”}, 2018.
+#' @references M. Betancourt,  [“Towards a Principled Bayesian Workflow”](https://betanalpha.github.io/assets/case_studies/principled_bayesian_workflow.html), 2018.
 #'
 #' @name prior_posterior
-#' @md
 NULL
 
 # Combine prior and posterior dataframe -----------------------------------

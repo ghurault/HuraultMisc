@@ -24,6 +24,6 @@ Extract summary statistics
 The tidybayes package offers an alternative to this function, for example:
 \code{fit \%>\% tidy_draws() \%>\% gather_variables \%>\% mean_qi()}.
 However, this does not provide information about Rhat or Neff, nor does it process the indexes.
-The tidybayes package is more useful for summarising the distribution of a handful of parameters (using spread_draws).
+The tidybayes package is more useful for summarising the distribution of a handful of parameters (using \code{\link[tidybayes:spread_draws]{tidybayes::spread_draws()}}).
 }
 

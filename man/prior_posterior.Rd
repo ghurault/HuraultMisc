@@ -24,23 +24,23 @@ check_model_sensitivity(prior, post, pars = NULL)
 
 \item{post}{Dataframe of posterior parameter estimates}
 
-\item{pars}{Vector of parameter names to plot. Defaults to all parameters presents in post and prior.}
+\item{pars}{Vector of parameter names to plot. Defaults to all parameters presents in \code{post} and \code{prior.}}
 
 \item{match_exact}{Logical indicating whether parameters should be matched exactly (e.g. "p" does not match "p[1]").}
 }
 \value{
 \itemize{
-\item combine_prior_posterior returns a dataframe with the same columns as in prior and post + "Distribution".
-\item compute_prior_influence returns a dataframe with columns: Variable, Index, PostShrinkage, DistPrior.
-\item plot_prior_posterior and plot_prior_influence returns a ggplot object
+\item \code{combine_prior_posterior} returns a dataframe with the same columns as in prior and post + "Distribution".
+\item \code{compute_prior_influence} returns a dataframe with columns: Variable, Index, PostShrinkage, DistPrior.
+\item \code{plot_prior_posterior} and \code{plot_prior_influence} returns a ggplot object
 }
 }
 \description{
 \itemize{
-\item combine_prior_posterior subsets and binds the prior and posterior dataframes
-\item plot_prior_posterior plots posterior CI alongside prior CI
-\item compute_prior_influence computes diagnostics of how the posterior is influenced by the prior
-\item plot_prior_influence plots diagnostics from compute_prior_influence
+\item \code{combine_prior_posterior} subsets and binds the prior and posterior dataframes
+\item \code{plot_prior_posterior} plots posterior CI alongside prior CI
+\item \code{compute_prior_influence} computes diagnostics of how the posterior is influenced by the prior
+\item \code{plot_prior_influence} plots diagnostics from \code{compute_prior_influence}
 }
 }
 \details{
@@ -52,5 +52,5 @@ Shrinkage near 1 indicates that the data is much more informative than the prior
 }
 }
 \references{
-M. Betancourt, \href{https://betanalpha.github.io/assets/case_studies/principled_bayesian_workflow.html}{“Towards a Principled Bayesian Workflow”}, 2018.
+M. Betancourt,  \href{https://betanalpha.github.io/assets/case_studies/principled_bayesian_workflow.html}{“Towards a Principled Bayesian Workflow”}, 2018.
 }
