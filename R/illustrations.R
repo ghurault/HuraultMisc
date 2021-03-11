@@ -98,13 +98,13 @@ illustrate_RPS <- function(mu = 5, sigma = 1, observed = 6) {
 #' @import ggplot2
 illustrate_forward_chaining <- function(horizon = 7, n_it = 5) {
 
-  df <- do.call(bind_rows,
-                lapply(1:n_it,
-                       function(it) {
-                         data.frame(Iteration = it,
-                                    Day = 1:((it + 1) * horizon),
-                                    Subset = c(rep("Train", it * horizon), rep("Test", horizon))
-                         )}))
+  df <- lapply(1:n_it,
+               function(it) {
+                 data.frame(Iteration = it,
+                            Day = 1:((it + 1) * horizon),
+                            Subset = c(rep("Train", it * horizon), rep("Test", horizon))
+                 )}) %>%
+    bind_rows()
   lbl <- df %>%
     group_by(.data$Iteration, .data$Subset) %>%
     summarise(Day = stats::median(.data$Day)) %>%

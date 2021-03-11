@@ -73,11 +73,11 @@ extract_draws <- function(obj, draws) {
   }
 
   if (is.list(obj)) {
-    do.call(rbind,
-            lapply(1:length(obj),
-                   function(i) {
-                     extract_draws_from_array(obj[[i]], draws, names(obj)[i])
-                   }))
+    lapply(1:length(obj),
+           function(i) {
+             extract_draws_from_array(obj[[i]], draws, names(obj)[i])
+           }) %>%
+      bind_rows()
   } else {
     extract_draws_from_array(obj, draws)
   }

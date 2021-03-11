@@ -189,14 +189,14 @@ extract_distribution <- function(object,
     out <- extract_function(transform(object))
     out[["Index"]] <- NA
   } else {
-    out <- do.call("rbind",
-                   lapply(1:ncol(object),
-                          function(i) {
-                            # Loop over parameters in the matrix
-                            tmp <- extract_function(transform(object[, i]))
-                            tmp[["Index"]] <- i
-                            return(tmp)
-                          }))
+    out <- lapply(1:ncol(object),
+                  function(i) {
+                    # Loop over parameters in the matrix
+                    tmp <- extract_function(transform(object[, i]))
+                    tmp[["Index"]] <- i
+                    return(tmp)
+                  }) %>%
+      bind_rows()
   }
 
   out[["Variable"]] <- parName
