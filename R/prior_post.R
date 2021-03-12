@@ -111,7 +111,7 @@ plot_prior_posterior <- function(prior, post, pars = NULL, match_exact = TRUE, l
   }
 
   tmp %>%
-    mutate(Lower = all_of(lb),
+    rename(Lower = all_of(lb),
            Upper = all_of(ub)) %>%
     ggplot(aes_string(x = "Variable", y = "Mean", ymin = "Lower", ymax = "Upper", colour = "Distribution")) +
     geom_pointrange(position = position_dodge2(width = .3), size = 1.2) +
