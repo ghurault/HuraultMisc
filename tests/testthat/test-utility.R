@@ -1,12 +1,3 @@
-# Test is_stanfit ---------------------------------------------------------
-
-test_that("is_stanfit works", {
-  expect_false(is_stanfit(matrix(rnorm(9), ncol = 3)))
-  a <- 1
-  class(a) <- "stanfit"
-  expect_true(is_stanfit(a))
-})
-
 # Test change_colnames ----------------------------------------------------
 
 df0 <- data.frame(A = 1:2, B = 3:4, C = 5:6)
