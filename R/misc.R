@@ -47,7 +47,7 @@ compute_RPS <- function(forecast, outcome) {
   if (any(is.na(c(forecast, outcome)))) {
     RPS <- NA
   } else {
-    stopifnot(all(forecast >=0 & forecast <= 1),
+    stopifnot(all(between(forecast, 0, 1)),
               round(sum(forecast), 2) == 1,
               outcome %in% 1:length(forecast))
     dummy_outcome <- 0 * forecast

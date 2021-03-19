@@ -52,7 +52,7 @@ PPC_group_distribution <- function(obj, parName = "", nDraws = 1) {
 
   if (is_stanfit(obj)) {
     stopifnot(is.character(parName),
-              length(parName) == 1)
+              is_scalar(parName))
     par <- rstan::extract(obj, pars = parName)[[1]] # parName in obj checked here
   } else {
     par <- obj

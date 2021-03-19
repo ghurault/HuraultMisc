@@ -50,7 +50,8 @@ combine_prior_posterior <- function(prior, post, pars = NULL, match_exact = TRUE
 
   stopifnot(is.data.frame(prior),
             is.data.frame(post),
-            is.logical(match_exact) & length(match_exact) == 1)
+            is.logical(match_exact),
+            is_scalar(match_exact))
 
   if (is.null(pars)) {
     pars <- intersect(post[["Variable"]], prior[["Variable"]])

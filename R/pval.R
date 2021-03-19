@@ -16,7 +16,7 @@ empirical_pval <- function(t_rep, t, alternative = c("two.sided", "less", "great
   stopifnot(is.vector(t_rep, mode = "numeric"),
             length(t_rep) > 1,
             is.numeric(t),
-            length(t) == 1)
+            is_scalar(t))
   alternative <- match.arg(alternative)
 
   r <- sum(t_rep > t)
@@ -58,7 +58,8 @@ post_pred_pval <- function(yrep, y, test_statistic = mean, alternative = c("two.
   stopifnot(is.matrix(yrep),
             is.vector(y, mode = "numeric"),
             is.function(test_statistic),
-            is.logical(plot))
+            is.logical(plot),
+            is_scalar(plot))
   alternative <- match.arg(alternative)
 
   if (ncol(yrep) != length(y)) {
