@@ -1,3 +1,4 @@
+set.seed(2021)
 N <- 100
 N_post <- 1e3
 truth <- rep(0, N)
