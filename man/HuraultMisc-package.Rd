@@ -17,7 +17,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Guillem Hurault \email{guillem.hurault@hotmail.fr}
+\strong{Maintainer}: Guillem Hurault \email{guillem.hurault@hotmail.fr} (\href{https://orcid.org/0000-0002-1052-3564}{ORCID})
 
 }
 \keyword{internal}

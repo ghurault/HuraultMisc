@@ -1,7 +1,12 @@
 Package: HuraultMisc
 Title: Guillem Hurault personal functions' library
 Version: 1.0.0
-Authors@R: person("Guillem", "Hurault", email = "guillem.hurault@hotmail.fr", role = c("aut", "cre"))
+Authors@R: 
+    person(given = "Guillem",
+           family = "Hurault",
+           role = c("aut", "cre"),
+           email = "guillem.hurault@hotmail.fr",
+           comment = c(ORCID = "0000-0002-1052-3564"))
 Description: Mainly contains functions for data analysis.
 URL: https://github.com/ghurault/HuraultMisc
 BugReports: https://github.com/ghurault/HuraultMisc/issues
