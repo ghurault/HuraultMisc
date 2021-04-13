@@ -49,20 +49,4 @@ test_that("extract_draws (and related) identify incorrect inputs", {
 
 # extract_parameters_from_draw (deprecated) --------------------------------------------------------------
 
-load(system.file("testdata", "env_hierarchical.Rdata", package = "HuraultMisc", mustWork = TRUE))
-fit_fake <- readRDS(system.file("testdata", "fake_hierarchical.rds", package = "HuraultMisc", mustWork = TRUE))
-
-tmp <- extract_parameters_from_draw(fit_fake, param, 1)
-
-test_that("extract_parameters_from_draw returns dataframe of correct size", {
-  expect_equal(nrow(tmp), N_parameters)
-})
-
-test_that("extract_parameters_from_draw extract all parameters", {
-  expect_equal(sort(param), sort(as.character(unique(tmp[["Parameter"]]))))
-})
-
-test_that("extract_parameters_from_draw catches incorrect inputs", {
-  expect_error(extract_parameters_from_draw(rnorm(1e3), "x", 1)) # not stanfit
-  expect_warning(extract_parameters_from_draw(fit_fake, "mu", c(1, 2))) # multiple draws
-})
+# In test-stan
