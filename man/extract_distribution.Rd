@@ -8,10 +8,8 @@ extract_distribution(
   object,
   parName = "",
   type = c("continuous", "discrete", "eti", "hdi"),
-  support = NULL,
   transform = identity,
-  nDensity = 2^7,
-  CI_level = seq(0.1, 0.9, 0.1)
+  ...
 )
 }
 \arguments{
@@ -22,17 +20,9 @@ a matrix (columns represents parameters, rows samples) or a vector.}
 
 \item{type}{Indicates how the distribution is summarised.}
 
-\item{support}{Support of the distribution.
-For type = "continuous", this must be the range of the distribution.
-For type = "discrete", this must be a vector of all possible values that the distribution can take.
-Can be NULL.}
-
 \item{transform}{Function to apply to the samples.}
 
-\item{nDensity}{Number of equally spaced points at which the density is to be estimated (better to use a power of 2).
-Applies when type = "continuous".}
-
-\item{CI_level}{Vector containing the level of the confidence/credible intervals. Applies when type = "eti" or type = "hdi".}
+\item{...}{Arguments to pass to \code{\link[=extract_pmf]{extract_pmf()}}, \code{\link[=extract_pdf]{extract_pdf()}}, \code{\link[=extract_eti]{extract_eti()}} or \code{\link[=extract_hdi]{extract_hdi()}} depending on \code{type}.}
 }
 \value{
 Dataframe

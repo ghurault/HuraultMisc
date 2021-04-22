@@ -152,9 +152,8 @@ test_that("process_replications output is in the correct support", {
 test_that("process_replications truncation works", {
   bd <- c(0, round(max_score / 5))
   pred_eti <- process_replications(fit_fake, idx = idx, parName = "y_rep", bounds = bd, type = "eti", CI_level = .99)
-  is_between <- function(x, lb, ub) {x >= lb & x <= ub}
-  expect_true(!any(!c(is_between(pred_eti[["Lower"]], bd[1], bd[2]),
-                      is_between(pred_eti[["Upper"]], bd[1], bd[2])),
+  expect_true(!any(!c(dplyr::between(pred_eti[["Lower"]], bd[1], bd[2]),
+                      dplyr::between(pred_eti[["Upper"]], bd[1], bd[2])),
                    na.rm = TRUE))
 })
 

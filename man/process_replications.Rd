@@ -4,7 +4,14 @@
 \alias{process_replications}
 \title{Extract posterior predictive distribution}
 \usage{
-process_replications(fit, idx = NULL, parName, bounds = NULL, ...)
+process_replications(
+  fit,
+  idx = NULL,
+  parName,
+  bounds = NULL,
+  type = c("continuous", "discrete", "eti", "hdi"),
+  ...
+)
 }
 \arguments{
 \item{fit}{Stanfit object}
@@ -14,6 +21,8 @@ process_replications(fit, idx = NULL, parName, bounds = NULL, ...)
 \item{parName}{Name of the parameter to extract}
 
 \item{bounds}{NULL or vector of length 2 representing the bounds of the distribution if it needs to be truncated.}
+
+\item{type}{Indicates how the distribution is summarised.}
 
 \item{...}{Parameters to be passed to \code{\link[=extract_distribution]{extract_distribution()}}}
 }

@@ -6,16 +6,17 @@
 #' @param idx Dataframe for translating the indices of the parameters into more informative variable (can be NULL)
 #' @param parName Name of the parameter to extract
 #' @param bounds NULL or vector of length 2 representing the bounds of the distribution if it needs to be truncated.
+#' @param type Indicates how the distribution is summarised.
 #' @param ... Parameters to be passed to [extract_distribution()]
 #'
 #' @return Dataframe
 #' @export
-process_replications <- function(fit, idx = NULL, parName, bounds = NULL, ...) {
+process_replications <- function(fit, idx = NULL, parName, bounds = NULL, type = c("continuous", "discrete", "eti", "hdi"), ...) {
 
   .Deprecated("extract_distribution")
 
   stopifnot(is_stanfit(fit))
-
+  type <- match.arg(type)
   if (is.null(bounds)) {
     support <- NULL
     transform <- identity
@@ -24,11 +25,20 @@ process_replications <- function(fit, idx = NULL, parName, bounds = NULL, ...) {
     transform <- function(x) {x[!(x < min(bounds) | x > max(bounds))]} # truncate
   }
 
-  out <- extract_distribution(object = fit,
-                              parName = parName,
-                              support = support,
-                              transform = transform,
-                              ...)
+  if (type %in% c("continuous", "discrete")) {
+    out <- extract_distribution(object = fit,
+                                parName = parName,
+                                type = type,
+                                support = support,
+                                transform = transform,
+                                ...)
+  } else {
+    out <- extract_distribution(object = fit,
+                                parName = parName,
+                                transform = transform,
+                                type = type,
+                                ...)
+  }
 
   out <- change_colnames(out, "Value", parName)
   if (!is.null(idx) & "Index" %in% colnames(idx)) {

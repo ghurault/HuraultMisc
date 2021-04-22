@@ -2,15 +2,13 @@
 
 #' Extract probability density function from vector of samples
 #'
-#' Not exported.
-#'
 #' @param x Vector of samples from a distribution.
 #' @param support Vector of length 2 corresponding to the range of the distribution. Can be NULL.
 #' @param n_density Number of equally spaced points at which the density is to be estimated (better to use a power of 2).
 #'
 #' @return Dataframe with columns: Value, Density.
 #'
-#' @noRd
+#' @export
 #'
 #' @examples
 #' extract_pdf(rnorm(1e4))
@@ -33,18 +31,17 @@ extract_pdf <- function(x, support = NULL, n_density = 2^7) {
 
 #' Extract probability mass function from vector of samples
 #'
-#' Not exported.
-#'
 #' @param x Vector of samples from a distribution.
 #' @param support Vector of all possible values that the distribution can take. Can be NULL.
+#' @param force_wholenumber Whether to cast values of x to wholenumber
 #'
 #' @return Dataframe with columns: Value, Probability.
 #'
-#' @noRd
+#' @export
 #'
 #' @examples
 #' extract_pmf(round(rnorm(1e4, 0, 10)))
-extract_pmf <- function(x, support = NULL) {
+extract_pmf <- function(x, support = NULL, force_wholenumber = FALSE) {
 
   stopifnot(is.vector(x, mode = "numeric"))
 
@@ -57,9 +54,15 @@ extract_pmf <- function(x, support = NULL) {
     support <- sort(support)
   }
 
-  if (!(all(x == round(x)))) {
-    x <- round(x)
-    warning("Non-integer values were rounded.")
+  if (force_wholenumber) {
+    if (!(all(is_wholenumber(x)))) {
+      x <- round(x)
+      warning("Non-integer values were rounded.")
+    }
+  }
+
+  if (!all(x %in% support)) {
+    warning("Some values in x are not in support")
   }
 
   d <- table(factor(x, levels = support))
@@ -67,54 +70,40 @@ extract_pmf <- function(x, support = NULL) {
              Probability = as.numeric(d / sum(d)))
 }
 
-#' Extract equal-tailed intervals from vector of samples
-#'
-#' Not exported.
+#' Extract confidence intervals from a vector of samples
 #'
 #' @param x Vector of samples from a distribution.
 #' @param CI_level Vector containing the level of the confidence/credible intervals.
+#' @param type "eti" for equal-tailed intervals and "hdi" for highest density intervals
 #'
 #' @return Dataframe with columns: Lower, Upper, Level.
 #'
-#' @noRd
+#' @export
 #'
 #' @examples
-#' extract_eti(rnorm(1e4))
-extract_eti <- function(x, CI_level = seq(0.1, 0.9, 0.1)) {
-
+#' x <- rexp(1e4)
+#' extract_ci(x, type = "eti")
+#' extract_ci(x, type = "hdi")
+extract_ci <- function(x, CI_level = seq(0.1, 0.9, 0.1), type = c("eti", "hdi")) {
   stopifnot(is.vector(x, mode = "numeric"),
             is.vector(CI_level, mode = "numeric"),
             min(CI_level) >=0 && max(CI_level) <= 1)
+  type <- match.arg(type)
 
-  data.frame(Lower = stats::quantile(x, probs = 0.5 - CI_level / 2),
-             Upper = stats::quantile(x, probs = 0.5 + CI_level / 2),
-             Level = CI_level)
+  if (type == "eti") {
+    out <- data.frame(Lower = stats::quantile(x, probs = 0.5 - CI_level / 2),
+                      Upper = stats::quantile(x, probs = 0.5 + CI_level / 2),
+                      Level = CI_level)
+  }
+  if (type == "hdi") {
+    tmp <- sapply(CI_level, function(q) {HDInterval::hdi(x, credMass = q)})
+    out <- data.frame(Lower = tmp["lower", ],
+               Upper = tmp["upper", ],
+               Level = CI_level)
+  }
+  return(out)
 }
 
-#' Extract highest density intervals from a vector of samples
-#'
-#' Not exported.
-#'
-#' @param x Vector of samples from a distribution.
-#' @param CI_level Vector containing the level of the confidence/credible intervals.
-#'
-#' @return Dataframe with columns: Lower, Upper, Level.
-#'
-#' @noRd
-#'
-#' @examples
-#' extract_hdi(rexp(1e4))
-extract_hdi <- function(x, CI_level = seq(0.1, 0.9, 0.1)) {
-
-  stopifnot(is.vector(x, mode = "numeric"),
-            is.vector(CI_level, mode = "numeric"),
-            min(CI_level) >=0 && max(CI_level) <= 1)
-
-  tmp <- sapply(CI_level, function(q) {HDInterval::hdi(x, credMass = q)})
-  data.frame(Lower = tmp["lower", ],
-             Upper = tmp["upper", ],
-             Level = CI_level)
-}
 
 # Master function ----------------------------------------------------
 
@@ -133,14 +122,8 @@ extract_hdi <- function(x, CI_level = seq(0.1, 0.9, 0.1)) {
 #' a matrix (columns represents parameters, rows samples) or a vector.
 #' @param parName Name of the parameter to extract.
 #' @param type Indicates how the distribution is summarised.
-#' @param support Support of the distribution.
-#' For type = "continuous", this must be the range of the distribution.
-#' For type = "discrete", this must be a vector of all possible values that the distribution can take.
-#' Can be NULL.
 #' @param transform Function to apply to the samples.
-#' @param nDensity Number of equally spaced points at which the density is to be estimated (better to use a power of 2).
-#' Applies when type = "continuous".
-#' @param CI_level Vector containing the level of the confidence/credible intervals. Applies when type = "eti" or type = "hdi".
+#' @param ... Arguments to pass to [extract_pmf()], [extract_pdf()], [extract_eti()] or [extract_hdi()] depending on `type`.
 #'
 #' @return Dataframe
 #' @export
@@ -153,10 +136,8 @@ extract_hdi <- function(x, CI_level = seq(0.1, 0.9, 0.1)) {
 extract_distribution <- function(object,
                                  parName = "",
                                  type = c("continuous", "discrete", "eti", "hdi"),
-                                 support = NULL,
                                  transform = identity,
-                                 nDensity = 2^7,
-                                 CI_level = seq(0.1, 0.9, 0.1)) {
+                                 ...) {
 
   type <- match.arg(type)
 
@@ -176,13 +157,13 @@ extract_distribution <- function(object,
   stopifnot(is.function(transform))
 
   if (type == "continuous") {
-    extract_function <- function(x) {extract_pdf(x, support, nDensity)}
+    extract_function <- function(x) {extract_pdf(x, ...)}
   } else if (type == "discrete") {
-    extract_function <- function(x) {extract_pmf(x, support)}
+    extract_function <- function(x) {extract_pmf(x, ...)}
   } else if (type == "eti") {
-    extract_function <- function(x) {extract_eti(x, CI_level)}
+    extract_function <- function(x) {extract_ci(x, type = "eti", ...)}
   } else if (type == "hdi") {
-    extract_function <- function(x) {extract_hdi(x, CI_level)}
+    extract_function <- function(x) {extract_ci(x, type = "hdi", ...)}
   }
 
   if (!is.matrix(object)) {
