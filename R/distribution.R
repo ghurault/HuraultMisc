@@ -123,7 +123,7 @@ extract_ci <- function(x, CI_level = seq(0.1, 0.9, 0.1), type = c("eti", "hdi"))
 #' @param parName Name of the parameter to extract.
 #' @param type Indicates how the distribution is summarised.
 #' @param transform Function to apply to the samples.
-#' @param ... Arguments to pass to [extract_pmf()], [extract_pdf()], [extract_eti()] or [extract_hdi()] depending on `type`.
+#' @param ... Arguments to pass to [extract_pmf()], [extract_pdf()] or [extract_ci()] depending on `type`.
 #'
 #' @return Dataframe
 #' @export

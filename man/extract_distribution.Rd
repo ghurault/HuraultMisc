@@ -22,7 +22,7 @@ a matrix (columns represents parameters, rows samples) or a vector.}
 
 \item{transform}{Function to apply to the samples.}
 
-\item{...}{Arguments to pass to \code{\link[=extract_pmf]{extract_pmf()}}, \code{\link[=extract_pdf]{extract_pdf()}}, \code{\link[=extract_eti]{extract_eti()}} or \code{\link[=extract_hdi]{extract_hdi()}} depending on \code{type}.}
+\item{...}{Arguments to pass to \code{\link[=extract_pmf]{extract_pmf()}}, \code{\link[=extract_pdf]{extract_pdf()}} or \code{\link[=extract_ci]{extract_ci()}} depending on \code{type}.}
 }
 \value{
 Dataframe
