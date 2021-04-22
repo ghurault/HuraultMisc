@@ -4,7 +4,7 @@
 \name{HuraultMisc-package}
 \alias{HuraultMisc}
 \alias{HuraultMisc-package}
-\title{HuraultMisc: Guillem Hurault personal functions' library}
+\title{HuraultMisc: Guillem Hurault Personal Functions' Library}
 \description{
 Mainly contains functions for data analysis.
 }
