@@ -18,8 +18,16 @@ is_scalar <- function(x) {length(x) == 1}
 
 #' Test whether x is a whole number
 #'
+#' - `is_wholenumber` uses [base::round()] to test whether `x` is a whole number,
+#' it will therefore issue an error if `x` is not of mode numeric.
+#' If used in [base::stopifnot()] for example, this won't be a problem but it may be in conditionals.
+#' - `is_scalar_wholenumber` comes with the additional argument `check_numeric`
+#' to check whether `x` is a numeric before checking it is a whole number.
+#'
 #' @param x Object to be tested
 #' @param tol Tolerance
+#' @param check_numeric Whether to check whether `x` is a numeric
+#' @param ... Arguments to pass to `is_wholenumber`
 #'
 #' @return Logical
 #'
@@ -39,8 +47,8 @@ is_wholenumber <- function(x, tol = .Machine$double.eps^0.5) {abs(x - round(x)) 
 
 #' @rdname is_wholenumber
 #' @export
-is_scalar_wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
-  is_scalar(x) && is_wholenumber(x, tol)
+is_scalar_wholenumber <- function(x, check_numeric = TRUE, ...) {
+  is_scalar(x) && ifelse(check_numeric, is.numeric(x), TRUE) && is_wholenumber(x, ...)
 }
 
 # Stanfit -----------------------------------------------------------------
