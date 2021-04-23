@@ -4,14 +4,12 @@
 \alias{extract_pmf}
 \title{Extract probability mass function from vector of samples}
 \usage{
-extract_pmf(x, support = NULL, force_wholenumber = FALSE)
+extract_pmf(x, support = NULL)
 }
 \arguments{
 \item{x}{Vector of samples from a distribution.}
 
 \item{support}{Vector of all possible values that the distribution can take. Can be NULL.}
-
-\item{force_wholenumber}{Whether to cast values of x to wholenumber}
 }
 \value{
 Dataframe with columns: Value, Probability.

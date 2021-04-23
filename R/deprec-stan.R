@@ -17,12 +17,14 @@ process_replications <- function(fit, idx = NULL, parName, bounds = NULL, type =
 
   stopifnot(is_stanfit(fit))
   type <- match.arg(type)
+
+  transform0 <- ifelse(type == "discrete", round, identity)
   if (is.null(bounds)) {
     support <- NULL
-    transform <- identity
+    transform <- transform0
   } else {
     support <- min(bounds):max(bounds)
-    transform <- function(x) {x[!(x < min(bounds) | x > max(bounds))]} # truncate
+    transform <- function(x) {transform0(x[!(x < min(bounds) | x > max(bounds))])} # truncate
   }
 
   if (type %in% c("continuous", "discrete")) {

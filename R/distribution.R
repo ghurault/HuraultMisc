@@ -33,7 +33,6 @@ extract_pdf <- function(x, support = NULL, n_density = 2^7) {
 #'
 #' @param x Vector of samples from a distribution.
 #' @param support Vector of all possible values that the distribution can take. Can be NULL.
-#' @param force_wholenumber Whether to cast values of x to wholenumber
 #'
 #' @return Dataframe with columns: Value, Probability.
 #'
@@ -41,7 +40,7 @@ extract_pdf <- function(x, support = NULL, n_density = 2^7) {
 #'
 #' @examples
 #' extract_pmf(round(rnorm(1e4, 0, 10)))
-extract_pmf <- function(x, support = NULL, force_wholenumber = FALSE) {
+extract_pmf <- function(x, support = NULL) {
 
   stopifnot(is.vector(x, mode = "numeric"))
 
@@ -52,13 +51,6 @@ extract_pmf <- function(x, support = NULL, force_wholenumber = FALSE) {
     stopifnot(is.vector(support, mode = "numeric"),
               length(support) >= 2)
     support <- sort(support)
-  }
-
-  if (force_wholenumber) {
-    if (!(all(is_wholenumber(x)))) {
-      x <- round(x)
-      warning("Non-integer values were rounded.")
-    }
   }
 
   if (!all(x %in% support)) {
@@ -157,23 +149,23 @@ extract_distribution <- function(object,
   stopifnot(is.function(transform))
 
   if (type == "continuous") {
-    extract_function <- function(x) {extract_pdf(x, ...)}
+    extract_function <- function(x) {extract_pdf(transform(x), ...)}
   } else if (type == "discrete") {
-    extract_function <- function(x) {extract_pmf(x, ...)}
+    extract_function <- function(x) {extract_pmf(transform(x), ...)}
   } else if (type == "eti") {
-    extract_function <- function(x) {extract_ci(x, type = "eti", ...)}
+    extract_function <- function(x) {extract_ci(transform(x), type = "eti", ...)}
   } else if (type == "hdi") {
-    extract_function <- function(x) {extract_ci(x, type = "hdi", ...)}
+    extract_function <- function(x) {extract_ci(transform(x), type = "hdi", ...)}
   }
 
   if (!is.matrix(object)) {
-    out <- extract_function(transform(object))
+    out <- extract_function(object)
     out[["Index"]] <- NA
   } else {
     out <- lapply(1:ncol(object),
                   function(i) {
                     # Loop over parameters in the matrix
-                    tmp <- extract_function(transform(object[, i]))
+                    tmp <- extract_function(object[, i])
                     tmp[["Index"]] <- i
                     return(tmp)
                   }) %>%
