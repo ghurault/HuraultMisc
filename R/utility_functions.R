@@ -164,3 +164,34 @@ logit <- function(x) {log(x / (1 - x))}
 #' @rdname logit
 #' @export
 inv_logit <- function(x) {1 / (1 + exp(-x))}
+
+
+# Approximate equal -------------------------------------------------------
+
+#' Approximate equal
+#'
+#' Compute whether x and y are approximately equal given a tolerance level
+#'
+#' @param x Numeric scalar
+#' @param y Numeric scalar
+#' @param tol Tolerance
+#'
+#' @return Boolean
+#'
+#' @name approx_equal
+#'
+#' @examples
+#' approx_equal(1, 1)
+#' 1 %~% (1 + 1e-16)
+#' 1 %~% 1.01
+NULL
+
+#' @rdname approx_equal
+#' @export
+approx_equal <- function(x, y, tol = .Machine$double.eps^0.5) {
+  abs(x - y) < tol
+}
+
+#' @rdname approx_equal
+#' @export
+`%~%` <- function(x, y) {approx_equal(x, y)}

@@ -43,7 +43,7 @@ NULL
 
 #' @rdname is_wholenumber
 #' @export
-is_wholenumber <- function(x, tol = .Machine$double.eps^0.5) {abs(x - round(x)) < tol}
+is_wholenumber <- function(x, tol = .Machine$double.eps^0.5) {approx_equal(x, round(x), tol = tol)}
 
 #' @rdname is_wholenumber
 #' @export

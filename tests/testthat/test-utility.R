@@ -98,3 +98,14 @@ test_that("inv_logit works", {
   expect_error(inv_logit("a"))
 })
 
+# Test approx_equal -------------------------------------------------------
+
+test_that("approx_equal works", {
+  expect_true(approx_equal(1, 1))
+  expect_true(1 %~% (1 + 1e-16))
+  expect_false(1 %~% 1.01)
+  expect_error(1 %~% "a")
+  expect_equal(approx_equal(1, c(1, 2)), c(TRUE, FALSE))
+  expect_equal(approx_equal(c(1, 2), 1), c(TRUE, FALSE))
+  expect_equal(approx_equal(c(1, 2), c(1, 2)), c(TRUE, TRUE))
+})
