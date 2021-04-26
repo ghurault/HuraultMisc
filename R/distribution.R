@@ -53,6 +53,11 @@ extract_pmf <- function(x, support = NULL) {
     support <- sort(support)
   }
 
+  # Round x and support to avoid double precision errors (e.g. when support is seq(0, 1, .1))
+  dp <- ceiling(-log10(min(support - dplyr::lag(support), na.rm = TRUE)) + .5)
+  support <- round(support, dp)
+  x <- round(x, dp)
+
   if (!all(x %in% support)) {
     warning("Some values in x are not in support")
   }
