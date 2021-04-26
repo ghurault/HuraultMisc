@@ -42,21 +42,27 @@ extract_pdf <- function(x, support = NULL, n_density = 2^7) {
 #' extract_pmf(round(rnorm(1e4, 0, 10)))
 extract_pmf <- function(x, support = NULL) {
 
-  stopifnot(is.vector(x, mode = "numeric"))
-
+  stopifnot(is.vector(x))
   if (is.null(support)) {
-    support <- min(floor(x)):max(ceiling(x))
+    if (is.numeric(x)) {
+      support <- min(floor(x)):max(ceiling(x))
+    } else {
+      support <- unique(x)
+    }
     warning("support is NULL, taking the following values: ", paste(support, collapse = ", "))
   } else {
-    stopifnot(is.vector(support, mode = "numeric"),
-              length(support) >= 2)
-    support <- sort(support)
+    stopifnot(is.vector(support),
+              length(support) >= 2,
+              mode(x) == mode(support))
   }
 
-  # Round x and support to avoid double precision errors (e.g. when support is seq(0, 1, .1))
-  dp <- ceiling(-log10(min(support - dplyr::lag(support), na.rm = TRUE)) + .5)
-  support <- round(support, dp)
-  x <- round(x, dp)
+  if (is.numeric(support)) {
+    support <- sort(support)
+    # Round x and support to avoid double precision errors (e.g. when support is seq(0, 1, .1))
+    dp <- ceiling(-log10(min(support - dplyr::lag(support), na.rm = TRUE)) + .5)
+    support <- round(support, dp)
+    x <- round(x, dp)
+  }
 
   if (!all(x %in% support)) {
     warning("Some values in x are not in support")

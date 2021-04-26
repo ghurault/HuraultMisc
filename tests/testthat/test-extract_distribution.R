@@ -25,7 +25,7 @@ test_that("extract_distribution works for matrix with type continuous", {
 
 # Test type discrete ------------------------------------------------------
 
-test_that("extract_distribution works for vector with type discrete", {
+test_that("extract_distribution works for discrete numeric vector", {
   x <- round(x * 10)
   dist <- extract_distribution(x,
                                parName = "x",
@@ -33,7 +33,12 @@ test_that("extract_distribution works for vector with type discrete", {
                                support = min(x):max(x))
   expect_true(all(c("Value", "Probability", "Index", "Variable") %in% colnames(dist)))
   expect_equal(range(dist[["Value"]]), range(x))
+})
 
+test_that("extract_pmf works for discrete non-numeric vector", {
+  dist <- extract_pmf(sample(LETTERS, 1e2, replace = TRUE),
+                      support = LETTERS)
+  expect_true(all(c("Value", "Probability") %in% colnames(dist)))
 })
 
 # Test type eti and hdi ---------------------------------------------------
