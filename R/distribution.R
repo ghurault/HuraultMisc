@@ -163,15 +163,14 @@ extract_distribution <- function(object,
   }
 
   if (!is.matrix(object)) {
-    out <- extract_function(object)
-    out[["Index"]] <- NA
+    out <- extract_function(object) %>%
+      mutate(Index = NA)
   } else {
     out <- lapply(1:ncol(object),
                   function(i) {
                     # Loop over parameters in the matrix
-                    tmp <- extract_function(object[, i])
-                    tmp[["Index"]] <- i
-                    return(tmp)
+                    extract_function(object[, i]) %>%
+                      mutate(Index = i)
                   }) %>%
       bind_rows()
   }
