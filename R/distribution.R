@@ -57,9 +57,13 @@ extract_pmf <- function(x, support = NULL) {
     warning("Some values in x are not in support")
   }
 
-  d <- table(factor(x, levels = support))
-  data.frame(Value = support,
-             Probability = as.numeric(d / sum(d)))
+  out <- factor(x, levels = support) %>%
+    table() %>%
+    proportions() %>%
+    as.numeric() %>%
+    data.frame(Value = support, Probability = .)
+
+  return(out)
 }
 
 #' Extract confidence intervals from a vector of samples
