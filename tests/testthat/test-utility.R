@@ -66,18 +66,18 @@ test_that("factor_to_numeric warns that the input factor_name is not in df", {
 
 # Test extract_index ---------------------------------------------------
 
-x <- c("sigma", "sigma[1]", "sigma[1, 2]", "sigma[1,3]", "sigma[1][4]")
+x <- c("sigma", "sigma[1]", "sigma[1, 2]", "sigma[1,3]", "sigma[1][4]", "sigma[10,10]")
 test_that("extract_index_1d returns a correct dataframe", {
-  sol <- data.frame(Variable = c("sigma", "sigma", "sigma[1, 2]", "sigma[1,3]", "sigma[1]"),
-                    Index = c(NA, 1, NA, NA, 4))
+  sol <- data.frame(Variable = c("sigma", "sigma", "sigma[1, 2]", "sigma[1,3]", "sigma[1]", "sigma[10,10]"),
+                    Index = c(NA, 1, NA, NA, 4, NA))
   out <- extract_index_1d(x)
   expect_equal(out, sol)
   expect_is(out, "data.frame")
 })
 
 test_that("extract_index_nd returns a correct dataframe", {
-  sol <- data.frame(Variable = c("sigma", "sigma", "sigma", "sigma", "sigma"))
-  sol$Index <- list(NA, 1, c(1, 2), c(1, 3), c(1, 4))
+  sol <- data.frame(Variable = c("sigma", "sigma", "sigma", "sigma", "sigma", "sigma"))
+  sol$Index <- list(NA, 1, c(1, 2), c(1, 3), c(1, 4), c(10, 10))
   out <- extract_index_nd(x)
   expect_equal(out, sol)
   expect_is(out, "data.frame")

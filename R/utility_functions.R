@@ -130,7 +130,7 @@ extract_index_nd <- function(x) {
 
   ## Extract index in patterns such as x[1], x[1,2], x[1,2, 3]
   # Identify variables with the corresponding pattern
-  re3 <- "^(.*)\\[(\\d(,\\s?\\d)*)\\]$"
+  re3 <- "^(.*)\\[(\\d+(,\\s?\\d+)*)\\]$"
   id_var <- grep(re3, out$Variable)
   # Extract what's inside the bracket and split at the comma
   out$Index[id_var] <- gsub(re3, "\\2", out$Variable[id_var], perl = TRUE) %>%
