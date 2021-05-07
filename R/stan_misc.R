@@ -8,7 +8,7 @@
 #'
 #'@section Alternative:
 #' The tidybayes package offers an alternative to this function, for example:
-#' `fit %>% tidy_draws() %>% gather_variables %>% mean_qi()`.
+#' `fit %>% tidy_draws() %>% gather_variables() %>% mean_qi()`.
 #' However, this does not provide information about Rhat or Neff, nor does it process the indexes.
 #' The tidybayes package is more useful for summarising the distribution of a handful of parameters (using [tidybayes::spread_draws()]).
 #'
@@ -18,9 +18,9 @@ summary_statistics <- function(fit, pars, probs = c(.05, .25, .5, .75, .95)) {
 
   stopifnot(is_stanfit(fit))
 
-  par <- rstan::summary(fit, pars = pars, probs = probs)$summary
-  par <- as.data.frame(par)
-  colnames(par)[colnames(par) == "mean"] <- "Mean"
+  par <- rstan::summary(fit, pars = pars, probs = probs)$summary %>%
+    as.data.frame() %>%
+    rename(Mean = .data$mean)
   par <- cbind(par, extract_index_1d(rownames(par))) # Extract index for 1d array/vectors
   rownames(par) <- NULL
 
