@@ -87,16 +87,18 @@ factor_to_numeric <- function(df, factor_name) {
 #' @examples
 #' extract_index_1d(c("sigma", "sigma[1]", "sigma[1, 1]", "sigma[1][2]"))
 extract_index_1d <- function(x) {
+
   stopifnot(is.vector(x, mode = "character"))
 
-  out <- data.frame(Variable = x, Index = NA)
-  out$Variable <- as.character(out$Variable)
-  re <- "(.*)\\[([0-9]+)\\]$"
+  out <- data.frame(Variable = as.character(x),
+                    Index = NA)
+  rg <- "(.*)\\[(\\d+)\\]$"
   # Identify variables ending in with a single number inside bracket
-  id_var <- grep(re, x)
+  id_var <- grep(rg, x)
   # Extract what's inside the bracket for Index and remove bracket for Variable
-  out$Index[id_var] <- as.numeric(sub(re, "\\2", x[id_var], perl = TRUE))
-  out$Variable[id_var] <- sub(re, "\\1", x[id_var], perl = TRUE)
+  out$Index[id_var] <- as.numeric(sub(rg, "\\2", x[id_var], perl = TRUE))
+  out$Variable[id_var] <- sub(rg, "\\1", x[id_var], perl = TRUE)
+
   return(out)
 }
 
@@ -104,7 +106,9 @@ extract_index_1d <- function(x) {
 #'
 #' @param x Character vector
 #'
-#' @return  Dataframe with columns Variable and Index
+#' @return  Dataframe with columns:
+#' - `Variable`, containing `x` where brackets have been removed
+#' - `Index`, a list containing values within the brackets
 #' @export
 #'
 #' @examples
@@ -113,33 +117,60 @@ extract_index_nd <- function(x) {
 
   stopifnot(is.vector(x, mode = "character"))
 
-  out <- data.frame(Variable = x, Index = NA)
-  out$Variable <- as.character(out$Variable)
+  out <- data.frame(Variable = as.character(x),
+                    Index = NA) %>%
+    extract_index_nbracket() %>%
+    extract_index_1bracket()
 
-  ## Extract index in patterns such as x[1][2]
-  # Identify the patterns
-  re1 <- "^(.*)(\\[\\d+\\]){2,}"
-  id_var <- grep(re1, out$Variable)
-  # Remove prefix and split at the brackets
-  re2 <- "^(\\w+)+(\\[.*\\])?$"
-  out$Index[id_var] <- gsub(re2, "\\2", out$Variable[id_var]) %>%
-    strsplit("[\\[\\]]", perl = TRUE) %>%
-    lapply(function(x) {as.numeric(x[x != ""])})
-  # Rename variable
-  out$Variable[id_var] <- gsub(re1, "\\1", out$Variable[id_var], perl = TRUE)
+  return(out)
+}
 
-  ## Extract index in patterns such as x[1], x[1,2], x[1,2, 3]
+#' Extract index when there is a unique bracket
+#'
+#' For example, patterns such as x[1], x[1,2], x[1,2, 3]
+#' Not exported.
+#'
+#' @param df Dataframe with columns "Variable" and "Index"
+#'
+#' @return Dataframe with columns Variable and Index
+#' @noRd
+extract_index_1bracket <- function(df) {
+
   # Identify variables with the corresponding pattern
-  re3 <- "^(.*)\\[(\\d+(,\\s?\\d+)*)\\]$"
-  id_var <- grep(re3, out$Variable)
+  rg <- "^(.*)\\[(\\d+(,\\s?\\d+)*)\\]$"
+  id_var <- grep(rg, df$Variable)
   # Extract what's inside the bracket and split at the comma
-  out$Index[id_var] <- gsub(re3, "\\2", out$Variable[id_var], perl = TRUE) %>%
+  df$Index[id_var] <- gsub(rg, "\\2", df$Variable[id_var], perl = TRUE) %>%
     strsplit(",") %>%
     lapply(as.numeric)
   # Rename variable
-  out$Variable[id_var] <- gsub(re3, "\\1", out$Variable[id_var], perl = TRUE)
+  df$Variable[id_var] <- gsub(rg, "\\1", df$Variable[id_var], perl = TRUE)
 
-  return(out)
+  return(df)
+}
+
+#' Extract index when there are multiple brackets
+#'
+#' For example, patterns such as x[1][2]
+#' Not exported.
+#'
+#' @param df Dataframe with columns "Variable" and "Index"
+#'
+#' @return Dataframe with columns Variable and Index
+#' @noRd
+extract_index_nbracket <- function(df) {
+
+  # Identify variables with the corresponding pattern
+  rg <- "^(.*?)((\\[\\d+\\])+)"
+  id_var <- grep(rg, df$Variable)
+  # Remove prefix and split at the brackets
+  df$Index[id_var] <- gsub(rg, "\\2", df$Variable[id_var]) %>%
+    strsplit("[\\[\\]]", perl = TRUE) %>%
+    lapply(function(x) {as.numeric(x[x != ""])})
+  # Rename variable
+  df$Variable[id_var] <- gsub(rg, "\\1", df$Variable[id_var], perl = TRUE)
+
+  return(df)
 }
 
 # Logit and inverse logit -------------------------------------------------

@@ -10,7 +10,11 @@ extract_index_nd(x)
 \item{x}{Character vector}
 }
 \value{
-Dataframe with columns Variable and Index
+Dataframe with columns:
+\itemize{
+\item \code{Variable}, containing \code{x} where brackets have been removed
+\item \code{Index}, a list containing values within the brackets
+}
 }
 \description{
 Extract multiple indices inside bracket(s) as a list
