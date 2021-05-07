@@ -4,16 +4,21 @@
 \alias{extract_index_nd}
 \title{Extract multiple indices inside bracket(s) as a list}
 \usage{
-extract_index_nd(x)
+extract_index_nd(x, dim_names = NULL)
 }
 \arguments{
 \item{x}{Character vector}
+
+\item{dim_names}{Optional character vector of dimension names.
+If \code{dim_names} is not NULL, if the elements of \code{x} don't have the same number of indices,
+the missing indices will be set to NA.}
 }
 \value{
 Dataframe with columns:
 \itemize{
 \item \code{Variable}, containing \code{x} where brackets have been removed
-\item \code{Index}, a list containing values within the brackets
+\item \code{Index}, a list containing values within the brackets.
+If \code{dim_names} is not NULL, \code{Index} is replaced by columns with names \code{dim_names} containing numeric values.
 }
 }
 \description{

@@ -105,15 +105,20 @@ extract_index_1d <- function(x) {
 #' Extract multiple indices inside bracket(s) as a list
 #'
 #' @param x Character vector
+#' @param dim_names Optional character vector of dimension names.
+#' If `dim_names` is not NULL, if the elements of `x` don't have the same number of indices,
+#' the missing indices will be set to NA.
 #'
 #' @return  Dataframe with columns:
 #' - `Variable`, containing `x` where brackets have been removed
-#' - `Index`, a list containing values within the brackets
+#' - `Index`, a list containing values within the brackets.
+#' If `dim_names` is not NULL, `Index` is replaced by columns with names `dim_names` containing numeric values.
+#'
 #' @export
 #'
 #' @examples
 #' extract_index_nd(c("sigma", "sigma[1]", "sigma[1, 1]", "sigma[1][2]"))
-extract_index_nd <- function(x) {
+extract_index_nd <- function(x, dim_names = NULL) {
 
   stopifnot(is.vector(x, mode = "character"))
 
@@ -121,6 +126,27 @@ extract_index_nd <- function(x) {
                     Index = NA) %>%
     extract_index_nbracket() %>%
     extract_index_1bracket()
+
+  if (!is.null(dim_names)) {
+    stopifnot(all(vapply(out[["Index"]], function(x) {is.numeric(x) || (is_scalar(x) & is.na(x))}, logical(1))))
+    id_length <- vapply(out[["Index"]], length, numeric(1))
+    stopifnot(max(id_length) == length(dim_names),
+              is.character(dim_names))
+
+    if (!is_scalar(unique(id_length))) {
+      warning("The elements in x don't have the same number of indices. The last missing indices will be set to NA.")
+      max_dim <- max(id_length)
+      out[["Index"]] <- lapply(out[["Index"]],
+                               function(x) {
+                                 c(x, rep(NA, max_dim - length(x)))
+                               })
+    }
+
+    tmp <- do.call(rbind, out[["Index"]]) %>%
+      as.data.frame()
+    colnames(tmp) <- dim_names
+    out <- bind_cols(out["Variable"], tmp)
+  }
 
   return(out)
 }
