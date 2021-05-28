@@ -12,13 +12,15 @@ param <- EczemaPred::list_parameters("BinMC")
 param$Test <- NULL
 N_parameters <- N * length(param$PatientTime) + N_patient * length(param$Patient) + length(param$Population)
 
-fit_prior <- EczemaPred::sample_prior_BinMC(N_patient = N_patient, t_max = t_max, max_score = max_score, chains = 1, refresh = 0)
+model <- EczemaPred::EczemaModel("BinMC", max_score = max_score)
+
+fit_prior <- EczemaPred::sample_prior(model, N_patient = N_patient, t_max = t_max, chains = 1, refresh = 0)
 
 yrep <- rstan::extract(fit_prior, pars = "y_rep")[[1]]
-fd <- EczemaPred::get_index2(t_max) %>%
-  mutate(Score = yrep[5, ])
+idx <- EczemaPred::get_index2(t_max = t_max)
+fd <- idx %>% mutate(Score = yrep[5, ])
 
-fit_fake <- EczemaPred::fit_BinMC(train = fd, test = NULL, max_score = max_score, chains = 1, refresh = 0)
+fit_fake <- EczemaPred::EczemaFit(model, train = fd, test = NULL, chains = 1, refresh = 0)
 
 # Test summary_statistics -------------------------------------------------------------------
 
@@ -141,8 +143,6 @@ test_that("extract_distribution works with stanfit object", {
   expect_equal(length(unique(dist[["Index"]])), N)
   expect_equal(range(dist[["Value"]]), c(0, max_score))
 })
-
-idx <- EczemaPred::get_index2(t_max = t_max)
 
 test_that("process_replications output is in the correct support", {
   pred_cont <- process_replications(fit_fake, idx = idx, parName = "y_rep", bounds = c(0, max_score), type = "discrete")
