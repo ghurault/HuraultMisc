@@ -39,9 +39,12 @@ The distribution can be extracted as:
 \section{Alternative}{
 
 This function can notably be used to prepare the data for plotting fan charts when type = "eti" or "hdi".
-In that case, the \href{https://mjskay.github.io/ggdist/}{ggdist} package offers an alternative with \code{ggdist::stat_lineribbon()}.
+In that case, the \href{https://mjskay.github.io/ggdist/}{\code{ggdist}} package offers an alternative with \code{ggdist::stat_lineribbon()}.
 }
 
+\examples{
+extract_distribution(runif(1e2), type = "continuous", support = c(0, 1))
+}
 \seealso{
 \code{\link[=extract_draws]{extract_draws()}} for extracting draws of an object.
 }

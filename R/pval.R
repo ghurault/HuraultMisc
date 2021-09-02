@@ -2,11 +2,11 @@
 
 #' Compute empirical p-values
 #'
-#' @param t_rep Samples from a distribution
-#' @param t Observation
+#' @param t_rep Vector of samples from a distribution.
+#' @param t Observation (numeric scalar).
 #' @param alternative Indicates the alternative hypothesis: must be one of "two.sided", "greater" or "less".
 #'
-#' @return Empirical p-value
+#' @return Empirical p-value.
 #' @export
 #'
 #' @examples
@@ -41,11 +41,11 @@ empirical_pval <- function(t_rep, t, alternative = c("two.sided", "less", "great
 #' The simulations and observations are first summarised into a test statistics,
 #' then the test statistic of the observations is compared to the test statistic of the empirical distribution.
 #'
-#' @param yrep Matrix of posterior replications (nrow: number of samples, ncol: number of simulated observations)
-#' @param y Vector of observations
+#' @param yrep Matrix of posterior replications with rows corresponding to samples and columns to simulated observations.
+#' @param y Vector of observations.
 #' @param test_statistic Function of the test statistic to compute the p-value for
 #' @param alternative Indicates the alternative hypothesis: must be one of "two.sided", "greater" or "less".
-#' @param plot Whether to output a plot visualisting the distribution of the test statistic
+#' @param plot Whether to output a plot visualising the distribution of the test statistic
 #'
 #' @return List containing the p-value and (optionally) a ggplot
 #' @export

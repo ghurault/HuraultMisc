@@ -6,7 +6,7 @@
 \alias{HuraultMisc-package}
 \title{HuraultMisc: Guillem Hurault Personal Functions' Library}
 \description{
-Mainly contains functions for data analysis.
+Contains various functions for data analysis, notably helpers and diagnostics for Bayesian modelling using Stan.
 }
 \seealso{
 Useful links:

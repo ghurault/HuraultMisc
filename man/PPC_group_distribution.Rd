@@ -7,9 +7,9 @@
 PPC_group_distribution(obj, parName = "", nDraws = 1)
 }
 \arguments{
-\item{obj}{Matrix (rows: samples, cols: parameter) or Stanfit object}
+\item{obj}{Matrix (rows: samples, cols: parameter) or Stanfit object.}
 
-\item{parName}{Name of the observation-dependent (e.g. patient-dependent) parameter to consider (optional when obj is a matrix)}
+\item{parName}{Name of the observation-dependent (e.g. patient-dependent) parameter to consider (optional when \code{obj} is a matrix).}
 
 \item{nDraws}{Number of draws to plot}
 }
@@ -25,5 +25,5 @@ X <- matrix(rnorm(1e3), ncol = 10)
 PPC_group_distribution(X, "", 10)
 }
 \references{
-A. Gelman, J. B. B. Carlin, H. S. S. Stern, and D. B. B. Rubin, Bayesian Data Analysis (Chapter 6), Third Edition, 2014.
+'A. Gelman, J. B. B. Carlin, H. S. S. Stern, and D. B. B. Rubin, Bayesian Data Analysis (Chapter 6), Third Edition, 2014.'
 }

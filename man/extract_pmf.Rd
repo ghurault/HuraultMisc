@@ -12,7 +12,7 @@ extract_pmf(x, support = NULL)
 \item{support}{Vector of all possible values that the distribution can take. Can be NULL.}
 }
 \value{
-Dataframe with columns: Value, Probability.
+Dataframe with columns: \code{Value}, \code{Probability.}
 }
 \description{
 Extract probability mass function from vector of samples

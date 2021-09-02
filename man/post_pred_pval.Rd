@@ -13,15 +13,15 @@ post_pred_pval(
 )
 }
 \arguments{
-\item{yrep}{Matrix of posterior replications (nrow: number of samples, ncol: number of simulated observations)}
+\item{yrep}{Matrix of posterior replications with rows corresponding to samples and columns to simulated observations.}
 
-\item{y}{Vector of observations}
+\item{y}{Vector of observations.}
 
 \item{test_statistic}{Function of the test statistic to compute the p-value for}
 
 \item{alternative}{Indicates the alternative hypothesis: must be one of "two.sided", "greater" or "less".}
 
-\item{plot}{Whether to output a plot visualisting the distribution of the test statistic}
+\item{plot}{Whether to output a plot visualising the distribution of the test statistic}
 }
 \value{
 List containing the p-value and (optionally) a ggplot

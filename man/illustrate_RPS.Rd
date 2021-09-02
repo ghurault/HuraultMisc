@@ -7,11 +7,11 @@
 illustrate_RPS(mu = 5, sigma = 1, observed = 6)
 }
 \arguments{
-\item{mu}{Mean of the Gaussian forecast distribution}
+\item{mu}{Mean of the Gaussian forecast distribution.}
 
-\item{sigma}{Standard deviation of the Gaussian forecast distribution}
+\item{sigma}{Standard deviation of the Gaussian forecast distribution.}
 
-\item{observed}{Observed outcome}
+\item{observed}{Observed outcome.}
 }
 \value{
 Ggplot

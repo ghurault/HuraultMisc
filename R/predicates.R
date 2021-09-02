@@ -2,7 +2,7 @@
 
 #' Test whether x is of length 1
 #'
-#' @param x Object to be tested
+#' @param x Object to be tested.
 #'
 #' @return Logical
 #'
@@ -18,16 +18,16 @@ is_scalar <- function(x) {length(x) == 1}
 
 #' Test whether x is a whole number
 #'
-#' - `is_wholenumber` uses [base::round()] to test whether `x` is a whole number,
+#' - `is_wholenumber()` uses [base::round()] to test whether `x` is a whole number,
 #' it will therefore issue an error if `x` is not of mode numeric.
 #' If used in [base::stopifnot()] for example, this won't be a problem but it may be in conditionals.
-#' - `is_scalar_wholenumber` comes with the additional argument `check_numeric`
+#' - `is_scalar_wholenumber()` comes with the additional argument `check_numeric`
 #' to check whether `x` is a numeric before checking it is a whole number.
 #'
 #' @param x Object to be tested
 #' @param tol Tolerance
 #' @param check_numeric Whether to check whether `x` is a numeric
-#' @param ... Arguments to pass to `is_wholenumber`
+#' @param ... Arguments to pass to `is_wholenumber()`
 #'
 #' @return Logical
 #'
@@ -55,7 +55,7 @@ is_scalar_wholenumber <- function(x, check_numeric = TRUE, ...) {
 
 #' Test whether an object is of class "stanfit"
 #'
-#' @param obj Object
+#' @param obj Object.
 #'
 #' @return Boolean
 #' @export

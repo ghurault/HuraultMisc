@@ -2,15 +2,15 @@
 
 #' Extract summary statistics
 #'
-#' @param fit Stanfit object
+#' @param fit Stanfit object.
 #' @param pars Character vector of parameters to extract. Defaults to all parameters.
-#' @param probs Numeric vector of quantiles to extract
+#' @param probs Numeric vector of quantiles to extract.
 #'
 #'@section Alternative:
-#' The [tidybayes](https://mjskay.github.io/tidybayes/) package offers an alternative to this function, for example:
+#' The ['tidybayes'](https://mjskay.github.io/tidybayes/) package offers an alternative to this function, for example:
 #' `fit %>% tidy_draws() %>% gather_variables() %>% mean_qi()`.
-#' However, this does not provide information about Rhat or Neff, nor does it process the indexes.
-#' The tidybayes package is more useful for summarising the distribution of a handful of parameters (using `tidybayes::spread_draws()`).
+#' However, this does not provide information about `Rhat` or `Neff`, nor does it process the indexes.
+#' The 'tidybayes' package is more useful for summarising the distribution of a handful of parameters (using `tidybayes::spread_draws()`).
 #'
 #' @return Dataframe of posterior summary statistics
 #' @export
@@ -34,12 +34,12 @@ summary_statistics <- function(fit, pars, probs = c(.05, .25, .5, .75, .95)) {
 #' Plot the distribution density of parameters within a same group from a single/multiple draw of the posterior distribution.
 #' In the case of a hierarchical model, we might look at the distribution of patient parameter and compare it to the prior for the population distribution.
 #'
-#' @param obj Matrix (rows: samples, cols: parameter) or Stanfit object
-#' @param parName Name of the observation-dependent (e.g. patient-dependent) parameter to consider (optional when obj is a matrix)
+#' @param obj Matrix (rows: samples, cols: parameter) or Stanfit object.
+#' @param parName Name of the observation-dependent (e.g. patient-dependent) parameter to consider (optional when `obj` is a matrix).
 #' @param nDraws Number of draws to plot
 #'
 #' @return Ggplot of the distribution
-#' @references A. Gelman, J. B. B. Carlin, H. S. S. Stern, and D. B. B. Rubin, Bayesian Data Analysis (Chapter 6), Third Edition, 2014.
+#' @references 'A. Gelman, J. B. B. Carlin, H. S. S. Stern, and D. B. B. Rubin, Bayesian Data Analysis (Chapter 6), Third Edition, 2014.'
 #' @export
 #' @import ggplot2
 #'

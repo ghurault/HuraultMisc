@@ -7,10 +7,11 @@
 #' This means the output is between 0 and 1, 1 corresponding to the maximum resolution.
 #'
 #' @param f Vector of forecasts
-#' @param p0 Vector of base rate. In the case rate is usually the prevalence of a uniform forecast (e.g. 1 / number of categories)
+#' @param p0 Vector of base rate.
+#' In the case rate is usually the prevalence of a uniform forecast (e.g. 1 / number of categories)
 #' but can depend on the observation (hence the vector).
 #'
-#' @return Resolution
+#' @return Vector of resolution values
 #' @export
 #'
 #' @examples
@@ -24,17 +25,17 @@ compute_resolution <- function(f, p0) {
 
   reso <- mean((f - p0)^2)
   uncertainty <- mean(p0 * (1 - p0))
-  reso / uncertainty
+  return(reso / uncertainty)
 }
 
 # Compute RPS -------------------------------------------------------------
 
 #' Compute RPS for a single forecast
 #'
-#' @param forecast Vector of length N (forecast)
-#' @param outcome Index of the true outcome (between 1 and N)
+#' @param forecast Vector of length N (forecast).
+#' @param outcome Index of the true outcome (between 1 and N).
 #'
-#' @return RPS
+#' @return RPS (numeric scalar)
 #' @export
 #'
 #' @examples

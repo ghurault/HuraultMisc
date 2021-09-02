@@ -25,7 +25,7 @@ sol_nrow <- c(length(dr[[1]]),
               length(dr[[6]]) * 2 * 2,
               length(dr[[7]]) * 2 * 2 * 2)
 
-test_that("extract_draws (and related) returns dataframe of correct size", {
+test_that("extract_draws() (and related) returns dataframe of correct size", {
   for (i in 1:length(tmp)) {
     expect_true(is.data.frame(tmp[[1]]))
     expect_true(all(colnames(tmp[[i]]) %in% c("Draw", "Index", "Value", "Parameter")))
@@ -33,14 +33,14 @@ test_that("extract_draws (and related) returns dataframe of correct size", {
   }
 })
 
-test_that("extract_draws (and related) returns correct draws", {
+test_that("extract_draws() (and related) returns correct draws", {
   for (i in 1:length(tmp)) {
     expect_equal(sort(unique(tmp[[i]][["Draw"]])), sort(dr[[i]]))
     expect_true(!any(is.na(tmp[[i]][["Value"]])))
   }
 })
 
-test_that("extract_draws (and related) identify incorrect inputs", {
+test_that("extract_draws() (and related) identify incorrect inputs", {
   expect_error(extract_draws_from_array(list(1, 2), 1))
   expect_error(extract_draws_from_array(rnorm(1e2), 0))
   expect_error(extract_draws_from_array(rnorm(1e2), 1e4))
@@ -49,4 +49,4 @@ test_that("extract_draws (and related) identify incorrect inputs", {
 
 # extract_parameters_from_draw (deprecated) --------------------------------------------------------------
 
-# In test-stan
+# In test-stan.R

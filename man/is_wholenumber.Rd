@@ -16,17 +16,17 @@ is_scalar_wholenumber(x, check_numeric = TRUE, ...)
 
 \item{check_numeric}{Whether to check whether \code{x} is a numeric}
 
-\item{...}{Arguments to pass to \code{is_wholenumber}}
+\item{...}{Arguments to pass to \code{is_wholenumber()}}
 }
 \value{
 Logical
 }
 \description{
 \itemize{
-\item \code{is_wholenumber} uses \code{\link[base:Round]{base::round()}} to test whether \code{x} is a whole number,
+\item \code{is_wholenumber()} uses \code{\link[base:Round]{base::round()}} to test whether \code{x} is a whole number,
 it will therefore issue an error if \code{x} is not of mode numeric.
 If used in \code{\link[base:stopifnot]{base::stopifnot()}} for example, this won't be a problem but it may be in conditionals.
-\item \code{is_scalar_wholenumber} comes with the additional argument \code{check_numeric}
+\item \code{is_scalar_wholenumber()} comes with the additional argument \code{check_numeric}
 to check whether \code{x} is a numeric before checking it is a whole number.
 }
 }

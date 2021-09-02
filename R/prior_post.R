@@ -2,18 +2,18 @@
 
 #' Compare prior to posterior
 #'
-#' - `combine_prior_posterior` subsets and binds the prior and posterior dataframes
-#' - `plot_prior_posterior` plots posterior CI alongside prior CI
-#' - `compute_prior_influence` computes diagnostics of how the posterior is influenced by the prior
-#' - `plot_prior_influence` plots diagnostics from `compute_prior_influence`
+#' - `combine_prior_posterior` subsets and binds the prior and posterior dataframes.
+#' - `plot_prior_posterior` plots posterior CI alongside prior CI.
+#' - `compute_prior_influence` computes diagnostics of how the posterior is influenced by the prior.
+#' - `plot_prior_influence` plots diagnostics from `compute_prior_influence`.
 #'
 #' @param prior Dataframe of prior parameter estimates.
-#' The dataframe is expected to have columns "Variable", "Mean".
-#' For `plot_prior_posterior`, columns "5%" and "95%" should also be present.
-#' For `compute_prior_influence` and `plot_prior_influence`, columns "Index" and "sd" should also be present.
+#' The dataframe is expected to have columns `Variable`, `Mean.`
+#' For `plot_prior_posterior()`, the columns `5%` and `95%` should also be present.
+#' For `compute_prior_influence()` and `plot_prior_influence()`, the columns `Index` and `sd` should also be present.
 #' @param post Dataframe of posterior parameter estimates, with same columns as `prior`.
 #' @param pars Vector of parameter names to plot. Defaults to all parameters presents in `post` and `prior.`
-#' @param match_exact Logical indicating whether parameters should be matched exactly (e.g. "p" does not match "p\[1\]").
+#' @param match_exact Logical indicating whether parameters should be matched exactly (e.g. `p` does not match `p\[1\]`).
 #' @param lb Name of the column in `prior` and `post` corresponding to lower bound of error bar
 #' @param ub Name of the column in `prior` and `post` corresponding to upper bound of error bar
 #' @param remove_index_prior Whether to remove the index variable for `prior` except the first one.
@@ -21,22 +21,22 @@
 #' (e.g. with subject parameters, when `prior` does not contain as many subjects as post for computational reasons).
 #'
 #' @return
-#' - `combine_prior_posterior` returns a dataframe with the same columns as in prior and post + "Distribution".
-#' - `compute_prior_influence` returns a dataframe with columns: Variable, Index, PostShrinkage, DistPrior.
+#' - `combine_prior_posterior` returns a dataframe with the same columns as in prior and post and a column `Distribution`.
+#' - `compute_prior_influence` returns a dataframe with columns: `Variable`, `Index`, `PostShrinkage`, `DistPrior.`
 #' - `plot_prior_posterior` and `plot_prior_influence` returns a ggplot object
 #'
 #' @details
-#' - Posterior shrinkage (`PostShrinkage`) = 1 - Var(Post) / Var(Prior), capturing how much the model is learning.
+#' - Posterior shrinkage (`PostShrinkage = 1 - Var(Post) / Var(Prior)`), capturing how much the model is learning.
 #' Shrinkage near 0 indicates that the data provides little information beyond the prior.
 #' Shrinkage near 1 indicates that the data is much more informative than the prior.
-#' - Mahalanobis distance between the mean posterior and the prior (`DistPrior`), capturing whether the prior "includes" the posterior.
+#' - 'Mahalanobis' distance between the mean posterior and the prior (`DistPrior`), capturing whether the prior "includes" the posterior.
 #'
 #' @section Note:
 #' For `plot_prior_posterior`, parameters with the same name but different indices are plotted together.
 #' If their prior distribution is the same, it can be useful to only keep one index in `prior`.
 #' If not, we can use `match_exact = FALSE` to plot `parameter[1]` and `parameter[2]` separately.
 #'
-#' @references M. Betancourt,  [“Towards a Principled Bayesian Workflow”](https://betanalpha.github.io/assets/case_studies/principled_bayesian_workflow.html), 2018.
+#' @references [M. Betancourt, “Towards a Principled Bayesian Workflow”](https://betanalpha.github.io/assets/case_studies/principled_bayesian_workflow.html), 2018.
 #'
 #' @name prior_posterior
 NULL
@@ -184,7 +184,7 @@ plot_prior_influence <-  function(prior, post, pars = NULL, match_exact = TRUE) 
     theme_classic(base_size = 15)
 
   if (length(unique(tmp[["Variable"]])) <= 8) {
-    p <- p + scale_colour_manual(values = c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7"))
+    p <- p + scale_colour_manual(values = c("#999999", cbbPalette[-1]))
   }
 
   return(p)

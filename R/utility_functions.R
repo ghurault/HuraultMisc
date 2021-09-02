@@ -17,8 +17,8 @@ NULL
 #' Change column names of a dataframe
 #'
 #' @param df Dataframe
-#' @param current_names Vector of column names to change
-#' @param new_names Vector of new names
+#' @param current_names Vector of column names to change.
+#' @param new_names Vector of new names.
 #'
 #' @return Dataframe with new column names
 #' @export
@@ -43,10 +43,10 @@ change_colnames <- function(df, current_names, new_names) {
 
 #' Change the type of the column of a dataframe from factor to numeric
 #'
-#' @param df Dataframe
-#' @param factor_name Vector of names of factors to change into numerics
+#' @param df Dataframe.
+#' @param factor_name Vector of names of factors to change to numeric.
 #'
-#' @return Same dataframe with type of the given columns changed to numeric
+#' @return Same dataframe with type of the given columns changed to numeric.
 #' @export
 #'
 #' @examples
@@ -79,9 +79,9 @@ factor_to_numeric <- function(df, factor_name) {
 #'
 #' Not exported.
 #'
-#' @param x Character vector
+#' @param x Character vector.
 #'
-#' @return Dataframe with columns Variable and Index
+#' @return Dataframe with columns `Variable` and `Index.`
 #' @noRd
 #'
 #' @examples
@@ -104,7 +104,7 @@ extract_index_1d <- function(x) {
 
 #' Extract multiple indices inside bracket(s) as a list
 #'
-#' @param x Character vector
+#' @param x Character vector.
 #' @param dim_names Optional character vector of dimension names.
 #' If `dim_names` is not NULL, if the elements of `x` don't have the same number of indices,
 #' the missing indices will be set to NA.
@@ -156,9 +156,9 @@ extract_index_nd <- function(x, dim_names = NULL) {
 #' For example, patterns such as x[1], x[1,2], x[1,2, 3]
 #' Not exported.
 #'
-#' @param df Dataframe with columns "Variable" and "Index"
+#' @param df Dataframe with columns `Variable` and `Index.`
 #'
-#' @return Dataframe with columns Variable and Index
+#' @return Dataframe with columns `Variable` and `Index`
 #' @noRd
 extract_index_1bracket <- function(df) {
 
@@ -180,9 +180,9 @@ extract_index_1bracket <- function(df) {
 #' For example, patterns such as x[1][2]
 #' Not exported.
 #'
-#' @param df Dataframe with columns "Variable" and "Index"
+#' @param df Dataframe with columns `Variable` and `Index`.
 #'
-#' @return Dataframe with columns Variable and Index
+#' @return Dataframe with columns `Variable` and `Index`.
 #' @noRd
 extract_index_nbracket <- function(df) {
 
@@ -203,9 +203,9 @@ extract_index_nbracket <- function(df) {
 
 #' Logit and Inverse logit
 #'
-#' @param x Numeric vector
+#' @param x Numeric vector.
 #'
-#' @return Numeric vector
+#' @return Numeric vector.
 #'
 #' @name logit
 #'
@@ -229,9 +229,9 @@ inv_logit <- function(x) {1 / (1 + exp(-x))}
 #'
 #' Compute whether x and y are approximately equal given a tolerance level
 #'
-#' @param x Numeric scalar
-#' @param y Numeric scalar
-#' @param tol Tolerance
+#' @param x Numeric scalar.
+#' @param y Numeric scalar.
+#' @param tol Tolerance.
 #'
 #' @return Boolean
 #'

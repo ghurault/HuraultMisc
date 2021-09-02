@@ -7,12 +7,12 @@
 compute_RPS(forecast, outcome)
 }
 \arguments{
-\item{forecast}{Vector of length N (forecast)}
+\item{forecast}{Vector of length N (forecast).}
 
-\item{outcome}{Index of the true outcome (between 1 and N)}
+\item{outcome}{Index of the true outcome (between 1 and N).}
 }
 \value{
-RPS
+RPS (numeric scalar)
 }
 \description{
 Compute RPS for a single forecast

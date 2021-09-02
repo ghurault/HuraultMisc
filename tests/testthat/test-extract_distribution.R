@@ -3,7 +3,7 @@
 x <- rnorm(1e4)
 X <- matrix(x, ncol = 100)
 
-test_that("extract_distribution works for vector with type continuous", {
+test_that("extract_distribution() works for vector with type continuous", {
   dist <- extract_distribution(x,
                                parName = "x",
                                type = "continuous",
@@ -13,7 +13,7 @@ test_that("extract_distribution works for vector with type continuous", {
   expect_equal(range(dist[["Value"]]), c(-10, 10))
 })
 
-test_that("extract_distribution works for matrix with type continuous", {
+test_that("extract_distribution() works for matrix with type continuous", {
   dist <- extract_distribution(X,
                                parName = "X",
                                type = "continuous",
@@ -25,7 +25,7 @@ test_that("extract_distribution works for matrix with type continuous", {
 
 # Test type discrete ------------------------------------------------------
 
-test_that("extract_distribution works for discrete numeric vector", {
+test_that("extract_distribution() works for discrete numeric vector", {
   x <- round(x * 10)
   dist <- extract_distribution(x,
                                parName = "x",
@@ -35,7 +35,7 @@ test_that("extract_distribution works for discrete numeric vector", {
   expect_equal(range(dist[["Value"]]), range(x))
 })
 
-test_that("extract_pmf works for discrete non-numeric vector", {
+test_that("extract_pmf() works for discrete non-numeric vector", {
   dist <- extract_pmf(sample(LETTERS, 1e2, replace = TRUE),
                       support = LETTERS)
   expect_true(all(c("Value", "Probability") %in% colnames(dist)))
@@ -47,7 +47,7 @@ CI_level <- list(seq(.1, .9, .1),
                  seq(.05, .95, .05))
 
 for (t in c("eti", "hdi")) {
-  test_that(paste0("extract_distribution works for vector with type ", t), {
+  test_that(paste0("extract_distribution() works for vector with type ", t), {
     for (i in 1:length(CI_level)) {
       dist <- extract_distribution(x, parName = "x", type = t, CI_level = CI_level[[i]])
       expect_true(all(c("Lower", "Upper", "Level", "Index", "Variable") %in% colnames(dist)))
@@ -58,7 +58,7 @@ for (t in c("eti", "hdi")) {
 
 # Errors and warnings -----------------------------------------------------
 
-test_that("extract_distribution catches errors and warnings",{
+test_that("extract_distribution() catches errors and warnings",{
   # Wrong input
   expect_error(extract_distribution(list(x), parName = "x"))
   # Wrong type

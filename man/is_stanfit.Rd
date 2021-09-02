@@ -7,7 +7,7 @@
 is_stanfit(obj)
 }
 \arguments{
-\item{obj}{Object}
+\item{obj}{Object.}
 }
 \value{
 Boolean

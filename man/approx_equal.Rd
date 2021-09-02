@@ -10,11 +10,11 @@ approx_equal(x, y, tol = .Machine$double.eps^0.5)
 x \%~\% y
 }
 \arguments{
-\item{x}{Numeric scalar}
+\item{x}{Numeric scalar.}
 
-\item{y}{Numeric scalar}
+\item{y}{Numeric scalar.}
 
-\item{tol}{Tolerance}
+\item{tol}{Tolerance.}
 }
 \value{
 Boolean

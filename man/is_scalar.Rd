@@ -7,7 +7,7 @@
 is_scalar(x)
 }
 \arguments{
-\item{x}{Object to be tested}
+\item{x}{Object to be tested.}
 }
 \value{
 Logical

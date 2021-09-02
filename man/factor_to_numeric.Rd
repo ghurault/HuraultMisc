@@ -7,12 +7,12 @@
 factor_to_numeric(df, factor_name)
 }
 \arguments{
-\item{df}{Dataframe}
+\item{df}{Dataframe.}
 
-\item{factor_name}{Vector of names of factors to change into numerics}
+\item{factor_name}{Vector of names of factors to change to numeric.}
 }
 \value{
-Same dataframe with type of the given columns changed to numeric
+Same dataframe with type of the given columns changed to numeric.
 }
 \description{
 Change the type of the column of a dataframe from factor to numeric

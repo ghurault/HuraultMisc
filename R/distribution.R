@@ -6,7 +6,7 @@
 #' @param support Vector of length 2 corresponding to the range of the distribution. Can be NULL.
 #' @param n_density Number of equally spaced points at which the density is to be estimated (better to use a power of 2).
 #'
-#' @return Dataframe with columns: Value, Density.
+#' @return Dataframe with columns: `Value`, `Density.`
 #'
 #' @export
 #'
@@ -34,7 +34,7 @@ extract_pdf <- function(x, support = NULL, n_density = 2^7) {
 #' @param x Vector of samples from a distribution.
 #' @param support Vector of all possible values that the distribution can take. Can be NULL.
 #'
-#' @return Dataframe with columns: Value, Probability.
+#' @return Dataframe with columns: `Value`, `Probability.`
 #'
 #' @export
 #'
@@ -81,9 +81,9 @@ extract_pmf <- function(x, support = NULL) {
 #'
 #' @param x Vector of samples from a distribution.
 #' @param CI_level Vector containing the level of the confidence/credible intervals.
-#' @param type "eti" for equal-tailed intervals and "hdi" for highest density intervals
+#' @param type "eti" for equal-tailed intervals and "hdi" for highest density intervals.
 #'
-#' @return Dataframe with columns: Lower, Upper, Level.
+#' @return Dataframe with columns: `Lower`, `Upper`, `Level.`
 #'
 #' @export
 #'
@@ -133,13 +133,17 @@ extract_ci <- function(x, CI_level = seq(0.1, 0.9, 0.1), type = c("eti", "hdi"))
 #' @param ... Arguments to pass to [extract_pmf()], [extract_pdf()] or [extract_ci()] depending on `type`.
 #'
 #' @return Dataframe
+#'
 #' @export
 #'
 #' @seealso [extract_draws()] for extracting draws of an object.
 #'
 #' @section Alternative:
 #' This function can notably be used to prepare the data for plotting fan charts when type = "eti" or "hdi".
-#' In that case, the [ggdist](https://mjskay.github.io/ggdist/) package offers an alternative with `ggdist::stat_lineribbon()`.
+#' In that case, the [`ggdist`](https://mjskay.github.io/ggdist/) package offers an alternative with `ggdist::stat_lineribbon()`.
+#'
+#' @examples
+#' extract_distribution(runif(1e2), type = "continuous", support = c(0, 1))
 extract_distribution <- function(object,
                                  parName = "",
                                  type = c("continuous", "discrete", "eti", "hdi"),

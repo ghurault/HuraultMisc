@@ -9,9 +9,9 @@ change_colnames(df, current_names, new_names)
 \arguments{
 \item{df}{Dataframe}
 
-\item{current_names}{Vector of column names to change}
+\item{current_names}{Vector of column names to change.}
 
-\item{new_names}{Vector of new names}
+\item{new_names}{Vector of new names.}
 }
 \value{
 Dataframe with new column names

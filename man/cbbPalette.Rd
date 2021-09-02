@@ -8,12 +8,12 @@
 An object of class \code{character} of length 8.
 }
 \source{
-http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/
+\href{http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/}{Cookbook for R}
 }
 \usage{
 cbbPalette
 }
 \description{
-Shortcut for \code{c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")}
+Shortcut for \code{c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")}.
 }
 \keyword{datasets}

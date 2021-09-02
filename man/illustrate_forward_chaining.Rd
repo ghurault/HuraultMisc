@@ -7,9 +7,9 @@
 illustrate_forward_chaining(horizon = 7, n_it = 5)
 }
 \arguments{
-\item{horizon}{Prediction horizon}
+\item{horizon}{Prediction horizon.}
 
-\item{n_it}{Number of iterations to display}
+\item{n_it}{Number of iterations to display.}
 }
 \value{
 Ggplot

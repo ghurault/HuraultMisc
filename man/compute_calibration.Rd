@@ -14,21 +14,22 @@ compute_calibration(
 )
 }
 \arguments{
-\item{forecast}{Vector of probability forecasts}
+\item{forecast}{Vector of probability forecasts.}
 
-\item{outcome}{Vector of observations (0 or 1)}
+\item{outcome}{Vector of observations (0 or 1).}
 
-\item{method}{Moethod used to estimate calibration, either "smoothing" or "binning"}
+\item{method}{Method used to estimate calibration, either "smoothing" or "binning".}
 
 \item{CI}{Confidence level (e.g. 0.95). CI not computed if NULL (CI can be expensive to compute for LOWESS).}
 
-\item{binwidth}{Binwidth when calibration is estimated by binning.  If NULL, automatic bin width selection with Sturges' method.}
+\item{binwidth}{Binwidth when calibration is estimated by binning.
+If NULL, automatic bin width selection with 'Sturges' method.}
 
 \item{...}{Arguments of \code{\link[stats:loess]{stats::loess()}} function (e.g. span)}
 }
 \value{
-Dataframe with colums Forecast (bins), Frequency (frequency of outcomes in the bin),
-Lower (lower bound of the CI) and Upper (upper bound of the CI)
+Dataframe with columns \code{Forecast} (bins), \code{Frequency} (frequency of outcomes in the bin),
+\code{Lower} (lower bound of the CI) and \code{Upper} (upper bound of the CI).
 }
 \description{
 Estimate calibration given forecasts and corresponding outcomes

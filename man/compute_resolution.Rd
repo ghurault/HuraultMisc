@@ -9,11 +9,12 @@ compute_resolution(f, p0)
 \arguments{
 \item{f}{Vector of forecasts}
 
-\item{p0}{Vector of base rate. In the case rate is usually the prevalence of a uniform forecast (e.g. 1 / number of categories)
+\item{p0}{Vector of base rate.
+In the case rate is usually the prevalence of a uniform forecast (e.g. 1 / number of categories)
 but can depend on the observation (hence the vector).}
 }
 \value{
-Resolution
+Vector of resolution values
 }
 \description{
 The resolution is computed as the mean squared distance to a base rate (reference forecast) and

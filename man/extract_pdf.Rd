@@ -14,7 +14,7 @@ extract_pdf(x, support = NULL, n_density = 2^7)
 \item{n_density}{Number of equally spaced points at which the density is to be estimated (better to use a power of 2).}
 }
 \value{
-Dataframe with columns: Value, Density.
+Dataframe with columns: \code{Value}, \code{Density.}
 }
 \description{
 Extract probability density function from vector of samples

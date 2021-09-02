@@ -7,11 +7,11 @@
 summary_statistics(fit, pars, probs = c(0.05, 0.25, 0.5, 0.75, 0.95))
 }
 \arguments{
-\item{fit}{Stanfit object}
+\item{fit}{Stanfit object.}
 
 \item{pars}{Character vector of parameters to extract. Defaults to all parameters.}
 
-\item{probs}{Numeric vector of quantiles to extract}
+\item{probs}{Numeric vector of quantiles to extract.}
 }
 \value{
 Dataframe of posterior summary statistics
@@ -21,9 +21,9 @@ Extract summary statistics
 }
 \section{Alternative}{
 
-The \href{https://mjskay.github.io/tidybayes/}{tidybayes} package offers an alternative to this function, for example:
+The \href{https://mjskay.github.io/tidybayes/}{'tidybayes'} package offers an alternative to this function, for example:
 \code{fit \%>\% tidy_draws() \%>\% gather_variables() \%>\% mean_qi()}.
-However, this does not provide information about Rhat or Neff, nor does it process the indexes.
-The tidybayes package is more useful for summarising the distribution of a handful of parameters (using \code{tidybayes::spread_draws()}).
+However, this does not provide information about \code{Rhat} or \code{Neff}, nor does it process the indexes.
+The 'tidybayes' package is more useful for summarising the distribution of a handful of parameters (using \code{tidybayes::spread_draws()}).
 }
 

@@ -4,11 +4,11 @@
 #'
 #' Not exported.
 #'
-#' @param obj Array/Vector/Matrix (first dimension corresponds to draws)
-#' @param draws Vector draws to extract
-#' @param parName Optional name to give to the parameter
+#' @param obj Array/Vector/Matrix (first dimension corresponds to draws).
+#' @param draws Vector draws to extract.
+#' @param parName Optional name to give to the parameter.
 #'
-#' @return Dataframe with columns: Draw, Index (for 1d vector), Value, Parameter
+#' @return Dataframe with columns: `Draw`, `Index` (for 1d vector), `Value`, `Parameter`.
 #' @noRd
 extract_draws_from_array <- function(obj, draws, parName = "") {
 
@@ -52,10 +52,10 @@ extract_draws_from_array <- function(obj, draws, parName = "") {
 
 #' Extract parameters' draws
 #'
-#' @param obj Array/Vector/Matrix of draws (cf. first dimension) or list of it
-#' @param draws Vector of draws to extract
+#' @param obj Array/Vector/Matrix of draws (cf. first dimension) or list of it.
+#' @param draws Vector of draws to extract.
 #'
-#' @return Dataframe with columns: Draw, Index, Value and Parameter
+#' @return Dataframe with columns: `Draw`, `Index`, `Value` and `Parameter`.
 #' @export
 #'
 #' @examples

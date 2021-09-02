@@ -7,7 +7,7 @@
 extract_index_nd(x, dim_names = NULL)
 }
 \arguments{
-\item{x}{Character vector}
+\item{x}{Character vector.}
 
 \item{dim_names}{Optional character vector of dimension names.
 If \code{dim_names} is not NULL, if the elements of \code{x} don't have the same number of indices,

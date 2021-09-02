@@ -8,14 +8,14 @@
 #' Useful for fake data check.
 #'
 #' @param post_samples Matrix of posterior samples. Rows represent a sample and columns represent variables.
-#' @param truth Vector of true parameter values (should be the same length as the number of columns in post_samples).
+#' @param truth Vector of true parameter values (should be the same length as the number of columns in `post_samples`).
 #' @param CI Vector of confidence levels.
-#' @param type Type of confidence intervals: either "eti" (equal-tailed intervals) or "hdi" (highest density intervals)
+#' @param type Type of confidence intervals: either "eti" (equal-tailed intervals) or "hdi" (highest density intervals).
 #'
 #' @name coverage
 #'
 #' @return
-#' `compute_coverage` returns a dataframe containing coverage (and 95% uncertainty interval for the coverage) for different confidence level (nominal coverage).
+#' `compute_coverage` returns a Dataframe containing coverage (and 95% uncertainty interval for the coverage) for different confidence level (nominal coverage).
 #' `plot_coverage` returns a ggplot of the coverage as the function of the nominal coverage with 95% uncertainty interval.
 #'
 #' @examples

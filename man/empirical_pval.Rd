@@ -7,14 +7,14 @@
 empirical_pval(t_rep, t, alternative = c("two.sided", "less", "greater"))
 }
 \arguments{
-\item{t_rep}{Samples from a distribution}
+\item{t_rep}{Vector of samples from a distribution.}
 
-\item{t}{Observation}
+\item{t}{Observation (numeric scalar).}
 
 \item{alternative}{Indicates the alternative hypothesis: must be one of "two.sided", "greater" or "less".}
 }
 \value{
-Empirical p-value
+Empirical p-value.
 }
 \description{
 Compute empirical p-values

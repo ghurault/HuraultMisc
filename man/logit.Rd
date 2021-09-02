@@ -10,10 +10,10 @@ logit(x)
 inv_logit(x)
 }
 \arguments{
-\item{x}{Numeric vector}
+\item{x}{Numeric vector.}
 }
 \value{
-Numeric vector
+Numeric vector.
 }
 \description{
 Logit and Inverse logit

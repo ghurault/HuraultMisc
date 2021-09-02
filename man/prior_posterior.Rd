@@ -34,15 +34,15 @@ check_model_sensitivity(prior, post, pars = NULL)
 }
 \arguments{
 \item{prior}{Dataframe of prior parameter estimates.
-The dataframe is expected to have columns "Variable", "Mean".
-For \code{plot_prior_posterior}, columns "5\%" and "95\%" should also be present.
-For \code{compute_prior_influence} and \code{plot_prior_influence}, columns "Index" and "sd" should also be present.}
+The dataframe is expected to have columns \code{Variable}, \code{Mean.}
+For \code{plot_prior_posterior()}, the columns \verb{5\%} and \verb{95\%} should also be present.
+For \code{compute_prior_influence()} and \code{plot_prior_influence()}, the columns \code{Index} and \code{sd} should also be present.}
 
 \item{post}{Dataframe of posterior parameter estimates, with same columns as \code{prior}.}
 
 \item{pars}{Vector of parameter names to plot. Defaults to all parameters presents in \code{post} and \code{prior.}}
 
-\item{match_exact}{Logical indicating whether parameters should be matched exactly (e.g. "p" does not match "p[1]").}
+\item{match_exact}{Logical indicating whether parameters should be matched exactly (e.g. \code{p} does not match \verb{p\[1\]}).}
 
 \item{lb}{Name of the column in \code{prior} and \code{post} corresponding to lower bound of error bar}
 
@@ -54,25 +54,25 @@ This is useful if a parameter with multiple index have the same prior distributi
 }
 \value{
 \itemize{
-\item \code{combine_prior_posterior} returns a dataframe with the same columns as in prior and post + "Distribution".
-\item \code{compute_prior_influence} returns a dataframe with columns: Variable, Index, PostShrinkage, DistPrior.
+\item \code{combine_prior_posterior} returns a dataframe with the same columns as in prior and post and a column \code{Distribution}.
+\item \code{compute_prior_influence} returns a dataframe with columns: \code{Variable}, \code{Index}, \code{PostShrinkage}, \code{DistPrior.}
 \item \code{plot_prior_posterior} and \code{plot_prior_influence} returns a ggplot object
 }
 }
 \description{
 \itemize{
-\item \code{combine_prior_posterior} subsets and binds the prior and posterior dataframes
-\item \code{plot_prior_posterior} plots posterior CI alongside prior CI
-\item \code{compute_prior_influence} computes diagnostics of how the posterior is influenced by the prior
-\item \code{plot_prior_influence} plots diagnostics from \code{compute_prior_influence}
+\item \code{combine_prior_posterior} subsets and binds the prior and posterior dataframes.
+\item \code{plot_prior_posterior} plots posterior CI alongside prior CI.
+\item \code{compute_prior_influence} computes diagnostics of how the posterior is influenced by the prior.
+\item \code{plot_prior_influence} plots diagnostics from \code{compute_prior_influence}.
 }
 }
 \details{
 \itemize{
-\item Posterior shrinkage (\code{PostShrinkage}) = 1 - Var(Post) / Var(Prior), capturing how much the model is learning.
+\item Posterior shrinkage (\code{PostShrinkage = 1 - Var(Post) / Var(Prior)}), capturing how much the model is learning.
 Shrinkage near 0 indicates that the data provides little information beyond the prior.
 Shrinkage near 1 indicates that the data is much more informative than the prior.
-\item Mahalanobis distance between the mean posterior and the prior (\code{DistPrior}), capturing whether the prior "includes" the posterior.
+\item 'Mahalanobis' distance between the mean posterior and the prior (\code{DistPrior}), capturing whether the prior "includes" the posterior.
 }
 }
 \section{Note}{
@@ -83,5 +83,5 @@ If not, we can use \code{match_exact = FALSE} to plot \code{parameter[1]} and \c
 }
 
 \references{
-M. Betancourt,  \href{https://betanalpha.github.io/assets/case_studies/principled_bayesian_workflow.html}{“Towards a Principled Bayesian Workflow”}, 2018.
+\href{https://betanalpha.github.io/assets/case_studies/principled_bayesian_workflow.html}{M. Betancourt, “Towards a Principled Bayesian Workflow”}, 2018.
 }

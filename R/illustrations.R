@@ -5,9 +5,9 @@
 #' Illustration of the RPS in the case of forecasts for a discrete "Severity" score, ranging from 0 to 10.
 #' The forecast follow a (truncated between 0 and 10) Gaussian distribution, which is discretised to the nearest integer for RPS calculation.
 #'
-#' @param mu Mean of the Gaussian forecast distribution
-#' @param sigma Standard deviation of the Gaussian forecast distribution
-#' @param observed Observed outcome
+#' @param mu Mean of the Gaussian forecast distribution.
+#' @param sigma Standard deviation of the Gaussian forecast distribution.
+#' @param observed Observed outcome.
 #'
 #' @return Ggplot
 #' @export
@@ -84,8 +84,8 @@ illustrate_RPS <- function(mu = 5, sigma = 1, observed = 6) {
 
 #' Illustration forward chaining
 #'
-#' @param horizon Prediction horizon
-#' @param n_it Number of iterations to display
+#' @param horizon Prediction horizon.
+#' @param n_it Number of iterations to display.
 #'
 #' @return Ggplot
 #' @export

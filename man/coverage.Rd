@@ -23,14 +23,14 @@ plot_coverage(
 \arguments{
 \item{post_samples}{Matrix of posterior samples. Rows represent a sample and columns represent variables.}
 
-\item{truth}{Vector of true parameter values (should be the same length as the number of columns in post_samples).}
+\item{truth}{Vector of true parameter values (should be the same length as the number of columns in \code{post_samples}).}
 
 \item{CI}{Vector of confidence levels.}
 
-\item{type}{Type of confidence intervals: either "eti" (equal-tailed intervals) or "hdi" (highest density intervals)}
+\item{type}{Type of confidence intervals: either "eti" (equal-tailed intervals) or "hdi" (highest density intervals).}
 }
 \value{
-\code{compute_coverage} returns a dataframe containing coverage (and 95\% uncertainty interval for the coverage) for different confidence level (nominal coverage).
+\code{compute_coverage} returns a Dataframe containing coverage (and 95\% uncertainty interval for the coverage) for different confidence level (nominal coverage).
 \code{plot_coverage} returns a ggplot of the coverage as the function of the nominal coverage with 95\% uncertainty interval.
 }
 \description{

@@ -11,10 +11,10 @@ extract_ci(x, CI_level = seq(0.1, 0.9, 0.1), type = c("eti", "hdi"))
 
 \item{CI_level}{Vector containing the level of the confidence/credible intervals.}
 
-\item{type}{"eti" for equal-tailed intervals and "hdi" for highest density intervals}
+\item{type}{"eti" for equal-tailed intervals and "hdi" for highest density intervals.}
 }
 \value{
-Dataframe with columns: Lower, Upper, Level.
+Dataframe with columns: \code{Lower}, \code{Upper}, \code{Level.}
 }
 \description{
 Extract confidence intervals from a vector of samples

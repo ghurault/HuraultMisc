@@ -7,12 +7,12 @@
 extract_draws(obj, draws)
 }
 \arguments{
-\item{obj}{Array/Vector/Matrix of draws (cf. first dimension) or list of it}
+\item{obj}{Array/Vector/Matrix of draws (cf. first dimension) or list of it.}
 
-\item{draws}{Vector of draws to extract}
+\item{draws}{Vector of draws to extract.}
 }
 \value{
-Dataframe with columns: Draw, Index, Value and Parameter
+Dataframe with columns: \code{Draw}, \code{Index}, \code{Value} and \code{Parameter}.
 }
 \description{
 Extract parameters' draws
