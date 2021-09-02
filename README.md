@@ -3,7 +3,7 @@
 <!-- badges: start -->
 [![R build status](https://github.com/ghurault/HuraultMisc/workflows/R-CMD-check/badge.svg)](https://github.com/ghurault/HuraultMisc/actions)
 [![Codecov test coverage](https://codecov.io/gh/ghurault/HuraultMisc/branch/master/graph/badge.svg)](https://codecov.io/gh/ghurault/HuraultMisc?branch=master)
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 <!-- badges: end -->
 
