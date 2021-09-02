@@ -139,7 +139,7 @@ extract_ci <- function(x, CI_level = seq(0.1, 0.9, 0.1), type = c("eti", "hdi"))
 #'
 #' @section Alternative:
 #' This function can notably be used to prepare the data for plotting fan charts when type = "eti" or "hdi".
-#' In that case, the ggdist package offers an alternative with [ggdist::stat_lineribbon()].
+#' In that case, the [ggdist](https://mjskay.github.io/ggdist/) package offers an alternative with `ggdist::stat_lineribbon()`.
 extract_distribution <- function(object,
                                  parName = "",
                                  type = c("continuous", "discrete", "eti", "hdi"),

@@ -68,7 +68,7 @@ process_replications <- function(fit, idx = NULL, parName, bounds = NULL, type =
 #'
 #' However, the tidybayes version is less efficient as all draws and parameters are extracted and then filtered (also the draw IDs are not the same).
 #' Using tidybayes would be more recommended when we only want to extract specific parameters,
-#' and that it does not matter which draw are extracted (in that case using [tidybayes::spread_draws()]).
+#' and that it does not matter which draw are extracted (in that case using `tidybayes::spread_draws()`).
 #'
 #' @return Dataframe
 #' @export

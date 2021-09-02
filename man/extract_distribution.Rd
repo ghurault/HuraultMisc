@@ -39,7 +39,7 @@ The distribution can be extracted as:
 \section{Alternative}{
 
 This function can notably be used to prepare the data for plotting fan charts when type = "eti" or "hdi".
-In that case, the ggdist package offers an alternative with \code{\link[ggdist:stat_lineribbon]{ggdist::stat_lineribbon()}}.
+In that case, the \href{https://mjskay.github.io/ggdist/}{ggdist} package offers an alternative with \code{ggdist::stat_lineribbon()}.
 }
 
 \seealso{

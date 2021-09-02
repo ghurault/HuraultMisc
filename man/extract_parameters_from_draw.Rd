@@ -32,6 +32,6 @@ The tidybayes package offers an alternative to this function, for example:
 
 However, the tidybayes version is less efficient as all draws and parameters are extracted and then filtered (also the draw IDs are not the same).
 Using tidybayes would be more recommended when we only want to extract specific parameters,
-and that it does not matter which draw are extracted (in that case using \code{\link[tidybayes:spread_draws]{tidybayes::spread_draws()}}).
+and that it does not matter which draw are extracted (in that case using \code{tidybayes::spread_draws()}).
 }
 
