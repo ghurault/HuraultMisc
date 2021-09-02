@@ -30,7 +30,4 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Suggests: 
     testthat (>= 2.1.0),
-    covr,
-    EczemaPred (>= 0.0.0.9000)
-Remotes:  
-    github::ghurault/EczemaPred
+    covr
