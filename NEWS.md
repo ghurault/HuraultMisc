@@ -1,4 +1,8 @@
+# Development version
+
+- 
+
 # HuraultMisc 1.1.1
 
-- First tagged release
+- First CRAN release
 - Added `NEWS.md` file to track changes to the package.

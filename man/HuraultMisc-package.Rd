@@ -4,7 +4,7 @@
 \name{HuraultMisc-package}
 \alias{HuraultMisc}
 \alias{HuraultMisc-package}
-\title{HuraultMisc: Guillem Hurault Personal Functions' Library}
+\title{HuraultMisc: Guillem Hurault Functions' Library}
 \description{
 Contains various functions for data analysis, notably helpers and diagnostics for Bayesian modelling using Stan.
 }
