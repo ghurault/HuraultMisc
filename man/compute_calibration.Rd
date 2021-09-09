@@ -23,7 +23,7 @@ compute_calibration(
 \item{CI}{Confidence level (e.g. 0.95). CI not computed if NULL (CI can be expensive to compute for LOWESS).}
 
 \item{binwidth}{Binwidth when calibration is estimated by binning.
-If NULL, automatic bin width selection with 'Sturges' method.}
+If NULL, automatic bin width selection with Sturges' method.}
 
 \item{...}{Arguments of \code{\link[stats:loess]{stats::loess()}} function (e.g. span)}
 }

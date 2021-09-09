@@ -39,7 +39,7 @@ summary_statistics <- function(fit, pars, probs = c(.05, .25, .5, .75, .95)) {
 #' @param nDraws Number of draws to plot
 #'
 #' @return Ggplot of the distribution
-#' @references 'A. Gelman, J. B. B. Carlin, H. S. S. Stern, and D. B. B. Rubin, Bayesian Data Analysis (Chapter 6), Third Edition, 2014.'
+#' @references A. Gelman, J. B. B. Carlin, H. S. S. Stern, and D. B. B. Rubin, Bayesian Data Analysis (Chapter 6), Third Edition, 2014.
 #' @export
 #' @import ggplot2
 #'

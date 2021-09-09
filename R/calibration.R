@@ -7,7 +7,7 @@
 #' @param method Method used to estimate calibration, either "smoothing" or "binning".
 #' @param CI Confidence level (e.g. 0.95). CI not computed if NULL (CI can be expensive to compute for LOWESS).
 #' @param binwidth Binwidth when calibration is estimated by binning.
-#' If NULL, automatic bin width selection with 'Sturges' method.
+#' If NULL, automatic bin width selection with Sturges' method.
 #' @param ... Arguments of [stats::loess()] function (e.g. span)
 #'
 #' @return Dataframe with columns `Forecast` (bins), `Frequency` (frequency of outcomes in the bin),
