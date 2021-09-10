@@ -184,7 +184,7 @@ plot_prior_influence <-  function(prior, post, pars = NULL, match_exact = TRUE) 
     theme_classic(base_size = 15)
 
   if (length(unique(tmp[["Variable"]])) <= 8) {
-    p <- p + scale_colour_manual(values = c("#999999", cbbPalette[-1]))
+    p <- p + scale_colour_manual(values = c("#999999", HuraultMisc::cbbPalette[-1]))
   }
 
   return(p)

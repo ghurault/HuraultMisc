@@ -48,10 +48,10 @@ illustrate_RPS <- function(mu = 5, sigma = 1, observed = 6) {
   df1 <- data.frame(Severity = x, Density = stats::dnorm(x, mean = mu, sd = sigma) / Z)
   pdf <- ggplot(data = df1, aes_string(x = "Severity")) +
     geom_line(aes_string(y = "Density"), lwd = lwidth) +
-    geom_vline(xintercept = observed, colour = cbbPalette[2], lwd = lwidth) +
+    geom_vline(xintercept = observed, colour = HuraultMisc::cbbPalette[2], lwd = lwidth) +
     scale_y_continuous(expand = c(0,0), limits = c(0, max(df1$Density) * 1.05)) +
     scale_x_continuous(breaks = 0:10) +
-    scale_colour_manual(values = cbbPalette) +
+    scale_colour_manual(values = HuraultMisc::cbbPalette) +
     theme_classic(base_size = 15)
 
   # CDF
@@ -69,7 +69,7 @@ illustrate_RPS <- function(mu = 5, sigma = 1, observed = 6) {
     geom_ribbon(data = df2, aes_string(x = "x", ymin = "Lower", ymax = "Upper", fill = "Fill"), alpha = .3) +
     scale_y_continuous(expand = c(0, 0)) +
     scale_x_continuous(breaks = 0:10) +
-    scale_colour_manual(values = cbbPalette) +
+    scale_colour_manual(values = HuraultMisc::cbbPalette) +
     scale_fill_manual(values = "grey12") +
     labs(x = "Severity", y = "Cumulative Density") +
     theme_classic(base_size = 15) +
