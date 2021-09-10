@@ -1,6 +1,6 @@
 # Development version
 
-- 
+- `change_colnames()` is now deprecated
 
 # HuraultMisc 1.1.1
 
