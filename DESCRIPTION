@@ -1,6 +1,6 @@
 Package: HuraultMisc
 Title: Guillem Hurault Functions' Library
-Version: 1.1.1.9000
+Version: 1.1.2
 Authors@R: 
     person(given = "Guillem",
            family = "Hurault",
@@ -28,7 +28,7 @@ Imports:
     dplyr,
     tidyr
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Suggests:
     spelling, 
     testthat (>= 2.1.0),
