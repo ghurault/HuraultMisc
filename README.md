@@ -1,7 +1,7 @@
 # HuraultMisc
 
 <!-- badges: start -->
-[![R build status](https://github.com/ghurault/HuraultMisc/workflows/R-CMD-check/badge.svg)](https://github.com/ghurault/HuraultMisc/actions)
+[![R-CMD-check](https://github.com/ghurault/HuraultMisc/workflows/R-CMD-check/badge.svg)](https://github.com/ghurault/HuraultMisc/actions)
 [![Codecov test coverage](https://codecov.io/gh/ghurault/HuraultMisc/branch/master/graph/badge.svg)](https://codecov.io/gh/ghurault/HuraultMisc?branch=master)
 [![CRAN Status Badge](https://www.r-pkg.org/badges/version/HuraultMisc)](https://cran.r-project.org/package=HuraultMisc)
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
