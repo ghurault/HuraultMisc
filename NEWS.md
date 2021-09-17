@@ -1,3 +1,7 @@
+# Development version
+
+- Add pkgdown website
+
 # HuraultMisc 1.1.2
 
 - Fix error when using cbbPalette if lazy-loading

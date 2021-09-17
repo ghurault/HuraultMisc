@@ -1,6 +1,6 @@
 Package: HuraultMisc
 Title: Guillem Hurault Functions' Library
-Version: 1.1.2
+Version: 1.1.2.9000
 Authors@R: 
     person(given = "Guillem",
            family = "Hurault",

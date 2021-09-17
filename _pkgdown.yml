@@ -1,0 +1,35 @@
+reference:
+- title: "Manipulating samples from a distribution"
+- contents:
+  - extract_draws
+  - extract_distribution
+  - extract_pmf
+  - extract_pdf
+  - extract_ci
+- title: "Analysing Bayesian model fit"
+- contents:
+  - summary_statistics
+  - prior_posterior
+  - coverage
+  - PPC_group_distribution
+  - empirical_pval
+  - post_pred_pval
+- title: "Statistical calibration"
+- contents:
+  - compute_calibration
+  - compute_RPS
+  - compute_resolution
+- title: "Predicates"
+- contents:
+  - is_scalar
+  - is_wholenumber
+  - is_stanfit
+- title: "Miscellaneous"
+- contents:
+  - cbbPalette
+  - logit
+  - approx_equal
+  - factor_to_numeric
+  - extract_index_nd
+  - illustrate_RPS
+  - illustrate_forward_chaining
