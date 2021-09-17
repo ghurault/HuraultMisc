@@ -142,20 +142,21 @@
     </tr>
     <tr>
       <th>method</th>
-      <td><p>Method used to estimate calibration, either "smoothing" or "binning".</p></td>
+      <td><p>Method used to estimate calibration, either <code>"smoothing"</code> or <code>"binning"</code>.</p></td>
     </tr>
     <tr>
       <th>CI</th>
-      <td><p>Confidence level (e.g. 0.95). CI not computed if NULL (CI can be expensive to compute for LOWESS).</p></td>
+      <td><p>Confidence level (e.g. 0.95).
+CI not computed if <code>NULL</code> (CI can be expensive to compute for LOWESS).</p></td>
     </tr>
     <tr>
       <th>binwidth</th>
       <td><p>Binwidth when calibration is estimated by binning.
-If NULL, automatic bin width selection with Sturges' method.</p></td>
+If <code>NULL</code>, automatic bin width selection with Sturges' method.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Arguments of <code><a href='https://rdrr.io/r/stats/loess.html'>stats::loess()</a></code> function (e.g. span)</p></td>
+      <td><p>Arguments of <code><a href='https://rdrr.io/r/stats/loess.html'>stats::loess()</a></code> function (e.g. span).</p></td>
     </tr>
     </table>
 

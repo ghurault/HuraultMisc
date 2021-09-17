@@ -41,10 +41,10 @@
 
 <meta property="og:title" content="Extract a distribution represented by samples — extract_distribution" />
 <meta property="og:description" content="The distribution can be extracted as:
-a probability density function (&quot;continuous&quot;).
-a probability mass function (&quot;discrete&quot;).
-a series of equal-tailed confidence/credible intervals (&quot;eti&quot;).
-a series of highest density confidence/credible intervals (&quot;hdi&quot;).
+a probability density function (type = &quot;continuous&quot;), cf. extract_pdf().
+a probability mass function (type = &quot;discrete&quot;), cf. extract_pmf().
+a series of equal-tailed confidence/credible intervals (type = &quot;eti&quot;), cf. extract_ci().
+a series of highest density confidence/credible intervals (type = &quot;hdi&quot;), cf. extract_ci().
 
 " />
 
@@ -124,10 +124,10 @@ a series of highest density confidence/credible intervals (&quot;hdi&quot;).
 
     <div class="ref-description">
     <p>The distribution can be extracted as:</p><ul>
-<li><p>a probability density function ("continuous").</p></li>
-<li><p>a probability mass function ("discrete").</p></li>
-<li><p>a series of equal-tailed confidence/credible intervals ("eti").</p></li>
-<li><p>a series of highest density confidence/credible intervals ("hdi").</p></li>
+<li><p>a probability density function (<code>type = "continuous"</code>), cf. <code><a href='extract_pdf.html'>extract_pdf()</a></code>.</p></li>
+<li><p>a probability mass function (<code>type = "discrete"</code>), cf. <code><a href='extract_pmf.html'>extract_pmf()</a></code>.</p></li>
+<li><p>a series of equal-tailed confidence/credible intervals (<code>type = "eti"</code>), cf. <code><a href='extract_ci.html'>extract_ci()</a></code>.</p></li>
+<li><p>a series of highest density confidence/credible intervals (<code>type = "hdi"</code>), cf. <code><a href='extract_ci.html'>extract_ci()</a></code>.</p></li>
 </ul>
 
     </div>
@@ -168,12 +168,13 @@ a matrix (columns represents parameters, rows samples) or a vector.</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Dataframe</p>
+    <p>Dataframe.
+The columns depends on the method that is used (see specific function for details).</p>
     <h2 class="hasAnchor" id="alternative"><a class="anchor" href="#alternative"></a>Alternative</h2>
 
     
 
-<p>This function can notably be used to prepare the data for plotting fan charts when type = "eti" or "hdi".
+<p>This function can notably be used to prepare the data for plotting fan charts when <code>type = "eti"</code> or <code>"hdi"</code>.
 In that case, the <a href='https://mjskay.github.io/ggdist/'><code>ggdist</code></a> package offers an alternative with <code>ggdist::stat_lineribbon()</code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 

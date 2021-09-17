@@ -145,27 +145,28 @@ then the test statistic of the observations is compared to the test statistic of
     </tr>
     <tr>
       <th>test_statistic</th>
-      <td><p>Function of the test statistic to compute the p-value for</p></td>
+      <td><p>Function of the test statistic to compute the p-value for.</p></td>
     </tr>
     <tr>
       <th>alternative</th>
-      <td><p>Indicates the alternative hypothesis: must be one of "two.sided", "greater" or "less".</p></td>
+      <td><p>Indicates the alternative hypothesis: must be one of <code>"two.sided"</code>, <code>"greater"</code> or <code>"less"</code>.</p></td>
     </tr>
     <tr>
       <th>plot</th>
-      <td><p>Whether to output a plot visualising the distribution of the test statistic</p></td>
+      <td><p>Whether to output a plot visualising the distribution of the test statistic.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>List containing the p-value and (optionally) a ggplot</p>
+    <p>List containing the p-value and (optionally) a ggplot.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>post_pred_pval</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>1e3</span><span class='op'>)</span>, ncol <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='fu'>post_pred_pval</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>1e3</span><span class='op'>)</span>, ncol <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span>, plot <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $pval
-#&gt; [1] 0.1386139
-#&gt; </div></pre>
+#&gt; [1] 0.7722772
+#&gt; 
+#&gt; $plot</div><div class='img'><img src='post_pred_pval-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
