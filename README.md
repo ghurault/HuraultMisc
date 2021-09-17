@@ -28,8 +28,4 @@ devtools::install_github("ghurault/HuraultMisc")
 
 ## Usage
 
-The package can be loaded with `library(HuraultMisc)` and the list of available functions and their documentation can be accessed from:
-
-``` r
-help(package = HuraultMisc)
-```
+The package can be loaded with `library(HuraultMisc)` and the list of available functions and their documentation can be accessed from the [package website](https://ghurault.github.io/HuraultMisc/), or using the command `help(package = HuraultMisc)`.
