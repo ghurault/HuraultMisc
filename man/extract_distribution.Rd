@@ -25,20 +25,21 @@ a matrix (columns represents parameters, rows samples) or a vector.}
 \item{...}{Arguments to pass to \code{\link[=extract_pmf]{extract_pmf()}}, \code{\link[=extract_pdf]{extract_pdf()}} or \code{\link[=extract_ci]{extract_ci()}} depending on \code{type}.}
 }
 \value{
-Dataframe
+Dataframe.
+The columns depends on the method that is used (see specific function for details).
 }
 \description{
 The distribution can be extracted as:
 \itemize{
-\item a probability density function ("continuous").
-\item a probability mass function ("discrete").
-\item a series of equal-tailed confidence/credible intervals ("eti").
-\item a series of highest density confidence/credible intervals ("hdi").
+\item a probability density function (\code{type = "continuous"}), cf. \code{\link[=extract_pdf]{extract_pdf()}}.
+\item a probability mass function (\code{type = "discrete"}), cf. \code{\link[=extract_pmf]{extract_pmf()}}.
+\item a series of equal-tailed confidence/credible intervals (\code{type = "eti"}), cf. \code{\link[=extract_ci]{extract_ci()}}.
+\item a series of highest density confidence/credible intervals (\code{type = "hdi"}), cf. \code{\link[=extract_ci]{extract_ci()}}.
 }
 }
 \section{Alternative}{
 
-This function can notably be used to prepare the data for plotting fan charts when type = "eti" or "hdi".
+This function can notably be used to prepare the data for plotting fan charts when \code{type = "eti"} or \code{"hdi"}.
 In that case, the \href{https://mjskay.github.io/ggdist/}{\code{ggdist}} package offers an alternative with \code{ggdist::stat_lineribbon()}.
 }
 

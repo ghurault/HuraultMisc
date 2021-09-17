@@ -25,7 +25,9 @@ NULL
 #' @examples
 #' df <- data.frame(A = rep(1:5, each = 10))
 #' df$A <- factor(df$A)
+#' str(df)
 #' df <- factor_to_numeric(df, "A")
+#' str(df)
 factor_to_numeric <- function(df, factor_name) {
 
   stopifnot(is.data.frame(df),
@@ -79,8 +81,8 @@ extract_index_1d <- function(x) {
 #'
 #' @param x Character vector.
 #' @param dim_names Optional character vector of dimension names.
-#' If `dim_names` is not NULL, if the elements of `x` don't have the same number of indices,
-#' the missing indices will be set to NA.
+#' If `dim_names` is not `NULL`, if the elements of `x` don't have the same number of indices,
+#' the missing indices will be set to `NA`.
 #'
 #' @return  Dataframe with columns:
 #' - `Variable`, containing `x` where brackets have been removed

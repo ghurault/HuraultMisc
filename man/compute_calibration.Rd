@@ -18,14 +18,15 @@ compute_calibration(
 
 \item{outcome}{Vector of observations (0 or 1).}
 
-\item{method}{Method used to estimate calibration, either "smoothing" or "binning".}
+\item{method}{Method used to estimate calibration, either \code{"smoothing"} or \code{"binning"}.}
 
-\item{CI}{Confidence level (e.g. 0.95). CI not computed if NULL (CI can be expensive to compute for LOWESS).}
+\item{CI}{Confidence level (e.g. 0.95).
+CI not computed if \code{NULL} (CI can be expensive to compute for LOWESS).}
 
 \item{binwidth}{Binwidth when calibration is estimated by binning.
-If NULL, automatic bin width selection with Sturges' method.}
+If \code{NULL}, automatic bin width selection with Sturges' method.}
 
-\item{...}{Arguments of \code{\link[stats:loess]{stats::loess()}} function (e.g. span)}
+\item{...}{Arguments of \code{\link[stats:loess]{stats::loess()}} function (e.g. span).}
 }
 \value{
 Dataframe with columns \code{Forecast} (bins), \code{Frequency} (frequency of outcomes in the bin),

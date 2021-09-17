@@ -17,14 +17,14 @@ post_pred_pval(
 
 \item{y}{Vector of observations.}
 
-\item{test_statistic}{Function of the test statistic to compute the p-value for}
+\item{test_statistic}{Function of the test statistic to compute the p-value for.}
 
-\item{alternative}{Indicates the alternative hypothesis: must be one of "two.sided", "greater" or "less".}
+\item{alternative}{Indicates the alternative hypothesis: must be one of \code{"two.sided"}, \code{"greater"} or \code{"less"}.}
 
-\item{plot}{Whether to output a plot visualising the distribution of the test statistic}
+\item{plot}{Whether to output a plot visualising the distribution of the test statistic.}
 }
 \value{
-List containing the p-value and (optionally) a ggplot
+List containing the p-value and (optionally) a ggplot.
 }
 \description{
 Compute and plot posterior predictive p-value (Bayesian p-value) from samples of a distribution.
@@ -32,5 +32,5 @@ The simulations and observations are first summarised into a test statistics,
 then the test statistic of the observations is compared to the test statistic of the empirical distribution.
 }
 \examples{
-post_pred_pval(matrix(rnorm(1e3), ncol = 10), rnorm(10))
+post_pred_pval(matrix(rnorm(1e3), ncol = 10), rnorm(10), plot = TRUE)
 }

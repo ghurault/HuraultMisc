@@ -43,16 +43,16 @@ empirical_pval <- function(t_rep, t, alternative = c("two.sided", "less", "great
 #'
 #' @param yrep Matrix of posterior replications with rows corresponding to samples and columns to simulated observations.
 #' @param y Vector of observations.
-#' @param test_statistic Function of the test statistic to compute the p-value for
-#' @param alternative Indicates the alternative hypothesis: must be one of "two.sided", "greater" or "less".
-#' @param plot Whether to output a plot visualising the distribution of the test statistic
+#' @param test_statistic Function of the test statistic to compute the p-value for.
+#' @param alternative Indicates the alternative hypothesis: must be one of `"two.sided"`, `"greater"` or `"less"`.
+#' @param plot Whether to output a plot visualising the distribution of the test statistic.
 #'
-#' @return List containing the p-value and (optionally) a ggplot
+#' @return List containing the p-value and (optionally) a ggplot.
 #' @export
 #' @import ggplot2
 #'
 #' @examples
-#' post_pred_pval(matrix(rnorm(1e3), ncol = 10), rnorm(10))
+#' post_pred_pval(matrix(rnorm(1e3), ncol = 10), rnorm(10), plot = TRUE)
 post_pred_pval <- function(yrep, y, test_statistic = mean, alternative = c("two.sided", "less", "greater"), plot = FALSE) {
 
   stopifnot(is.matrix(yrep),

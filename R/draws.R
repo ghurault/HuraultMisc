@@ -63,9 +63,9 @@ extract_draws_from_array <- function(obj, draws, parName = "") {
 #' X <- matrix(x, ncol = 10)
 #' a <- array(rnorm(80), dim = c(10, 2, 2, 2))
 #' extract_draws(x, sample(1:length(x), 10))
-#' extract_draws(X, sample(1:nrow(X), 10))
-#' extract_draws(a, sample(1:10, 5))
-#' extract_draws(list(x = x, X = X, a = a), 1:10)
+#' extract_draws(X, sample(1:nrow(X), 10)) %>% head()
+#' extract_draws(a, sample(1:10, 5)) %>% head()
+#' extract_draws(list(x = x, X = X, a = a), 1:10) %>% head()
 extract_draws <- function(obj, draws) {
 
   if (!(inherits(obj, "list") || is.vector(obj, mode = "numeric") || is.matrix(obj) || is.array(obj))) {

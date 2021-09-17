@@ -10,8 +10,8 @@ extract_index_nd(x, dim_names = NULL)
 \item{x}{Character vector.}
 
 \item{dim_names}{Optional character vector of dimension names.
-If \code{dim_names} is not NULL, if the elements of \code{x} don't have the same number of indices,
-the missing indices will be set to NA.}
+If \code{dim_names} is not \code{NULL}, if the elements of \code{x} don't have the same number of indices,
+the missing indices will be set to \code{NA}.}
 }
 \value{
 Dataframe with columns:

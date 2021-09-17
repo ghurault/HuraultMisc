@@ -11,6 +11,7 @@ Contains various functions for data analysis, notably helpers and diagnostics fo
 \seealso{
 Useful links:
 \itemize{
+  \item \url{https://ghurault.github.io/HuraultMisc/}
   \item \url{https://github.com/ghurault/HuraultMisc}
   \item Report bugs at \url{https://github.com/ghurault/HuraultMisc/issues}
 }

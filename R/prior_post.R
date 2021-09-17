@@ -6,10 +6,11 @@
 #' - `plot_prior_posterior` plots posterior CI alongside prior CI.
 #' - `compute_prior_influence` computes diagnostics of how the posterior is influenced by the prior.
 #' - `plot_prior_influence` plots diagnostics from `compute_prior_influence`.
+#' `check_model_sensitivity` is a deprecated alias of `plot_prior_influence`.
 #'
 #' @param prior Dataframe of prior parameter estimates.
 #' The dataframe is expected to have columns `Variable`, `Mean.`
-#' For `plot_prior_posterior()`, the columns `5%` and `95%` should also be present.
+#' For `plot_prior_posterior()`, the columns `lb` and `ub` should also be present.
 #' For `compute_prior_influence()` and `plot_prior_influence()`, the columns `Index` and `sd` should also be present.
 #' @param post Dataframe of posterior parameter estimates, with same columns as `prior`.
 #' @param pars Vector of parameter names to plot. Defaults to all parameters presents in `post` and `prior.`
@@ -23,7 +24,7 @@
 #' @return
 #' - `combine_prior_posterior` returns a dataframe with the same columns as in prior and post and a column `Distribution`.
 #' - `compute_prior_influence` returns a dataframe with columns: `Variable`, `Index`, `PostShrinkage`, `DistPrior.`
-#' - `plot_prior_posterior` and `plot_prior_influence` returns a ggplot object
+#' - `plot_prior_posterior` and `plot_prior_influence` returns a ggplot object.
 #'
 #' @details
 #' - Posterior shrinkage (`PostShrinkage = 1 - Var(Post) / Var(Prior)`), capturing how much the model is learning.
@@ -39,6 +40,29 @@
 #' @references [M. Betancourt, “Towards a Principled Bayesian Workflow”](https://betanalpha.github.io/assets/case_studies/principled_bayesian_workflow.html), 2018.
 #'
 #' @name prior_posterior
+#'
+#' @examples
+#'
+#' library(dplyr)
+#'
+#' prior <- data.frame(Variable = c("a", "b"),
+#'                     Mean = c(0, 0),
+#'                     sd = c(10, 5),
+#'                     Index = c(NA, NA)) %>%
+#'   mutate(`5%` = qnorm(.05, mean = Mean, sd = sd),
+#'          `95%` = qnorm(.95, mean = Mean, sd = sd))
+#'
+#' post <- data.frame(Variable = c("a", "a", "b"),
+#'                    Mean = c(-1, 1, 2),
+#'                    sd = c(3, 4, 1),
+#'                    Index = c(1, 2, NA)) %>%
+#'   mutate(`5%` = qnorm(.05, mean = Mean, sd = sd),
+#'          `95%` = qnorm(.95, mean = Mean, sd = sd))
+#'
+#' plot_prior_posterior(prior, post)
+#'
+#' plot_prior_influence(prior, post, pars = c("a", "b"))
+#'
 NULL
 
 # Combine prior and posterior dataframe -----------------------------------

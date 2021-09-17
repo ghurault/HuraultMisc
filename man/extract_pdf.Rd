@@ -20,5 +20,5 @@ Dataframe with columns: \code{Value}, \code{Density.}
 Extract probability density function from vector of samples
 }
 \examples{
-extract_pdf(rnorm(1e4))
+extract_pdf(rnorm(1e3)) \%>\% head()
 }

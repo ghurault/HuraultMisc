@@ -35,7 +35,7 @@ check_model_sensitivity(prior, post, pars = NULL)
 \arguments{
 \item{prior}{Dataframe of prior parameter estimates.
 The dataframe is expected to have columns \code{Variable}, \code{Mean.}
-For \code{plot_prior_posterior()}, the columns \verb{5\%} and \verb{95\%} should also be present.
+For \code{plot_prior_posterior()}, the columns \code{lb} and \code{ub} should also be present.
 For \code{compute_prior_influence()} and \code{plot_prior_influence()}, the columns \code{Index} and \code{sd} should also be present.}
 
 \item{post}{Dataframe of posterior parameter estimates, with same columns as \code{prior}.}
@@ -56,7 +56,7 @@ This is useful if a parameter with multiple index have the same prior distributi
 \itemize{
 \item \code{combine_prior_posterior} returns a dataframe with the same columns as in prior and post and a column \code{Distribution}.
 \item \code{compute_prior_influence} returns a dataframe with columns: \code{Variable}, \code{Index}, \code{PostShrinkage}, \code{DistPrior.}
-\item \code{plot_prior_posterior} and \code{plot_prior_influence} returns a ggplot object
+\item \code{plot_prior_posterior} and \code{plot_prior_influence} returns a ggplot object.
 }
 }
 \description{
@@ -65,6 +65,7 @@ This is useful if a parameter with multiple index have the same prior distributi
 \item \code{plot_prior_posterior} plots posterior CI alongside prior CI.
 \item \code{compute_prior_influence} computes diagnostics of how the posterior is influenced by the prior.
 \item \code{plot_prior_influence} plots diagnostics from \code{compute_prior_influence}.
+\code{check_model_sensitivity} is a deprecated alias of \code{plot_prior_influence}.
 }
 }
 \details{
@@ -82,6 +83,29 @@ If their prior distribution is the same, it can be useful to only keep one index
 If not, we can use \code{match_exact = FALSE} to plot \code{parameter[1]} and \code{parameter[2]} separately.
 }
 
+\examples{
+
+library(dplyr)
+
+prior <- data.frame(Variable = c("a", "b"),
+                    Mean = c(0, 0),
+                    sd = c(10, 5),
+                    Index = c(NA, NA)) \%>\%
+  mutate(`5\%` = qnorm(.05, mean = Mean, sd = sd),
+         `95\%` = qnorm(.95, mean = Mean, sd = sd))
+
+post <- data.frame(Variable = c("a", "a", "b"),
+                   Mean = c(-1, 1, 2),
+                   sd = c(3, 4, 1),
+                   Index = c(1, 2, NA)) \%>\%
+  mutate(`5\%` = qnorm(.05, mean = Mean, sd = sd),
+         `95\%` = qnorm(.95, mean = Mean, sd = sd))
+
+plot_prior_posterior(prior, post)
+
+plot_prior_influence(prior, post, pars = c("a", "b"))
+
+}
 \references{
 \href{https://betanalpha.github.io/assets/case_studies/principled_bayesian_workflow.html}{M. Betancourt, “Towards a Principled Bayesian Workflow”}, 2018.
 }

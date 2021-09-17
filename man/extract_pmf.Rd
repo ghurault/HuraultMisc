@@ -18,5 +18,5 @@ Dataframe with columns: \code{Value}, \code{Probability.}
 Extract probability mass function from vector of samples
 }
 \examples{
-extract_pmf(round(rnorm(1e4, 0, 10)))
+extract_pmf(round(rnorm(1e3, 0, 10))) \%>\% head()
 }

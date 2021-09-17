@@ -20,5 +20,7 @@ Change the type of the column of a dataframe from factor to numeric
 \examples{
 df <- data.frame(A = rep(1:5, each = 10))
 df$A <- factor(df$A)
+str(df)
 df <- factor_to_numeric(df, "A")
+str(df)
 }

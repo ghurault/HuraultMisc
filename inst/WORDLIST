@@ -1,5 +1,6 @@
 Betancourt
 Binwidth
+CMD
 Codecov
 Gelman
 Ggplot
@@ -9,10 +10,12 @@ RPS
 RPSS
 Stanfit
 Sturges
+cbbPalette
 cf
 discretised
 eti
 ggplot
 hdi
+pkgdown
 stanfit
 tidybayes

@@ -11,7 +11,7 @@
 #' @export
 #'
 #' @examples
-#' extract_pdf(rnorm(1e4))
+#' extract_pdf(rnorm(1e3)) %>% head()
 extract_pdf <- function(x, support = NULL, n_density = 2^7) {
 
   stopifnot(is.vector(x, mode = "numeric"),
@@ -39,7 +39,7 @@ extract_pdf <- function(x, support = NULL, n_density = 2^7) {
 #' @export
 #'
 #' @examples
-#' extract_pmf(round(rnorm(1e4, 0, 10)))
+#' extract_pmf(round(rnorm(1e3, 0, 10))) %>% head()
 extract_pmf <- function(x, support = NULL) {
 
   stopifnot(is.vector(x))
@@ -119,10 +119,10 @@ extract_ci <- function(x, CI_level = seq(0.1, 0.9, 0.1), type = c("eti", "hdi"))
 #'@description
 #' The distribution can be extracted as:
 #' \itemize{
-#' \item a probability density function ("continuous").
-#' \item a probability mass function ("discrete").
-#' \item a series of equal-tailed confidence/credible intervals ("eti").
-#' \item a series of highest density confidence/credible intervals ("hdi").
+#' \item a probability density function (`type = "continuous"`), cf. [extract_pdf()].
+#' \item a probability mass function (`type = "discrete"`), cf. [extract_pmf()].
+#' \item a series of equal-tailed confidence/credible intervals (`type = "eti"`), cf. [extract_ci()].
+#' \item a series of highest density confidence/credible intervals (`type = "hdi"`), cf. [extract_ci()].
 #' }
 #'
 #' @param object Object specifying the distribution as samples: can be a Stanfit object,
@@ -132,14 +132,15 @@ extract_ci <- function(x, CI_level = seq(0.1, 0.9, 0.1), type = c("eti", "hdi"))
 #' @param transform Function to apply to the samples.
 #' @param ... Arguments to pass to [extract_pmf()], [extract_pdf()] or [extract_ci()] depending on `type`.
 #'
-#' @return Dataframe
+#' @return Dataframe.
+#' The columns depends on the method that is used (see specific function for details).
 #'
 #' @export
 #'
 #' @seealso [extract_draws()] for extracting draws of an object.
 #'
 #' @section Alternative:
-#' This function can notably be used to prepare the data for plotting fan charts when type = "eti" or "hdi".
+#' This function can notably be used to prepare the data for plotting fan charts when `type = "eti"` or `"hdi"`.
 #' In that case, the [`ggdist`](https://mjskay.github.io/ggdist/) package offers an alternative with `ggdist::stat_lineribbon()`.
 #'
 #' @examples
