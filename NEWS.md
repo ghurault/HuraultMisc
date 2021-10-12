@@ -1,5 +1,6 @@
 # Development version
 
+- Use EczemaPred for tests
 - Add pkgdown website
 
 # HuraultMisc 1.1.2
