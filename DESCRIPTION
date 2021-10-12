@@ -33,6 +33,6 @@ Suggests:
     spelling, 
     testthat (>= 2.1.0),
     covr,
-    EczemaPred (>= 0.0.0.9000)
+    EczemaPred (>= 0.1.0)
 Remotes:  
     github::ghurault/EczemaPred
