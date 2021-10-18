@@ -35,10 +35,18 @@ test_that("extract_distribution() works for discrete numeric vector", {
   expect_equal(range(dist[["Value"]]), range(x))
 })
 
-test_that("extract_pmf() works for discrete non-numeric vector", {
-  dist <- extract_pmf(sample(LETTERS, 1e2, replace = TRUE),
-                      support = LETTERS)
-  expect_true(all(c("Value", "Probability") %in% colnames(dist)))
+test_that("extract_distribution() works for discrete non-numeric vector", {
+  tmp <- list(
+    extract_distribution(sample(LETTERS, 1e2, replace = TRUE),
+                         type = "discrete",
+                         support = LETTERS),
+    extract_distribution(sample(LETTERS, 1e2, replace = TRUE),
+                         type = "discrete") %>%
+      expect_warning()
+  )
+  for (i in seq_along(tmp)) {
+    expect_true(all(c("Value", "Probability") %in% colnames(tmp[[i]])))
+  }
 })
 
 # Test type eti and hdi ---------------------------------------------------

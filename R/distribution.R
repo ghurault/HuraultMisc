@@ -163,8 +163,7 @@ extract_distribution <- function(object,
     object <- rstan::extract(object, pars = parName)[[1]]
   }
 
-  stopifnot(is.numeric(object),
-            is.vector(object) || is.matrix(object))
+  stopifnot(is.vector(object) || is.matrix(object))
 
   stopifnot(is.function(transform))
 
