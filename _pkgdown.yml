@@ -33,5 +33,3 @@ reference:
   - approx_equal
   - factor_to_numeric
   - extract_index_nd
-  - illustrate_RPS
-  - illustrate_forward_chaining

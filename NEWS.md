@@ -2,6 +2,7 @@
 
 - Use EczemaPred for tests
 - Add pkgdown website
+- Remove illustrations
 
 # HuraultMisc 1.1.2
 
