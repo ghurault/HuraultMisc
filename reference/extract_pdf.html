@@ -144,14 +144,16 @@
     <p>Dataframe with columns: <code>Value</code>, <code>Density.</code></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>extract_pdf</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>1e3</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: support is NULL, taking the range: -2.67462414277104, 3.30449993886855</span></div><div class='output co'>#&gt;       Value    Density
-#&gt; 1 -2.674624 0.01288999
-#&gt; 2 -2.627544 0.01487313
-#&gt; 3 -2.580465 0.01687755
-#&gt; 4 -2.533385 0.01891765
-#&gt; 5 -2.486305 0.02103410
-#&gt; 6 -2.439226 0.02328534</div></pre>
+    <pre class="examples"><span class='r-in'><span class='fu'>extract_pdf</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>1e3</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='%>%.html'>%&gt;%</a></span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>support is NULL, taking the range: -2.67462414277104, 3.30449993886855</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>       Value    Density</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1 -2.674624 0.01288999</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2 -2.627544 0.01487313</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3 -2.580465 0.01687755</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4 -2.533385 0.01891765</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5 -2.486305 0.02103410</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6 -2.439226 0.02328534</span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

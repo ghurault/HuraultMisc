@@ -140,42 +140,46 @@
     <p>Dataframe with columns: <code>Draw</code>, <code>Index</code>, <code>Value</code> and <code>Parameter</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>1e3</span><span class='op'>)</span>
-<span class='va'>X</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='va'>x</span>, ncol <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
-<span class='va'>a</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/array.html'>array</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>80</span><span class='op'>)</span>, dim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'>extract_draws</span><span class='op'>(</span><span class='va'>x</span>, <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>, <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;    Draw Index      Value Parameter
-#&gt; 1   987    NA -0.7243031          
-#&gt; 2   882    NA -0.1294454          
-#&gt; 3   558    NA -0.4068792          
-#&gt; 4   671    NA  0.2240605          
-#&gt; 5   723    NA  0.5537659          
-#&gt; 6   344    NA -0.3748225          
-#&gt; 7    35    NA -0.0163258          
-#&gt; 8   211    NA -0.9950957          
-#&gt; 9   270    NA -0.4642373          
-#&gt; 10  183    NA -1.2984846          </div><div class='input'><span class='fu'>extract_draws</span><span class='op'>(</span><span class='va'>X</span>, <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span>, <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;   Draw Index       Value Parameter
-#&gt; 1   77     1 -0.64673925          
-#&gt; 2   49     1 -0.26782068          
-#&gt; 3   46     1  2.98092487          
-#&gt; 4   33     1  0.44274836          
-#&gt; 5   53     1  1.35450579          
-#&gt; 6   19     1 -0.04296275          </div><div class='input'><span class='fu'>extract_draws</span><span class='op'>(</span><span class='va'>a</span>, <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span>, <span class='fl'>5</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;    Draw        Value Index Parameter
-#&gt; 4     4  0.001101175    NA   [1,1,1]
-#&gt; 5     5  0.371937966    NA   [1,1,1]
-#&gt; 7     7 -1.126069064    NA   [1,1,1]
-#&gt; 8     8 -1.684877471    NA   [1,1,1]
-#&gt; 10   10  0.187181644    NA   [1,1,1]
-#&gt; 14    4  0.335227359    NA   [2,1,1]</div><div class='input'><span class='fu'>extract_draws</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>x</span>, X <span class='op'>=</span> <span class='va'>X</span>, a <span class='op'>=</span> <span class='va'>a</span><span class='op'>)</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;   Draw Index      Value Parameter
-#&gt; 1    1    NA -0.1374551         x
-#&gt; 2    2    NA  0.2360422         x
-#&gt; 3    3    NA -1.5895893         x
-#&gt; 4    4    NA -0.3899635         x
-#&gt; 5    5    NA -0.2078879         x
-#&gt; 6    6    NA -0.3458473         x</div></pre>
+    <pre class="examples"><span class='r-in'><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>1e3</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>X</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='va'>x</span>, ncol <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>a</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/array.html'>array</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>80</span><span class='op'>)</span>, dim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'>extract_draws</span><span class='op'>(</span><span class='va'>x</span>, <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>, <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>    Draw Index      Value Parameter</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1   987    NA -0.7243031          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2   882    NA -0.1294454          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3   558    NA -0.4068792          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4   671    NA  0.2240605          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5   723    NA  0.5537659          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6   344    NA -0.3748225          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 7    35    NA -0.0163258          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 8   211    NA -0.9950957          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 9   270    NA -0.4642373          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 10  183    NA -1.2984846          </span>
+<span class='r-in'><span class='fu'>extract_draws</span><span class='op'>(</span><span class='va'>X</span>, <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span>, <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='%>%.html'>%&gt;%</a></span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   Draw Index       Value Parameter</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1   77     1 -0.64673925          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2   49     1 -0.26782068          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3   46     1  2.98092487          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4   33     1  0.44274836          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5   53     1  1.35450579          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6   19     1 -0.04296275          </span>
+<span class='r-in'><span class='fu'>extract_draws</span><span class='op'>(</span><span class='va'>a</span>, <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span>, <span class='fl'>5</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='%>%.html'>%&gt;%</a></span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>    Draw        Value Index Parameter</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4     4  0.001101175    NA   [1,1,1]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5     5  0.371937966    NA   [1,1,1]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 7     7 -1.126069064    NA   [1,1,1]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 8     8 -1.684877471    NA   [1,1,1]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 10   10  0.187181644    NA   [1,1,1]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 14    4  0.335227359    NA   [2,1,1]</span>
+<span class='r-in'><span class='fu'>extract_draws</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>x</span>, X <span class='op'>=</span> <span class='va'>X</span>, a <span class='op'>=</span> <span class='va'>a</span><span class='op'>)</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>)</span> <span class='op'><a href='%>%.html'>%&gt;%</a></span> <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   Draw Index      Value Parameter</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1    1    NA -0.1374551         x</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2    2    NA  0.2360422         x</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3    3    NA -1.5895893         x</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4    4    NA -0.3899635         x</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5    5    NA -0.2078879         x</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6    6    NA -0.3458473         x</span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
