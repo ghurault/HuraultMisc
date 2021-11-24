@@ -1,0 +1,42 @@
+# -----------------------------------------------------------
+# CITATION file created with {cffr} R package, v0.1.1
+# See also: https://docs.ropensci.org/cffr/
+# -----------------------------------------------------------
+ 
+cff-version: 1.2.0
+message: 'To cite package "HuraultMisc" in publications use:'
+type: software
+license: MIT
+title: 'HuraultMisc: Guillem Hurault Functions'' Library'
+version: 1.1.1
+abstract: Contains various functions for data analysis, notably helpers and diagnostics
+  for Bayesian modelling using Stan.
+authors:
+- family-names: Hurault
+  given-names: Guillem
+  email: guillem.hurault@hotmail.fr
+  orcid: https://orcid.org/0000-0002-1052-3564
+preferred-citation:
+  type: manual
+  title: 'HuraultMisc: Guillem Hurault Functions'' Library'
+  authors:
+  - family-names: Hurault
+    given-names: Guillem
+    email: guillem.hurault@hotmail.fr
+    orcid: https://orcid.org/0000-0002-1052-3564
+  year: '2021'
+  url: https://CRAN.R-project.org/package=HuraultMisc
+repository: https://CRAN.R-project.org/package=HuraultMisc
+repository-code: https://github.com/ghurault/HuraultMisc
+url: https://github.com/ghurault/HuraultMisc
+date-released: '2021-09-06'
+contact:
+- family-names: Hurault
+  given-names: Guillem
+  email: guillem.hurault@hotmail.fr
+  orcid: https://orcid.org/0000-0002-1052-3564
+keywords:
+- bayesian-statistics
+- data-analysis
+- r-package
+- statistical-models
