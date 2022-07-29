@@ -72,3 +72,44 @@ PPC_group_distribution <- function(obj, parName = "", nDraws = 1) {
     labs(x = parName, y = "Density") +
     theme_classic(base_size = 15)
 }
+
+# R-squared ---------------------------------------------------------------
+
+#' Compute Bayesian R-squared from matrix of posterior replications
+#'
+#' The approach is not fully Bayesian and provides a global estimate rather than an estimate for each sample
+#' (this is because the predictive means and residual variance are estimated from replications than given by the model).
+#'
+#' @param yrep Matrix with rows representing samples and columns representing observations
+#'
+#' @return Bayesian R-squared (scalar, between 0 and 1)
+#'
+#' @export
+#'
+#' @references [A. Gelman, B. Goodrich, J. Gabry, and A. Vehtari, “R-squared for Bayesian Regression Models,” Am. Stat., vol. 73, no. 3, pp. 307–309, Jul. 2019](https://doi.org/10.1080/00031305.2018.1549100)
+#'
+#' @examples
+#' N <- 50
+#' N_sample <- 1e2
+#' y <- runif(N, 0, 10)
+#' yrep <- do.call(cbind,
+#'                 lapply(1:N,
+#'                        function(i) {
+#'                          y[i] + rnorm(N_sample)
+#'                        }))
+#' compute_rsquared(yrep)
+compute_rsquared <- function(yrep) {
+
+  stopifnot(is.matrix(yrep),
+            is.numeric(yrep))
+
+  n_smp <- nrow(yrep)
+  mean_yrep <- apply(yrep, 2, mean)
+  var_fit <- stats::var(mean_yrep)
+
+  err <- yrep - matrix(rep(mean_yrep, each = n_smp), nrow = n_smp)
+  var_res <- mean(apply(err, 1, stats::var))
+
+  return(var_fit / (var_fit + var_res))
+
+}

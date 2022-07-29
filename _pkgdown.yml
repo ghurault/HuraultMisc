@@ -16,6 +16,7 @@ reference:
   - PPC_group_distribution
   - empirical_pval
   - post_pred_pval
+  - compute_rsquared
 - title: "Statistical calibration"
 - contents:
   - compute_calibration

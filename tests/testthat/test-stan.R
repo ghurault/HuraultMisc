@@ -135,6 +135,19 @@ test_that("PPC_group_distribution incorrect inputs", {
   expect_error(PPC_group_distribution(fit_fake, "parameter_not_in_model"))
 })
 
+
+# Test compute_rsquared ---------------------------------------------------
+
+test_that("compute_rsquared runs", {
+  rsq <- compute_rsquared(yrep)
+  expect_true(dplyr::between(rsq, 0, 1))
+})
+
+test_that("compute_rsquared catches incorrect input", {
+  expect_error(compute_rsquared(as.character(yrep)))
+  expect_error(compute_rsquared(yrep[, 1]))
+})
+
 # extract_distribution with stanfit object --------------------------------
 
 test_that("extract_distribution works with stanfit object", {

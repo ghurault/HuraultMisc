@@ -3,6 +3,7 @@
 - Use EczemaPred for tests
 - Add pkgdown website
 - Remove illustrations
+- `compute_rsquared`
 
 # HuraultMisc 1.1.2
 
