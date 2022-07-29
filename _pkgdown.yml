@@ -34,3 +34,8 @@ reference:
   - approx_equal
   - factor_to_numeric
   - extract_index_nd
+- title: "Deprecated"
+- contents:
+  - change_colnames
+  - extract_parameters_from_draw
+  - process_replications
