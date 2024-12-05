@@ -1,108 +1,38 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/404.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/index.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/reference/HuraultMisc-package.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/reference/PPC_group_distribution.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/reference/approx_equal.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/reference/cbbPalette.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/reference/change_colnames.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/reference/compute_RPS.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/reference/compute_calibration.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/reference/compute_resolution.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/reference/compute_rsquared.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/reference/coverage.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/reference/empirical_pval.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/reference/extract_ci.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/reference/extract_distribution.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/reference/extract_draws.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/reference/extract_index_nd.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/reference/extract_parameters_from_draw.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/reference/extract_pdf.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/reference/extract_pmf.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/reference/factor_to_numeric.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/reference/is_scalar.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/reference/is_stanfit.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/reference/is_wholenumber.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/reference/logit.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/reference/pipe.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/reference/post_pred_pval.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/reference/prior_posterior.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/reference/process_replications.html</loc>
-  </url>
-  <url>
-    <loc>https://ghurault.github.io/HuraultMisc/reference/summary_statistics.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://ghurault.github.io/HuraultMisc/404.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/LICENSE-text.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/LICENSE.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/authors.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/index.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/news/index.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/reference/HuraultMisc-package.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/reference/PPC_group_distribution.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/reference/approx_equal.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/reference/cbbPalette.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/reference/change_colnames.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/reference/compute_RPS.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/reference/compute_calibration.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/reference/compute_resolution.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/reference/compute_rsquared.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/reference/coverage.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/reference/empirical_pval.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/reference/extract_ci.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/reference/extract_distribution.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/reference/extract_draws.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/reference/extract_index_nd.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/reference/extract_parameters_from_draw.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/reference/extract_pdf.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/reference/extract_pmf.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/reference/factor_to_numeric.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/reference/index.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/reference/is_scalar.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/reference/is_stanfit.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/reference/is_wholenumber.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/reference/logit.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/reference/pipe.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/reference/post_pred_pval.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/reference/prior_posterior.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/reference/process_replications.html</loc></url>
+<url><loc>https://ghurault.github.io/HuraultMisc/reference/summary_statistics.html</loc></url>
 </urlset>
+
