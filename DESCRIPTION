@@ -5,7 +5,7 @@ Authors@R:
     person(given = "Guillem",
            family = "Hurault",
            role = c("aut", "cre"),
-           email = "guillem.hurault@hotmail.fr",
+           email = "ghurault.dev@outlook.com",
            comment = c(ORCID = "0000-0002-1052-3564"))
 Description: Contains various functions for data analysis, notably helpers and diagnostics for Bayesian modelling using Stan.
 URL: https://ghurault.github.io/HuraultMisc/, https://github.com/ghurault/HuraultMisc
@@ -27,7 +27,7 @@ Imports:
     dplyr,
     tidyr
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 Suggests:
     spelling, 
     testthat (>= 2.1.0),
