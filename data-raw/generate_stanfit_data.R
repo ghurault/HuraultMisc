@@ -30,23 +30,6 @@ params <- list(
   Observation = c("y_rep")
 )
 
-N_parameters <- N * length(params$Observation) + N_subject * length(params$Subject) + length(params$Population)
-
-# Dataframe to translate observation parameters' indices into patient and time values
-observations_dictionary <- function(data_stan) {
-  tmp <- with(
-    data_stan,
-    data.frame(
-      Subject = rep(1:N_subject, N_repeat),
-      Repeat = do.call(c, lapply(N_repeat, function(x) {
-        1:x
-      }))
-    )
-  )
-  tmp$Index <- 1:nrow(tmp)
-  return(tmp)
-}
-
 mdl <- cmdstan_model(stan_code)
 
 # Sample from prior predictive distribution ---------------------------------------------
