@@ -45,19 +45,27 @@
 #'
 #' library(dplyr)
 #'
-#' prior <- data.frame(Variable = c("a", "b"),
-#'                     Mean = c(0, 0),
-#'                     sd = c(10, 5),
-#'                     Index = c(NA, NA)) %>%
-#'   mutate(`5%` = qnorm(.05, mean = Mean, sd = sd),
-#'          `95%` = qnorm(.95, mean = Mean, sd = sd))
+#' prior <- data.frame(
+#'   Variable = c("a", "b"),
+#'   Mean = c(0, 0),
+#'   sd = c(10, 5),
+#'   Index = c(NA, NA)
+#' ) %>%
+#'   mutate(
+#'     `5%` = qnorm(.05, mean = Mean, sd = sd),
+#'     `95%` = qnorm(.95, mean = Mean, sd = sd)
+#'   )
 #'
-#' post <- data.frame(Variable = c("a", "a", "b"),
-#'                    Mean = c(-1, 1, 2),
-#'                    sd = c(3, 4, 1),
-#'                    Index = c(1, 2, NA)) %>%
-#'   mutate(`5%` = qnorm(.05, mean = Mean, sd = sd),
-#'          `95%` = qnorm(.95, mean = Mean, sd = sd))
+#' post <- data.frame(
+#'   Variable = c("a", "a", "b"),
+#'   Mean = c(-1, 1, 2),
+#'   sd = c(3, 4, 1),
+#'   Index = c(1, 2, NA)
+#' ) %>%
+#'   mutate(
+#'     `5%` = qnorm(.05, mean = Mean, sd = sd),
+#'     `95%` = qnorm(.95, mean = Mean, sd = sd)
+#'   )
 #'
 #' plot_prior_posterior(prior, post)
 #'
@@ -71,28 +79,37 @@ NULL
 #' @export
 #' @import dplyr
 combine_prior_posterior <- function(prior, post, pars = NULL, match_exact = TRUE) {
-
-  stopifnot(is.data.frame(prior),
-            is.data.frame(post),
-            is.logical(match_exact),
-            is_scalar(match_exact))
+  stopifnot(
+    is.data.frame(prior),
+    is.data.frame(post),
+    is.logical(match_exact),
+    is_scalar(match_exact)
+  )
 
   if (is.null(pars)) {
     pars <- intersect(post[["Variable"]], prior[["Variable"]])
   }
-  stopifnot(is.vector(pars, mode = "character"),
-            length(pars) > 0)
+  stopifnot(
+    is.vector(pars, mode = "character"),
+    length(pars) > 0
+  )
 
   if (!is.null(pars) & !match_exact) {
     rg <- paste0("^", pars, "(\\[.+\\])?$")
 
-    pars <- sapply(list(prior[["Variable"]],
-                        post[["Variable"]]),
-                   function(x) {
-                     id <- sapply(rg, function(rgi) {grepl(rgi, x)})
-                     id <- apply(id, 1, any)
-                     return(x[id])
-                   })
+    pars <- sapply(
+      list(
+        prior[["Variable"]],
+        post[["Variable"]]
+      ),
+      function(x) {
+        id <- sapply(rg, function(rgi) {
+          grepl(rgi, x)
+        })
+        id <- apply(id, 1, any)
+        return(x[id])
+      }
+    )
     pars <- unique(c(pars))
   }
 
@@ -104,8 +121,10 @@ combine_prior_posterior <- function(prior, post, pars = NULL, match_exact = TRUE
     filter(.data$Variable %in% pars) %>%
     mutate(Distribution = "Prior")
 
-  stopifnot(nrow(post) > 0,
-            nrow(prior) > 0)
+  stopifnot(
+    nrow(post) > 0,
+    nrow(prior) > 0
+  )
 
   out <- bind_rows(prior, post)
   return(out)
@@ -119,15 +138,16 @@ combine_prior_posterior <- function(prior, post, pars = NULL, match_exact = TRUE
 #' @export
 #' @import ggplot2
 plot_prior_posterior <- function(prior, post, pars = NULL, match_exact = TRUE, lb = "5%", ub = "95%") {
+  id_vars <- c("Variable", "Mean", lb, ub)
 
-  id_vars <-  c("Variable", "Mean", lb, ub)
+  stopifnot(
+    is.data.frame(post),
+    is.data.frame(prior),
+    all(id_vars %in% colnames(post)),
+    all(id_vars %in% colnames(prior))
+  )
 
-  stopifnot(is.data.frame(post),
-            is.data.frame(prior),
-            all(id_vars %in% colnames(post)),
-            all(id_vars %in% colnames(prior)))
-
-  id_vars <-  c(id_vars, "Distribution")
+  id_vars <- c(id_vars, "Distribution")
 
   tmp <- combine_prior_posterior(prior, post, pars = pars, match_exact = match_exact)[, id_vars]
   tmp[["Distribution"]] <- factor(tmp[["Distribution"]], levels = c("Prior", "Posterior")) # to show posterior on top
@@ -136,8 +156,10 @@ plot_prior_posterior <- function(prior, post, pars = NULL, match_exact = TRUE, l
   }
 
   tmp %>%
-    rename(Lower = all_of(lb),
-           Upper = all_of(ub)) %>%
+    rename(
+      Lower = all_of(lb),
+      Upper = all_of(ub)
+    ) %>%
     ggplot(aes_string(x = "Variable", y = "Mean", ymin = "Lower", ymax = "Upper", colour = "Distribution")) +
     geom_pointrange(position = position_dodge2(width = .3), size = 1.2) +
     scale_colour_manual(values = c("#E69F00", "#000000")) +
@@ -153,14 +175,15 @@ plot_prior_posterior <- function(prior, post, pars = NULL, match_exact = TRUE, l
 #' @export
 #' @import dplyr
 compute_prior_influence <- function(prior, post, pars = NULL, match_exact = TRUE, remove_index_prior = TRUE) {
-
   id_vars <- c("Variable", "Index", "Mean", "sd")
 
-  stopifnot(is.data.frame(prior),
-            is.data.frame(post),
-            is.vector(pars, mode = "character"),
-            all(id_vars %in% colnames(prior)),
-            all(id_vars %in% colnames(post)))
+  stopifnot(
+    is.data.frame(prior),
+    is.data.frame(post),
+    is.vector(pars, mode = "character"),
+    all(id_vars %in% colnames(prior)),
+    all(id_vars %in% colnames(post))
+  )
 
   if (remove_index_prior) {
     prior[which(prior[["Index"]] == 1), "Index"] <- NA
@@ -170,15 +193,22 @@ compute_prior_influence <- function(prior, post, pars = NULL, match_exact = TRUE
   tmp <- combine_prior_posterior(prior = prior, post = post, pars = pars, match_exact = match_exact) %>%
     select(all_of(c(id_vars, "Distribution")))
 
-  prior <- tmp %>% filter(.data$Distribution == "Prior") %>% select(-.data$Distribution, -.data$Index)
-  post <- tmp %>% filter(.data$Distribution == "Posterior") %>% select(-.data$Distribution)
+  prior <- tmp %>%
+    filter(.data$Distribution == "Prior") %>%
+    select(-.data$Distribution, -.data$Index)
+  post <- tmp %>%
+    filter(.data$Distribution == "Posterior") %>%
+    select(-.data$Distribution)
 
   out <- right_join(prior,
-                    post,
-                    by = "Variable",
-                    suffix = c("_Prior", "_Posterior")) %>%
-    mutate(PostShrinkage = 1 - (.data$sd_Posterior / .data$sd_Prior)^2,
-           DistPrior = abs(.data$Mean_Posterior - .data$Mean_Prior) / .data$sd_Prior) %>%
+    post,
+    by = "Variable",
+    suffix = c("_Prior", "_Posterior")
+  ) %>%
+    mutate(
+      PostShrinkage = 1 - (.data$sd_Posterior / .data$sd_Prior)^2,
+      DistPrior = abs(.data$Mean_Posterior - .data$Mean_Prior) / .data$sd_Prior
+    ) %>%
     select(all_of(c("Variable", "Index", "PostShrinkage", "DistPrior")))
 
   return(out)
@@ -187,24 +217,26 @@ compute_prior_influence <- function(prior, post, pars = NULL, match_exact = TRUE
 #' @rdname prior_posterior
 #' @export
 #' @import ggplot2
-plot_prior_influence <-  function(prior, post, pars = NULL, match_exact = TRUE) {
-
+plot_prior_influence <- function(prior, post, pars = NULL, match_exact = TRUE) {
   tmp <- compute_prior_influence(prior = prior, post = post, pars = pars, match_exact = match_exact)
   if (!is.null(pars) & match_exact) {
     tmp[["Variable"]] <- factor(tmp[["Variable"]], levels = pars)
   }
 
-  p <- ggplot(data = tmp,
-              aes_string(x = "PostShrinkage", y = "DistPrior", colour = "Variable")) +
+  p <- ggplot(
+    data = tmp,
+    aes_string(x = "PostShrinkage", y = "DistPrior", colour = "Variable")
+  ) +
     geom_point(alpha = 0.8, size = 2) +
     annotate("text",
-             x = c(0.5, 0.1, 0.9),
-             y = c(2.5, 0.25, 0.25),
-             label = c("Prior/Observational\nconflict", "Poorly\nidentified", "Ideal"),
-             size = 5) +
+      x = c(0.5, 0.1, 0.9),
+      y = c(2.5, 0.25, 0.25),
+      label = c("Prior/Observational\nconflict", "Poorly\nidentified", "Ideal"),
+      size = 5
+    ) +
     scale_y_continuous(limits = c(0, NA), expand = expansion(mult = c(0, 0.1))) +
     scale_x_continuous(limits = c(min(0, min(tmp[["PostShrinkage"]])), 1), expand = expansion(mult = c(0, 0.01))) +
-    labs(x =  "Posterior shrinkage", y = "Prior/Posterior distance", colour = "") +
+    labs(x = "Posterior shrinkage", y = "Prior/Posterior distance", colour = "") +
     theme_classic(base_size = 15)
 
   if (length(unique(tmp[["Variable"]])) <= 8) {

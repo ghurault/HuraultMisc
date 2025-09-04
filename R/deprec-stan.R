@@ -11,8 +11,8 @@
 #'
 #' @return Dataframe.
 #' @export
+#' @keywords internal
 process_replications <- function(fit, idx = NULL, parName, bounds = NULL, type = c("continuous", "discrete", "eti", "hdi"), ...) {
-
   .Deprecated("extract_distribution")
 
   stopifnot(is_stanfit(fit))
@@ -24,22 +24,28 @@ process_replications <- function(fit, idx = NULL, parName, bounds = NULL, type =
     transform <- transform0
   } else {
     support <- min(bounds):max(bounds)
-    transform <- function(x) {transform0(x[!(x < min(bounds) | x > max(bounds))])} # truncate
+    transform <- function(x) {
+      transform0(x[!(x < min(bounds) | x > max(bounds))])
+    } # truncate
   }
 
   if (type %in% c("continuous", "discrete")) {
-    out <- extract_distribution(object = fit,
-                                parName = parName,
-                                type = type,
-                                support = support,
-                                transform = transform,
-                                ...)
+    out <- extract_distribution(
+      object = fit,
+      parName = parName,
+      type = type,
+      support = support,
+      transform = transform,
+      ...
+    )
   } else {
-    out <- extract_distribution(object = fit,
-                                parName = parName,
-                                transform = transform,
-                                type = type,
-                                ...)
+    out <- extract_distribution(
+      object = fit,
+      parName = parName,
+      transform = transform,
+      type = type,
+      ...
+    )
   }
 
   out <- change_colnames(out, "Value", parName)
@@ -72,8 +78,8 @@ process_replications <- function(fit, idx = NULL, parName, bounds = NULL, type =
 #'
 #' @return Dataframe
 #' @export
+#' @keywords internal
 extract_parameters_from_draw <- function(fit, param, draw) {
-
   .Deprecated("extract_draws")
 
   stopifnot(is_stanfit(fit))

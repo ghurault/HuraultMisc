@@ -32,3 +32,4 @@ Dataframe.
 \description{
 Extract posterior predictive distribution
 }
+\keyword{internal}

@@ -1,7 +1,6 @@
 test_that("Calibration curve are accurate", {
-
   # Perfectly calibrated data (10000 observations)
-  file <- system.file("testdata", "calibration.csv",package="HuraultMisc", mustWork = TRUE)
+  file <- system.file("testdata", "calibration.csv", package = "HuraultMisc", mustWork = TRUE)
   df <- read.csv(file)
 
   # tolerances

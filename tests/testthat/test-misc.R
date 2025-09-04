@@ -15,7 +15,9 @@ test_that("compute_resolution() catches incorrect inputs", {
 test_that("compute_RPS() returns the correct values for a uniform forecast", {
   for (k in 3:20) {
     p0 <- rep(1 / k, k)
-    E_RPS <- mean(sapply(1:k, function(x) {compute_RPS(p0, x)}))
+    E_RPS <- mean(sapply(1:k, function(x) {
+      compute_RPS(p0, x)
+    }))
     expect_equal(E_RPS, (k + 1) / 6 / k)
   }
 })

@@ -20,10 +20,10 @@ Shortcut for \code{c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#00
 library(ggplot2)
 library(dplyr)
 df <- data.frame(palette = HuraultMisc::cbbPalette) \%>\%
-mutate(palette = factor(palette, levels = palette))
+  mutate(palette = factor(palette, levels = palette))
 
 ggplot(data = df, aes(x = palette, fill = palette, y = 0)) +
-geom_tile() +
+  geom_tile() +
   scale_fill_manual(values = levels(df$palette)) +
   coord_cartesian(expand = FALSE) +
   labs(x = "", y = "") +

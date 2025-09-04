@@ -41,7 +41,9 @@ Useful for fake data check.
 N <- 100
 N_post <- 1e3
 truth <- rep(0, N)
-post_samples <- sapply(rnorm(N, 0, 1), function(x) {rnorm(N_post, x, 1)})
+post_samples <- sapply(rnorm(N, 0, 1), function(x) {
+  rnorm(N_post, x, 1)
+})
 
 compute_coverage(post_samples, truth)
 plot_coverage(post_samples, truth)

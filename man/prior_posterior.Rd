@@ -87,19 +87,27 @@ If not, we can use \code{match_exact = FALSE} to plot \code{parameter[1]} and \c
 
 library(dplyr)
 
-prior <- data.frame(Variable = c("a", "b"),
-                    Mean = c(0, 0),
-                    sd = c(10, 5),
-                    Index = c(NA, NA)) \%>\%
-  mutate(`5\%` = qnorm(.05, mean = Mean, sd = sd),
-         `95\%` = qnorm(.95, mean = Mean, sd = sd))
+prior <- data.frame(
+  Variable = c("a", "b"),
+  Mean = c(0, 0),
+  sd = c(10, 5),
+  Index = c(NA, NA)
+) \%>\%
+  mutate(
+    `5\%` = qnorm(.05, mean = Mean, sd = sd),
+    `95\%` = qnorm(.95, mean = Mean, sd = sd)
+  )
 
-post <- data.frame(Variable = c("a", "a", "b"),
-                   Mean = c(-1, 1, 2),
-                   sd = c(3, 4, 1),
-                   Index = c(1, 2, NA)) \%>\%
-  mutate(`5\%` = qnorm(.05, mean = Mean, sd = sd),
-         `95\%` = qnorm(.95, mean = Mean, sd = sd))
+post <- data.frame(
+  Variable = c("a", "a", "b"),
+  Mean = c(-1, 1, 2),
+  sd = c(3, 4, 1),
+  Index = c(1, 2, NA)
+) \%>\%
+  mutate(
+    `5\%` = qnorm(.05, mean = Mean, sd = sd),
+    `95\%` = qnorm(.95, mean = Mean, sd = sd)
+  )
 
 plot_prior_posterior(prior, post)
 

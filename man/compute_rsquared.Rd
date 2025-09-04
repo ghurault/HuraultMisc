@@ -20,13 +20,17 @@ The approach is not fully Bayesian and provides a global estimate rather than an
 N <- 50
 N_sample <- 1e2
 y <- runif(N, 0, 10)
-yrep <- do.call(cbind,
-                lapply(1:N,
-                       function(i) {
-                         y[i] + rnorm(N_sample)
-                       }))
+yrep <- do.call(
+  cbind,
+  lapply(
+    1:N,
+    function(i) {
+      y[i] + rnorm(N_sample)
+    }
+  )
+)
 compute_rsquared(yrep)
 }
 \references{
-\href{https://doi.org/10.1080/00031305.2018.1549100}{A. Gelman, B. Goodrich, J. Gabry, and A. Vehtari, “R-squared for Bayesian Regression Models,” Am. Stat., vol. 73, no. 3, pp. 307–309, Jul. 2019}
+\href{www.tandfonline.com/doi/full/10.1080/00031305.2018.1549100}{A. Gelman, B. Goodrich, J. Gabry, and A. Vehtari, “R-squared for Bayesian Regression Models,” Am. Stat., vol. 73, no. 3, pp. 307–309, Jul. 2019}
 }

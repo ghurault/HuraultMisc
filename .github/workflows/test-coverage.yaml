@@ -5,6 +5,8 @@ on:
     branches: [main, master]
   pull_request:
     branches: [main, master]
+  schedule:
+      - cron: '0 0 1 * *'  # 1st of each month (in addition to push/PR)
 
 name: test-coverage
 

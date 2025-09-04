@@ -1,7 +1,9 @@
 test_that("empirical_pval() returns correct values", {
   tol <- 0.1
-  expect_equal(empirical_pval(seq(1, 100), 95, alternative = "greater"),
-               (5 + 1) / (100 + 1))
+  expect_equal(
+    empirical_pval(seq(1, 100), 95, alternative = "greater"),
+    (5 + 1) / (100 + 1)
+  )
   expect_lt(empirical_pval(rnorm(1e3), 2, alternative = "two.sided"), .05 + tol)
   expect_lt(empirical_pval(rnorm(1e3), -2, alternative = "less"), .025 + tol)
 })

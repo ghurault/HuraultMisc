@@ -11,14 +11,15 @@
 #' @return Dataframe with columns: `Draw`, `Index` (for 1d vector), `Value`, `Parameter`.
 #' @noRd
 extract_draws_from_array <- function(obj, draws, parName = "") {
-
   stopifnot(is.vector(obj, mode = "numeric") || is.matrix(obj) || is.array(obj))
 
   obj <- as.array(obj)
   draws <- as.integer(draws)
 
-  stopifnot(min(draws) >= 1,
-            max(draws) <= dim(obj)[1])
+  stopifnot(
+    min(draws) >= 1,
+    max(draws) <= dim(obj)[1]
+  )
 
   d <- dim(obj)
   if (length(d) == 1) {
@@ -31,17 +32,21 @@ extract_draws_from_array <- function(obj, draws, parName = "") {
     } else {
       rownames(tmp) <- draws
       out <- reshape2::melt(tmp,
-                            varnames = c("Draw", "Index"),
-                            value.name = "Value")
+        varnames = c("Draw", "Index"),
+        value.name = "Value"
+      )
     }
     out$Parameter <- parName
   } else {
     id_lbl <- paste0("i", 1:(length(d) - 1))
     out <- reshape2::melt(obj,
-                          varnames = c("Draw", id_lbl),
-                          value.name = "Value")
+      varnames = c("Draw", id_lbl),
+      value.name = "Value"
+    )
     out <- out[out[["Draw"]] %in% draws, ]
-    lbl <- do.call(c, lapply(1:nrow(out), function(i) {paste0(out[i, id_lbl], collapse = ",")}))
+    lbl <- do.call(c, lapply(1:nrow(out), function(i) {
+      paste0(out[i, id_lbl], collapse = ",")
+    }))
     lbl <- paste0(parName, "[", lbl, "]")
     out$Index <- NA
     out[, id_lbl] <- NULL
@@ -67,16 +72,17 @@ extract_draws_from_array <- function(obj, draws, parName = "") {
 #' extract_draws(a, sample(1:10, 5)) %>% head()
 #' extract_draws(list(x = x, X = X, a = a), 1:10) %>% head()
 extract_draws <- function(obj, draws) {
-
   if (!(inherits(obj, "list") || is.vector(obj, mode = "numeric") || is.matrix(obj) || is.array(obj))) {
     stop(as.character(substitute(obj)), " should be a vector or a matrix or a list of it")
   }
 
   if (is.list(obj)) {
-    lapply(1:length(obj),
-           function(i) {
-             extract_draws_from_array(obj[[i]], draws, names(obj)[i])
-           }) %>%
+    lapply(
+      1:length(obj),
+      function(i) {
+        extract_draws_from_array(obj[[i]], draws, names(obj)[i])
+      }
+    ) %>%
       bind_rows()
   } else {
     extract_draws_from_array(obj, draws)
