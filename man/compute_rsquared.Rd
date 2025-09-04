@@ -32,5 +32,5 @@ yrep <- do.call(
 compute_rsquared(yrep)
 }
 \references{
-\href{https://doi.org/10.1080/00031305.2018.1549100}{A. Gelman, B. Goodrich, J. Gabry, and A. Vehtari, “R-squared for Bayesian Regression Models,” Am. Stat., vol. 73, no. 3, pp. 307–309, Jul. 2019}
+\href{www.tandfonline.com/doi/full/10.1080/00031305.2018.1549100}{A. Gelman, B. Goodrich, J. Gabry, and A. Vehtari, “R-squared for Bayesian Regression Models,” Am. Stat., vol. 73, no. 3, pp. 307–309, Jul. 2019}
 }

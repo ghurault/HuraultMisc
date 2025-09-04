@@ -86,7 +86,7 @@ PPC_group_distribution <- function(obj, parName = "", nDraws = 1) {
 #'
 #' @export
 #'
-#' @references [A. Gelman, B. Goodrich, J. Gabry, and A. Vehtari, “R-squared for Bayesian Regression Models,” Am. Stat., vol. 73, no. 3, pp. 307–309, Jul. 2019](https://doi.org/10.1080/00031305.2018.1549100)
+#' @references [A. Gelman, B. Goodrich, J. Gabry, and A. Vehtari, “R-squared for Bayesian Regression Models,” Am. Stat., vol. 73, no. 3, pp. 307–309, Jul. 2019](www.tandfonline.com/doi/full/10.1080/00031305.2018.1549100)
 #'
 #' @examples
 #' N <- 50
