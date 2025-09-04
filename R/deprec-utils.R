@@ -15,13 +15,14 @@
 #' df <- change_colnames(df, c("A", "C"), c("Aa", "Cc"))
 #' }
 change_colnames <- function(df, current_names, new_names) {
-
   .Deprecated("Use `dplyr::rename(df, setNames(current_names, new_names))` instead.")
 
-  stopifnot(is.data.frame(df),
-            is.vector(current_names, mode = "character"),
-            is.vector(new_names, mode = "character"),
-            length(current_names) == length(new_names))
+  stopifnot(
+    is.data.frame(df),
+    is.vector(current_names, mode = "character"),
+    is.vector(new_names, mode = "character"),
+    length(current_names) == length(new_names)
+  )
 
   for (i in 1:length(current_names)) {
     colnames(df)[colnames(df) == current_names[i]] <- new_names[i]

@@ -2,13 +2,16 @@ set.seed(2021)
 N <- 100
 N_post <- 1e3
 truth <- rep(0, N)
-post_samples <- sapply(rnorm(N, 0, 1), function(x) {rnorm(N_post, x, 1)})
+post_samples <- sapply(rnorm(N, 0, 1), function(x) {
+  rnorm(N_post, x, 1)
+})
 
 for (t in c("eti", "hdi")) {
-
   test_that("compute_coverage() is accurate", {
-    cov_rmse <- with(compute_coverage(post_samples, truth, type = t),
-                     sqrt(mean((Nominal - Coverage)^2)))
+    cov_rmse <- with(
+      compute_coverage(post_samples, truth, type = t),
+      sqrt(mean((Nominal - Coverage)^2))
+    )
     expect_lt(cov_rmse, 0.1)
   })
 
@@ -27,5 +30,4 @@ for (t in c("eti", "hdi")) {
     expect_error(compute_coverage(post_samples, truth, paste0(seq(0, 100, 5), "%")), type = t)
     expect_error(compute_coverage(post_samples, truth, seq(0, 100, 5)), type = t)
   })
-
 }

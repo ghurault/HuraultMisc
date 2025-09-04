@@ -29,9 +29,10 @@ NULL
 #' df <- factor_to_numeric(df, "A")
 #' str(df)
 factor_to_numeric <- function(df, factor_name) {
-
-  stopifnot(is.data.frame(df),
-            is.character(factor_name))
+  stopifnot(
+    is.data.frame(df),
+    is.character(factor_name)
+  )
 
   factor_name <- intersect(colnames(df), factor_name)
   if (length(factor_name) == 0) {
@@ -62,11 +63,12 @@ factor_to_numeric <- function(df, factor_name) {
 #' @examples
 #' extract_index_1d(c("sigma", "sigma[1]", "sigma[1, 1]", "sigma[1][2]"))
 extract_index_1d <- function(x) {
-
   stopifnot(is.vector(x, mode = "character"))
 
-  out <- data.frame(Variable = as.character(x),
-                    Index = NA)
+  out <- data.frame(
+    Variable = as.character(x),
+    Index = NA
+  )
   rg <- "(.*)\\[(\\d+)\\]$"
   # Identify variables ending in with a single number inside bracket
   id_var <- grep(rg, x)
@@ -94,27 +96,34 @@ extract_index_1d <- function(x) {
 #' @examples
 #' extract_index_nd(c("sigma", "sigma[1]", "sigma[1, 1]", "sigma[1][2]"))
 extract_index_nd <- function(x, dim_names = NULL) {
-
   stopifnot(is.vector(x, mode = "character"))
 
-  out <- data.frame(Variable = as.character(x),
-                    Index = NA) %>%
+  out <- data.frame(
+    Variable = as.character(x),
+    Index = NA
+  ) %>%
     extract_index_nbracket() %>%
     extract_index_1bracket()
 
   if (!is.null(dim_names)) {
-    stopifnot(all(vapply(out[["Index"]], function(x) {is.numeric(x) || (is_scalar(x) & is.na(x))}, logical(1))))
+    stopifnot(all(vapply(out[["Index"]], function(x) {
+      is.numeric(x) || (is_scalar(x) & is.na(x))
+    }, logical(1))))
     id_length <- vapply(out[["Index"]], length, numeric(1))
-    stopifnot(max(id_length) == length(dim_names),
-              is.character(dim_names))
+    stopifnot(
+      max(id_length) == length(dim_names),
+      is.character(dim_names)
+    )
 
     if (!is_scalar(unique(id_length))) {
       warning("The elements in x don't have the same number of indices. The last missing indices will be set to NA.")
       max_dim <- max(id_length)
-      out[["Index"]] <- lapply(out[["Index"]],
-                               function(x) {
-                                 c(x, rep(NA, max_dim - length(x)))
-                               })
+      out[["Index"]] <- lapply(
+        out[["Index"]],
+        function(x) {
+          c(x, rep(NA, max_dim - length(x)))
+        }
+      )
     }
 
     tmp <- do.call(rbind, out[["Index"]]) %>%
@@ -136,7 +145,6 @@ extract_index_nd <- function(x, dim_names = NULL) {
 #' @return Dataframe with columns `Variable` and `Index`
 #' @noRd
 extract_index_1bracket <- function(df) {
-
   # Identify variables with the corresponding pattern
   rg <- "^(.*)\\[(\\d+(,\\s?\\d+)*)\\]$"
   id_var <- grep(rg, df$Variable)
@@ -160,14 +168,15 @@ extract_index_1bracket <- function(df) {
 #' @return Dataframe with columns `Variable` and `Index`.
 #' @noRd
 extract_index_nbracket <- function(df) {
-
   # Identify variables with the corresponding pattern
   rg <- "^(.*?)((\\[\\d+\\])+)"
   id_var <- grep(rg, df$Variable)
   # Remove prefix and split at the brackets
   df$Index[id_var] <- gsub(rg, "\\2", df$Variable[id_var]) %>%
     strsplit("[\\[\\]]", perl = TRUE) %>%
-    lapply(function(x) {as.numeric(x[x != ""])})
+    lapply(function(x) {
+      as.numeric(x[x != ""])
+    })
   # Rename variable
   df$Variable[id_var] <- gsub(rg, "\\1", df$Variable[id_var], perl = TRUE)
 
@@ -191,11 +200,15 @@ NULL
 
 #' @rdname logit
 #' @export
-logit <- function(x) {log(x / (1 - x))}
+logit <- function(x) {
+  log(x / (1 - x))
+}
 
 #' @rdname logit
 #' @export
-inv_logit <- function(x) {1 / (1 + exp(-x))}
+inv_logit <- function(x) {
+  1 / (1 + exp(-x))
+}
 
 
 # Approximate equal -------------------------------------------------------
@@ -226,4 +239,6 @@ approx_equal <- function(x, y, tol = .Machine$double.eps^0.5) {
 
 #' @rdname approx_equal
 #' @export
-`%~%` <- function(x, y) {approx_equal(x, y)}
+`%~%` <- function(x, y) {
+  approx_equal(x, y)
+}

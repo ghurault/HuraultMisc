@@ -26,7 +26,6 @@ test_that("change_colnames() catches incorrect inputs", {
 # Test `factor_to_numeric()` --------------------------------------------------
 
 test_that("factor_to_numeric() works", {
-
   x <- matrix(rbinom(3 * 100, 5, 0.5), ncol = 3)
   df0 <- data.frame(A = x[, 1], B = x[, 2], C = x[, 3])
 
@@ -68,8 +67,10 @@ test_that("factor_to_numeric() warns that the input factor_name is not in df", {
 
 x <- c("sigma", "sigma[1]", "sigma1[1]", "sigma[1, 2]", "sigma[1,3]", "sigma[1][4]", "sigma[10,10]", "sigma[1][2][3]")
 test_that("extract_index_1d() returns a correct dataframe", {
-  sol <- data.frame(Variable = c("sigma", "sigma", "sigma1", "sigma[1, 2]", "sigma[1,3]", "sigma[1]", "sigma[10,10]", "sigma[1][2]"),
-                    Index = c(NA, 1, 1, NA, NA, 4, NA, 3))
+  sol <- data.frame(
+    Variable = c("sigma", "sigma", "sigma1", "sigma[1, 2]", "sigma[1,3]", "sigma[1]", "sigma[10,10]", "sigma[1][2]"),
+    Index = c(NA, 1, 1, NA, NA, 4, NA, 3)
+  )
   out <- extract_index_1d(x)
   expect_equal(out, sol)
   expect_is(out, "data.frame")
@@ -86,9 +87,11 @@ test_that("extract_index_nd() returns a correct dataframe", {
 test_that("extract_index_nd() works when dim_names is provided", {
   y <- c("sigma[1,2]", "a[2, 3]", "b[3][4]")
   dim_names <- c("A", "B")
-  sol <- data.frame(Variable = c("sigma", "a", "b"),
-                    A = c(1, 2, 3),
-                    B = c(2, 3, 4))
+  sol <- data.frame(
+    Variable = c("sigma", "a", "b"),
+    A = c(1, 2, 3),
+    B = c(2, 3, 4)
+  )
   expect_equal(extract_index_nd(y, dim_names = dim_names), sol)
   expect_error(extract_index_nd(y, dim_names = c("A")))
   expect_warning(extract_index_nd(x, dim_names = c("A", "B", "C")))

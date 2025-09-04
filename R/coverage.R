@@ -22,7 +22,9 @@
 #' N <- 100
 #' N_post <- 1e3
 #' truth <- rep(0, N)
-#' post_samples <- sapply(rnorm(N, 0, 1), function(x) {rnorm(N_post, x, 1)})
+#' post_samples <- sapply(rnorm(N, 0, 1), function(x) {
+#'   rnorm(N_post, x, 1)
+#' })
 #'
 #' compute_coverage(post_samples, truth)
 #' plot_coverage(post_samples, truth)
@@ -34,46 +36,56 @@ NULL
 #' @export
 #' @import tidyr
 compute_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05), type = c("eti", "hdi")) {
-
-  stopifnot(is.matrix(post_samples),
-            is.vector(truth, mode = "numeric"),
-            ncol(post_samples) == length(truth),
-            is.vector(CI, mode = "numeric"),
-            min(CI) >= 0 && max(CI) <= 1)
+  stopifnot(
+    is.matrix(post_samples),
+    is.vector(truth, mode = "numeric"),
+    ncol(post_samples) == length(truth),
+    is.vector(CI, mode = "numeric"),
+    min(CI) >= 0 && max(CI) <= 1
+  )
   type <- match.arg(type)
 
   CI <- CI[CI > 0 & CI < 1]
 
   # Compute lower and upper bounds for different confidence levels, for each variable
   df <- extract_distribution(post_samples,
-                             parName = "",
-                             type = type,
-                             CI_level = CI)
+    parName = "",
+    type = type,
+    CI_level = CI
+  )
 
   # Check if the truth is in the interval
   df <- inner_join(df,
-                   data.frame(Truth = truth, Index = 1:length(truth)),
-                   by = "Index") %>%
+    data.frame(Truth = truth, Index = 1:length(truth)),
+    by = "Index"
+  ) %>%
     mutate(Coverage = (.data$Truth >= .data$Lower & .data$Truth <= .data$Upper))
 
   # Compute coverage and confidence levels (95% for coverage)
   cov <- df %>%
     group_by(.data$Level) %>%
     summarise(cv = Hmisc::binconf(sum(.data$Coverage),
-                                  length(.data$Coverage),
-                                  alpha = 0.05,
-                                  method = "exact",
-                                  return.df = TRUE)) %>%
+      length(.data$Coverage),
+      alpha = 0.05,
+      method = "exact",
+      return.df = TRUE
+    )) %>%
     unpack(.data$cv) %>%
-    rename(Nominal = .data$Level,
-           Coverage = .data$PointEst)
+    rename(
+      Nominal = .data$Level,
+      Coverage = .data$PointEst
+    )
 
   # Add extreme values
-  cov <- bind_rows(cov,
-                   data.frame(Nominal = c(0, 1),
-                              Coverage = c(0, 1),
-                              Lower = c(0, 1),
-                              Upper = c(0, 1))) %>%
+  cov <- bind_rows(
+    cov,
+    data.frame(
+      Nominal = c(0, 1),
+      Coverage = c(0, 1),
+      Lower = c(0, 1),
+      Upper = c(0, 1)
+    )
+  ) %>%
     arrange(.data$Nominal)
 
   return(cov)
@@ -87,8 +99,10 @@ compute_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05), type = c
 plot_coverage <- function(post_samples, truth, CI = seq(0, 1, 0.05), type = c("eti", "hdi")) {
   col <- "#0072B2"
 
-  ggplot(data =  compute_coverage(post_samples, truth, CI, type),
-         aes_string(x = "Nominal", y = "Coverage", ymin = "Lower", ymax = "Upper")) +
+  ggplot(
+    data = compute_coverage(post_samples, truth, CI, type),
+    aes_string(x = "Nominal", y = "Coverage", ymin = "Lower", ymax = "Upper")
+  ) +
     geom_line(colour = col, size = 1.5) +
     geom_ribbon(alpha = 0.5, fill = col) +
     geom_abline(intercept = 0, slope = 1, colour = "black", linetype = "dashed") +

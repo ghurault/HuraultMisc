@@ -13,16 +13,19 @@
 #' @examples
 #' extract_pdf(rnorm(1e3)) %>% head()
 extract_pdf <- function(x, support = NULL, n_density = 2^7) {
-
-  stopifnot(is.vector(x, mode = "numeric"),
-            is.numeric(n_density))
+  stopifnot(
+    is.vector(x, mode = "numeric"),
+    is.numeric(n_density)
+  )
 
   if (is.null(support)) {
     support <- stats::quantile(x, probs = c(.001, 0.999))
     warning("support is NULL, taking the range: ", paste(support, collapse = ", "))
   } else {
-    stopifnot(is.vector(support, mode = "numeric"),
-              length(support) >= 2)
+    stopifnot(
+      is.vector(support, mode = "numeric"),
+      length(support) >= 2
+    )
   }
 
   d <- stats::density(x, kernel = "gaussian", from = min(support), to = max(support), n = as.integer(n_density))
@@ -41,7 +44,6 @@ extract_pdf <- function(x, support = NULL, n_density = 2^7) {
 #' @examples
 #' extract_pmf(round(rnorm(1e3, 0, 10))) %>% head()
 extract_pmf <- function(x, support = NULL) {
-
   stopifnot(is.vector(x))
   if (is.null(support)) {
     if (is.numeric(x)) {
@@ -51,9 +53,11 @@ extract_pmf <- function(x, support = NULL) {
     }
     warning("support is NULL, taking the following values: ", paste(support, collapse = ", "))
   } else {
-    stopifnot(is.vector(support),
-              length(support) >= 2,
-              mode(x) == mode(support))
+    stopifnot(
+      is.vector(support),
+      length(support) >= 2,
+      mode(x) == mode(support)
+    )
   }
 
   if (is.numeric(support)) {
@@ -92,21 +96,29 @@ extract_pmf <- function(x, support = NULL) {
 #' extract_ci(x, type = "eti")
 #' extract_ci(x, type = "hdi")
 extract_ci <- function(x, CI_level = seq(0.1, 0.9, 0.1), type = c("eti", "hdi")) {
-  stopifnot(is.vector(x, mode = "numeric"),
-            is.vector(CI_level, mode = "numeric"),
-            min(CI_level) >=0 && max(CI_level) <= 1)
+  stopifnot(
+    is.vector(x, mode = "numeric"),
+    is.vector(CI_level, mode = "numeric"),
+    min(CI_level) >= 0 && max(CI_level) <= 1
+  )
   type <- match.arg(type)
 
   if (type == "eti") {
-    out <- data.frame(Lower = stats::quantile(x, probs = 0.5 - CI_level / 2),
-                      Upper = stats::quantile(x, probs = 0.5 + CI_level / 2),
-                      Level = CI_level)
+    out <- data.frame(
+      Lower = stats::quantile(x, probs = 0.5 - CI_level / 2),
+      Upper = stats::quantile(x, probs = 0.5 + CI_level / 2),
+      Level = CI_level
+    )
   }
   if (type == "hdi") {
-    tmp <- sapply(CI_level, function(q) {HDInterval::hdi(x, credMass = q)})
-    out <- data.frame(Lower = tmp["lower", ],
-               Upper = tmp["upper", ],
-               Level = CI_level)
+    tmp <- sapply(CI_level, function(q) {
+      HDInterval::hdi(x, credMass = q)
+    })
+    out <- data.frame(
+      Lower = tmp["lower", ],
+      Upper = tmp["upper", ],
+      Level = CI_level
+    )
   }
   return(out)
 }
@@ -116,7 +128,7 @@ extract_ci <- function(x, CI_level = seq(0.1, 0.9, 0.1), type = c("eti", "hdi"))
 
 #' Extract a distribution represented by samples
 #'
-#'@description
+#' @description
 #' The distribution can be extracted as:
 #' \itemize{
 #' \item a probability density function (`type = "continuous"`), cf. [extract_pdf()].
@@ -150,7 +162,6 @@ extract_distribution <- function(object,
                                  type = c("continuous", "discrete", "eti", "hdi"),
                                  transform = identity,
                                  ...) {
-
   type <- match.arg(type)
 
   parName <- as.character(parName)
@@ -168,25 +179,35 @@ extract_distribution <- function(object,
   stopifnot(is.function(transform))
 
   if (type == "continuous") {
-    extract_function <- function(x) {extract_pdf(transform(x), ...)}
+    extract_function <- function(x) {
+      extract_pdf(transform(x), ...)
+    }
   } else if (type == "discrete") {
-    extract_function <- function(x) {extract_pmf(transform(x), ...)}
+    extract_function <- function(x) {
+      extract_pmf(transform(x), ...)
+    }
   } else if (type == "eti") {
-    extract_function <- function(x) {extract_ci(transform(x), type = "eti", ...)}
+    extract_function <- function(x) {
+      extract_ci(transform(x), type = "eti", ...)
+    }
   } else if (type == "hdi") {
-    extract_function <- function(x) {extract_ci(transform(x), type = "hdi", ...)}
+    extract_function <- function(x) {
+      extract_ci(transform(x), type = "hdi", ...)
+    }
   }
 
   if (!is.matrix(object)) {
     out <- extract_function(object) %>%
       mutate(Index = NA)
   } else {
-    out <- lapply(1:ncol(object),
-                  function(i) {
-                    # Loop over parameters in the matrix
-                    extract_function(object[, i]) %>%
-                      mutate(Index = i)
-                  }) %>%
+    out <- lapply(
+      1:ncol(object),
+      function(i) {
+        # Loop over parameters in the matrix
+        extract_function(object[, i]) %>%
+          mutate(Index = i)
+      }
+    ) %>%
       bind_rows()
   }
 

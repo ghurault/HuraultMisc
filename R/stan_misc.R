@@ -6,7 +6,7 @@
 #' @param pars Character vector of parameters to extract. Defaults to all parameters.
 #' @param probs Numeric vector of quantiles to extract.
 #'
-#'@section Alternative:
+#' @section Alternative:
 #' The [tidybayes](https://mjskay.github.io/tidybayes/) package offers an alternative to this function, for example:
 #' `fit %>% tidy_draws() %>% gather_variables() %>% mean_qi()`.
 #' However, this does not provide information about `Rhat` or `Neff`, nor does it process the indexes.
@@ -15,7 +15,6 @@
 #' @return Dataframe of posterior summary statistics
 #' @export
 summary_statistics <- function(fit, pars, probs = c(.05, .25, .5, .75, .95)) {
-
   stopifnot(is_stanfit(fit))
 
   par <- rstan::summary(fit, pars = pars, probs = probs)$summary %>%
@@ -47,12 +46,13 @@ summary_statistics <- function(fit, pars, probs = c(.05, .25, .5, .75, .95)) {
 #' X <- matrix(rnorm(1e3), ncol = 10)
 #' PPC_group_distribution(X, "", 10)
 PPC_group_distribution <- function(obj, parName = "", nDraws = 1) {
-
   stopifnot(is_stanfit(obj) || is.matrix(obj))
 
   if (is_stanfit(obj)) {
-    stopifnot(is.character(parName),
-              is_scalar(parName))
+    stopifnot(
+      is.character(parName),
+      is_scalar(parName)
+    )
     par <- rstan::extract(obj, pars = parName)[[1]] # parName in obj checked here
   } else {
     par <- obj
@@ -92,16 +92,21 @@ PPC_group_distribution <- function(obj, parName = "", nDraws = 1) {
 #' N <- 50
 #' N_sample <- 1e2
 #' y <- runif(N, 0, 10)
-#' yrep <- do.call(cbind,
-#'                 lapply(1:N,
-#'                        function(i) {
-#'                          y[i] + rnorm(N_sample)
-#'                        }))
+#' yrep <- do.call(
+#'   cbind,
+#'   lapply(
+#'     1:N,
+#'     function(i) {
+#'       y[i] + rnorm(N_sample)
+#'     }
+#'   )
+#' )
 #' compute_rsquared(yrep)
 compute_rsquared <- function(yrep) {
-
-  stopifnot(is.matrix(yrep),
-            is.numeric(yrep))
+  stopifnot(
+    is.matrix(yrep),
+    is.numeric(yrep)
+  )
 
   n_smp <- nrow(yrep)
   mean_yrep <- apply(yrep, 2, mean)
@@ -111,5 +116,4 @@ compute_rsquared <- function(yrep) {
   var_res <- mean(apply(err, 1, stats::var))
 
   return(var_fit / (var_fit + var_res))
-
 }

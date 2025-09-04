@@ -17,11 +17,12 @@
 #' @examples
 #' compute_resolution(seq(0, 1, .1), 0.5)
 compute_resolution <- function(f, p0) {
-
-  stopifnot(min(f) >= 0,
-            max(f) <= 1,
-            min(p0) >= 0,
-            max(p0) <= 1)
+  stopifnot(
+    min(f) >= 0,
+    max(f) <= 1,
+    min(p0) >= 0,
+    max(p0) <= 1
+  )
 
   reso <- mean((f - p0)^2)
   uncertainty <- mean(p0 * (1 - p0))
@@ -41,16 +42,19 @@ compute_resolution <- function(f, p0) {
 #' @examples
 #' compute_RPS(c(.2, .5, .3), 2)
 compute_RPS <- function(forecast, outcome) {
-
-  stopifnot(is.vector(forecast, mode = "numeric"),
-            length(forecast) > 1)
+  stopifnot(
+    is.vector(forecast, mode = "numeric"),
+    length(forecast) > 1
+  )
 
   if (any(is.na(c(forecast, outcome)))) {
     RPS <- NA
   } else {
-    stopifnot(all(between(forecast, 0, 1)),
-              round(sum(forecast), 2) == 1,
-              outcome %in% 1:length(forecast))
+    stopifnot(
+      all(between(forecast, 0, 1)),
+      round(sum(forecast), 2) == 1,
+      outcome %in% 1:length(forecast)
+    )
     dummy_outcome <- 0 * forecast
     dummy_outcome[outcome] <- 1
     RPS <- sum((cumsum(forecast) - cumsum(dummy_outcome))^2) / (length(forecast) - 1)

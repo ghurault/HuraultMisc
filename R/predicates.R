@@ -12,7 +12,9 @@
 #' is_scalar(1) # TRUE
 #' is_scalar("a") # TRUE
 #' is_scalar(c(1, 2)) # FALSE
-is_scalar <- function(x) {length(x) == 1}
+is_scalar <- function(x) {
+  length(x) == 1
+}
 
 # Wholenumber ------------------------------------------------------------
 
@@ -43,7 +45,9 @@ NULL
 
 #' @rdname is_wholenumber
 #' @export
-is_wholenumber <- function(x, tol = .Machine$double.eps^0.5) {approx_equal(x, round(x), tol = tol)}
+is_wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
+  approx_equal(x, round(x), tol = tol)
+}
 
 #' @rdname is_wholenumber
 #' @export
