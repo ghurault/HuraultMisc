@@ -31,7 +31,4 @@ RoxygenNote: 7.3.2
 Suggests:
     spelling, 
     testthat (>= 2.1.0),
-    covr,
-    EczemaPred (>= 0.1.0)
-Remotes: 
-    github::ghurault/EczemaPred
+    covr
