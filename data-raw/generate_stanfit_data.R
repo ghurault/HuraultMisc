@@ -18,6 +18,9 @@ library(here)
 
 stan_code <- here("data-raw/hierarchical_model.stan") # Model path
 
+n_chains <- 4
+thin <- 4
+
 # Data
 N_subject <- 20
 N_repeat <- c(2, 7, 3, 4, 8, 9, 9, 6, 3, 8, 5, 7, 6, 3, 2, 5, 5, 11, 4, 7) # rpois(N_subject, 5)
@@ -43,8 +46,8 @@ data_prior <- list(
 )
 fit_prior <- mdl$sample(
   data = data_prior,
-  chains = 4,
-  thin = 2,
+  chains = n_chains,
+  thin = thin,
   save_warmup = FALSE,
   refresh = 0
 )
@@ -68,8 +71,8 @@ data_fake <- list(
 )
 fit_fake <- mdl$sample(
   data = data_fake,
-  chains = 4,
-  thin = 2,
+  chains = n_chains,
+  thin = thin,
   save_warmup = FALSE,
   refresh = 0
 )
