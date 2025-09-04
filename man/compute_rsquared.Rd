@@ -20,11 +20,15 @@ The approach is not fully Bayesian and provides a global estimate rather than an
 N <- 50
 N_sample <- 1e2
 y <- runif(N, 0, 10)
-yrep <- do.call(cbind,
-                lapply(1:N,
-                       function(i) {
-                         y[i] + rnorm(N_sample)
-                       }))
+yrep <- do.call(
+  cbind,
+  lapply(
+    1:N,
+    function(i) {
+      y[i] + rnorm(N_sample)
+    }
+  )
+)
 compute_rsquared(yrep)
 }
 \references{
