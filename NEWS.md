@@ -1,6 +1,5 @@
 # Development version
 
-- Use EczemaPred for tests
 - Add pkgdown website
 - Remove illustrations
 - `compute_rsquared`
