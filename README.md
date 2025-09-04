@@ -4,7 +4,7 @@
 [![R-CMD-check](https://github.com/ghurault/HuraultMisc/workflows/R-CMD-check/badge.svg)](https://github.com/ghurault/HuraultMisc/actions)
 [![Codecov test coverage](https://codecov.io/gh/ghurault/HuraultMisc/branch/main/graph/badge.svg)](https://app.codecov.io/gh/ghurault/HuraultMisc?branch=main)
 [![CRAN Status Badge](https://www.r-pkg.org/badges/version/HuraultMisc)](https://cran.r-project.org/package=HuraultMisc)
-[![](https://cranlogs.r-pkg.org/badges/HuraultMisc)](https://cran.r-project.org/package=HuraultMisc)
+[![CRAN Downloads](https://cranlogs.r-pkg.org/badges/HuraultMisc)](https://cran.r-project.org/package=HuraultMisc)
 [![pkgdown](https://github.com/ghurault/HuraultMisc/workflows/pkgdown/badge.svg)](https://github.com/ghurault/HuraultMisc/actions)
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)

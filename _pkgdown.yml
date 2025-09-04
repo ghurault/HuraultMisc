@@ -36,6 +36,7 @@ reference:
   - extract_index_nd
 
 template:
+  bootstrap: 5
   includes:
     in_header: |
       <!-- Google tag (gtag.js) -->
