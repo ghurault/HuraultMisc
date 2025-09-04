@@ -35,3 +35,4 @@ Using 'tidybayes' would be more recommended when we only want to extract specifi
 and that it does not matter which draw are extracted (in that case using \code{tidybayes::spread_draws()}).
 }
 
+\keyword{internal}

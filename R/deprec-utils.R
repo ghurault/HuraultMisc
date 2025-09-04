@@ -8,6 +8,7 @@
 #'
 #' @return Dataframe with new column names
 #' @export
+#' @keywords internal
 #'
 #' @examples
 #' \dontrun{

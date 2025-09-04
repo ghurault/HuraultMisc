@@ -11,6 +11,7 @@
 #'
 #' @return Dataframe.
 #' @export
+#' @keywords internal
 process_replications <- function(fit, idx = NULL, parName, bounds = NULL, type = c("continuous", "discrete", "eti", "hdi"), ...) {
   .Deprecated("extract_distribution")
 
@@ -77,6 +78,7 @@ process_replications <- function(fit, idx = NULL, parName, bounds = NULL, type =
 #'
 #' @return Dataframe
 #' @export
+#' @keywords internal
 extract_parameters_from_draw <- function(fit, param, draw) {
   .Deprecated("extract_draws")
 
