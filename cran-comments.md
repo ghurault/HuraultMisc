@@ -2,7 +2,7 @@
 
 - GitHub MacOS (r-release) 
 - GitHub Windows (r-release)
-- GitHub Ubuntu 20.04 (r-devel)
+- GitHub Ubuntu (r-devel)
 - win-builder (r-devel)
 
 ## R CMD check results
