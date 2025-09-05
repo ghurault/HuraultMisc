@@ -77,16 +77,18 @@ PPC_group_distribution <- function(obj, parName = "", nDraws = 1) {
 
 #' Compute Bayesian R-squared from matrix of posterior replications
 #'
-#' The approach is not fully Bayesian and provides a global estimate rather than an estimate for each sample
-#' (this is because the predictive means and residual variance are estimated from replications than given by the model).
+#' The function returns a global estimate rather than an estimate for each sample,
+#' since the predictive means and residual variance are estimated from replications
+#' instead of being computed on a per-sample basis.
+#'
+#' @references Gelman, A. et al. (2019) "R-squared for Bayesian Regression Models",
+#' The American Statistician, 73(3), pp. 307–309. \doi{doi:10.1080/00031305.2018.1549100}.
 #'
 #' @param yrep Matrix with rows representing samples and columns representing observations
 #'
 #' @return Bayesian R-squared (scalar, between 0 and 1)
 #'
 #' @export
-#'
-#' @references [A. Gelman, B. Goodrich, J. Gabry, and A. Vehtari, “R-squared for Bayesian Regression Models,” Am. Stat., vol. 73, no. 3, pp. 307–309, Jul. 2019](www.tandfonline.com/doi/full/10.1080/00031305.2018.1549100)
 #'
 #' @examples
 #' N <- 50
