@@ -13,8 +13,9 @@ compute_rsquared(yrep)
 Bayesian R-squared (scalar, between 0 and 1)
 }
 \description{
-The approach is not fully Bayesian and provides a global estimate rather than an estimate for each sample
-(this is because the predictive means and residual variance are estimated from replications than given by the model).
+The function returns a global estimate rather than an estimate for each sample,
+since the predictive means and residual variance are estimated from replications
+instead of being computed on a per-sample basis.
 }
 \examples{
 N <- 50
@@ -32,5 +33,6 @@ yrep <- do.call(
 compute_rsquared(yrep)
 }
 \references{
-\href{www.tandfonline.com/doi/full/10.1080/00031305.2018.1549100}{A. Gelman, B. Goodrich, J. Gabry, and A. Vehtari, “R-squared for Bayesian Regression Models,” Am. Stat., vol. 73, no. 3, pp. 307–309, Jul. 2019}
+Gelman, A. et al. (2019) "R-squared for Bayesian Regression Models",
+The American Statistician, 73(3), pp. 307–309. \doi{doi:10.1080/00031305.2018.1549100}.
 }
