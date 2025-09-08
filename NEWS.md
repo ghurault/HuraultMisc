@@ -1,3 +1,5 @@
+# HuraultMisc (development version)
+
 # HuraultMisc 1.2.0
 
 - Add `compute_rsquared` to compute Bayesian R-squared from posterior
