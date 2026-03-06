@@ -1,0 +1,70 @@
+# Package index
+
+## Manipulating samples from a distribution
+
+- [`extract_draws()`](https://ghurault.github.io/HuraultMisc/reference/extract_draws.md)
+  : Extract parameters' draws
+- [`extract_distribution()`](https://ghurault.github.io/HuraultMisc/reference/extract_distribution.md)
+  : Extract a distribution represented by samples
+- [`extract_pmf()`](https://ghurault.github.io/HuraultMisc/reference/extract_pmf.md)
+  : Extract probability mass function from vector of samples
+- [`extract_pdf()`](https://ghurault.github.io/HuraultMisc/reference/extract_pdf.md)
+  : Extract probability density function from vector of samples
+- [`extract_ci()`](https://ghurault.github.io/HuraultMisc/reference/extract_ci.md)
+  : Extract confidence intervals from a vector of samples
+
+## Analysing Bayesian model fit
+
+- [`summary_statistics()`](https://ghurault.github.io/HuraultMisc/reference/summary_statistics.md)
+  : Extract summary statistics
+- [`combine_prior_posterior()`](https://ghurault.github.io/HuraultMisc/reference/prior_posterior.md)
+  [`plot_prior_posterior()`](https://ghurault.github.io/HuraultMisc/reference/prior_posterior.md)
+  [`compute_prior_influence()`](https://ghurault.github.io/HuraultMisc/reference/prior_posterior.md)
+  [`plot_prior_influence()`](https://ghurault.github.io/HuraultMisc/reference/prior_posterior.md)
+  [`check_model_sensitivity()`](https://ghurault.github.io/HuraultMisc/reference/prior_posterior.md)
+  : Compare prior to posterior
+- [`compute_coverage()`](https://ghurault.github.io/HuraultMisc/reference/coverage.md)
+  [`plot_coverage()`](https://ghurault.github.io/HuraultMisc/reference/coverage.md)
+  : Coverage probability
+- [`PPC_group_distribution()`](https://ghurault.github.io/HuraultMisc/reference/PPC_group_distribution.md)
+  : Posterior Predictive Check for Stan model
+- [`empirical_pval()`](https://ghurault.github.io/HuraultMisc/reference/empirical_pval.md)
+  : Compute empirical p-values
+- [`post_pred_pval()`](https://ghurault.github.io/HuraultMisc/reference/post_pred_pval.md)
+  : Posterior Predictive p-value
+- [`compute_rsquared()`](https://ghurault.github.io/HuraultMisc/reference/compute_rsquared.md)
+  : Compute Bayesian R-squared from matrix of posterior replications
+
+## Statistical calibration
+
+- [`compute_calibration()`](https://ghurault.github.io/HuraultMisc/reference/compute_calibration.md)
+  : Estimate calibration given forecasts and corresponding outcomes
+- [`compute_RPS()`](https://ghurault.github.io/HuraultMisc/reference/compute_RPS.md)
+  : Compute RPS for a single forecast
+- [`compute_resolution()`](https://ghurault.github.io/HuraultMisc/reference/compute_resolution.md)
+  : Compute resolution of forecasts, normalised by the uncertainty
+
+## Predicates
+
+- [`is_scalar()`](https://ghurault.github.io/HuraultMisc/reference/is_scalar.md)
+  : Test whether x is of length 1
+- [`is_wholenumber()`](https://ghurault.github.io/HuraultMisc/reference/is_wholenumber.md)
+  [`is_scalar_wholenumber()`](https://ghurault.github.io/HuraultMisc/reference/is_wholenumber.md)
+  : Test whether x is a whole number
+- [`is_stanfit()`](https://ghurault.github.io/HuraultMisc/reference/is_stanfit.md)
+  : Test whether an object is of class "stanfit"
+
+## Miscellaneous
+
+- [`cbbPalette`](https://ghurault.github.io/HuraultMisc/reference/cbbPalette.md)
+  : A colour blind friendly palette (with black)
+- [`logit()`](https://ghurault.github.io/HuraultMisc/reference/logit.md)
+  [`inv_logit()`](https://ghurault.github.io/HuraultMisc/reference/logit.md)
+  : Logit and Inverse logit
+- [`approx_equal()`](https://ghurault.github.io/HuraultMisc/reference/approx_equal.md)
+  [`` `%~%` ``](https://ghurault.github.io/HuraultMisc/reference/approx_equal.md)
+  : Approximate equal
+- [`factor_to_numeric()`](https://ghurault.github.io/HuraultMisc/reference/factor_to_numeric.md)
+  : Change the type of the column of a dataframe from factor to numeric
+- [`extract_index_nd()`](https://ghurault.github.io/HuraultMisc/reference/extract_index_nd.md)
+  : Extract multiple indices inside bracket(s) as a list

@@ -1,0 +1,44 @@
+# Extract parameters from a single draw
+
+Extract parameters from a single draw
+
+## Usage
+
+``` r
+extract_parameters_from_draw(fit, param, draw)
+```
+
+## Arguments
+
+- fit:
+
+  Stanfit object.
+
+- param:
+
+  Vector of parameter names.
+
+- draw:
+
+  Index of the draw to extract the parameters from.
+
+## Value
+
+Dataframe
+
+## Note
+
+Useful for to generate fake data.
+
+## Alternative
+
+The 'tidybayes' package offers an alternative to this function, for
+example:
+
+`fit %>% tidy_draws() %>% gather_variables() %>% filter(.draw == draw & .variable %in% param)`
+
+However, the 'tidybayes' version is less efficient as all draws and
+parameters are extracted and then filtered (also the draw IDs are not
+the same). Using 'tidybayes' would be more recommended when we only want
+to extract specific parameters, and that it does not matter which draw
+are extracted (in that case using `tidybayes::spread_draws()`).
