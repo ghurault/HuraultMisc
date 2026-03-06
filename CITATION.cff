@@ -8,7 +8,7 @@ message: 'To cite package "HuraultMisc" in publications use:'
 type: software
 license: MIT
 title: 'HuraultMisc: Guillem Hurault Functions'' Library'
-version: 1.1.2.9000
+version: 1.2.1.9000
 doi: 10.32614/CRAN.package.HuraultMisc
 abstract: Contains various functions for data analysis, notably helpers and diagnostics
   for Bayesian modelling using Stan.
@@ -40,7 +40,7 @@ references:
   institution:
     name: R Foundation for Statistical Computing
     address: Vienna, Austria
-  year: '2025'
+  year: '2026'
   version: '>= 3.5.0'
 - type: software
   title: ggplot2
@@ -80,61 +80,8 @@ references:
     given-names: Teun
     name-particle: van den
     orcid: https://orcid.org/0000-0002-9335-7468
-  year: '2025'
+  year: '2026'
   doi: 10.32614/CRAN.package.ggplot2
-- type: software
-  title: reshape2
-  abstract: 'reshape2: Flexibly Reshape Data: A Reboot of the Reshape Package'
-  notes: Imports
-  url: https://github.com/hadley/reshape
-  repository: https://CRAN.R-project.org/package=reshape2
-  authors:
-  - family-names: Wickham
-    given-names: Hadley
-    email: h.wickham@gmail.com
-  year: '2025'
-  doi: 10.32614/CRAN.package.reshape2
-- type: software
-  title: rstan
-  abstract: 'rstan: R Interface to Stan'
-  notes: Imports
-  url: https://mc-stan.org/rstan/
-  repository: https://CRAN.R-project.org/package=rstan
-  authors:
-  - family-names: Guo
-    given-names: Jiqiang
-    email: guojq28@gmail.com
-  - family-names: Gabry
-    given-names: Jonah
-    email: jsg2201@columbia.edu
-  - family-names: Goodrich
-    given-names: Ben
-    email: benjamin.goodrich@columbia.edu
-  - family-names: Johnson
-    given-names: Andrew
-    email: andrew.johnson@arjohnsonau.com
-  - family-names: Weber
-    given-names: Sebastian
-    email: sdw.post@waebers.de
-  - family-names: Badr
-    given-names: Hamada S.
-    email: badr@jhu.edu
-    orcid: https://orcid.org/0000-0002-9808-2344
-  year: '2025'
-  doi: 10.32614/CRAN.package.rstan
-- type: software
-  title: Hmisc
-  abstract: 'Hmisc: Harrell Miscellaneous'
-  notes: Imports
-  url: https://hbiostat.org/R/Hmisc/
-  repository: https://CRAN.R-project.org/package=Hmisc
-  authors:
-  - family-names: Harrell Jr
-    given-names: Frank E
-    email: fh@fharrell.com
-    orcid: https://orcid.org/0000-0002-8271-5493
-  year: '2025'
-  doi: 10.32614/CRAN.package.Hmisc
 - type: software
   title: stats
   abstract: 'R: A Language and Environment for Statistical Computing'
@@ -144,7 +91,7 @@ references:
   institution:
     name: R Foundation for Statistical Computing
     address: Vienna, Austria
-  year: '2025'
+  year: '2026'
 - type: software
   title: grDevices
   abstract: 'R: A Language and Environment for Statistical Computing'
@@ -154,19 +101,7 @@ references:
   institution:
     name: R Foundation for Statistical Computing
     address: Vienna, Austria
-  year: '2025'
-- type: software
-  title: HDInterval
-  abstract: 'HDInterval: Highest (Posterior) Density Intervals'
-  notes: Imports
-  repository: https://CRAN.R-project.org/package=HDInterval
-  authors:
-  - family-names: Meredith
-    given-names: Mike
-  - family-names: Kruschke
-    given-names: John
-  year: '2025'
-  doi: 10.32614/CRAN.package.HDInterval
+  year: '2026'
 - type: software
   title: magrittr
   abstract: 'magrittr: A Forward-Pipe Operator for R'
@@ -179,8 +114,8 @@ references:
     email: stefan@stefanbache.dk
   - family-names: Wickham
     given-names: Hadley
-    email: hadley@rstudio.com
-  year: '2025'
+    email: hadley@posit.co
+  year: '2026'
   doi: 10.32614/CRAN.package.magrittr
 - type: software
   title: dplyr
@@ -205,7 +140,7 @@ references:
     given-names: Davis
     email: davis@posit.co
     orcid: https://orcid.org/0000-0003-4777-038X
-  year: '2025'
+  year: '2026'
   doi: 10.32614/CRAN.package.dplyr
 - type: software
   title: tidyr
@@ -222,59 +157,6 @@ references:
     email: davis@posit.co
   - family-names: Girlich
     given-names: Maximilian
-  year: '2025'
+  year: '2026'
   doi: 10.32614/CRAN.package.tidyr
-- type: software
-  title: spelling
-  abstract: 'spelling: Tools for Spell Checking in R'
-  notes: Suggests
-  url: https://ropensci.r-universe.dev/spelling
-  repository: https://CRAN.R-project.org/package=spelling
-  authors:
-  - family-names: Ooms
-    given-names: Jeroen
-    email: jeroenooms@gmail.com
-    orcid: https://orcid.org/0000-0002-4035-0289
-  - family-names: Hester
-    given-names: Jim
-    email: james.hester@rstudio.com
-  year: '2025'
-  doi: 10.32614/CRAN.package.spelling
-- type: software
-  title: testthat
-  abstract: 'testthat: Unit Testing for R'
-  notes: Suggests
-  url: https://testthat.r-lib.org
-  repository: https://CRAN.R-project.org/package=testthat
-  authors:
-  - family-names: Wickham
-    given-names: Hadley
-    email: hadley@posit.co
-  year: '2025'
-  doi: 10.32614/CRAN.package.testthat
-  version: '>= 2.1.0'
-- type: software
-  title: covr
-  abstract: 'covr: Test Coverage for Packages'
-  notes: Suggests
-  url: https://covr.r-lib.org
-  repository: https://CRAN.R-project.org/package=covr
-  authors:
-  - family-names: Hester
-    given-names: Jim
-    email: james.f.hester@gmail.com
-  year: '2025'
-  doi: 10.32614/CRAN.package.covr
-- type: software
-  title: EczemaPred
-  abstract: 'EczemaPred: Predicting the Evolution of Eczema Severity'
-  notes: Suggests
-  url: https://ghurault.github.io/EczemaPred/
-  authors:
-  - family-names: Hurault
-    given-names: Guillem
-    email: guillem.hurault@hotmail.fr
-    orcid: https://orcid.org/0000-0002-1052-3564
-  version: '>= 0.1.0'
-  year: '2025'
 
