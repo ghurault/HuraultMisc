@@ -52,7 +52,7 @@ List containing the p-value and (optionally) a ggplot.
 ``` r
 post_pred_pval(matrix(rnorm(1e3), ncol = 10), rnorm(10), plot = TRUE)
 #> $pval
-#> [1] 0.2178218
+#> [1] 0.6930693
 #> 
 #> $plot
 

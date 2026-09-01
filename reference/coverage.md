@@ -61,18 +61,18 @@ post_samples <- sapply(rnorm(N, 0, 1), function(x) {
 
 compute_coverage(post_samples, truth)
 #> # A tibble: 21 × 4
-#>    Nominal Coverage  Lower  Upper
-#>      <dbl>    <dbl>  <dbl>  <dbl>
-#>  1    0        0    0      0     
-#>  2    0.05     0.04 0.0110 0.0993
-#>  3    0.1      0.09 0.0420 0.164 
-#>  4    0.15     0.17 0.102  0.258 
-#>  5    0.2      0.22 0.143  0.314 
-#>  6    0.25     0.3  0.212  0.400 
-#>  7    0.3      0.32 0.230  0.421 
-#>  8    0.35     0.38 0.285  0.483 
-#>  9    0.4      0.42 0.322  0.523 
-#> 10    0.45     0.49 0.389  0.592 
+#>    Nominal Coverage  Lower Upper
+#>      <dbl>    <dbl>  <dbl> <dbl>
+#>  1    0        0    0      0    
+#>  2    0.05     0.07 0.0286 0.139
+#>  3    0.1      0.12 0.0636 0.200
+#>  4    0.15     0.17 0.102  0.258
+#>  5    0.2      0.26 0.177  0.357
+#>  6    0.25     0.31 0.221  0.410
+#>  7    0.3      0.33 0.239  0.431
+#>  8    0.35     0.34 0.248  0.442
+#>  9    0.4      0.38 0.285  0.483
+#> 10    0.45     0.45 0.350  0.553
 #> # ℹ 11 more rows
 plot_coverage(post_samples, truth)
 #> Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.

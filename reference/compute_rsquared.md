@@ -44,5 +44,5 @@ yrep <- do.call(
   )
 )
 compute_rsquared(yrep)
-#> [1] 0.8969546
+#> [1] 0.8943424
 ```

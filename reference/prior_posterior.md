@@ -120,6 +120,7 @@ Workflow”](https://betanalpha.github.io/assets/case_studies/principled_bayesia
 ## Examples
 
 ``` r
+
 library(dplyr)
 
 prior <- data.frame(

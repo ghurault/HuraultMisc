@@ -10,12 +10,14 @@ To install the currently released version of the package on CRAN, please
 type the following commands in R:
 
 ``` r
+
 install.packages("HuraultMisc")
 ```
 
 Alternatively, you can install the development version with:
 
 ``` r
+
 devtools::install_github("ghurault/HuraultMisc")
 ```
 

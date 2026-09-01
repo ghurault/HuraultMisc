@@ -31,5 +31,5 @@ Empirical p-value.
 
 ``` r
 empirical_pval(rnorm(1e2), 2)
-#> [1] 0.05940594
+#> [1] 0.01980198
 ```
